@@ -24,12 +24,10 @@ interface ApiResponse {
   success?: boolean;
   message?: string;
   accessToken?: string;
+  refreshToken?: string;
   token?: string;
   user?: any;
-  data?: {
-    accessToken?: string;
-    user?: any;
-  };
+  data?: any;
 }
 
 type PostResult<T> = { ok: boolean; status: number; data: T | null };
@@ -53,7 +51,17 @@ async function postJson<T>(
 
 function pickAuth(r: ApiResponse | null) {
   const token = r?.accessToken || r?.token || r?.data?.accessToken || "";
-  const user = r?.user || r?.data?.user || null;
+
+  // supports:
+  // 1) { user: {...} }
+  // 2) { data: { user: {...} } }
+  // 3) { data: {...subadmin object...} }
+  const user =
+    r?.user ||
+    r?.data?.user ||
+    (r?.data && !r?.data?.user ? r.data : null) ||
+    null;
+
   return { token, user };
 }
 
@@ -69,27 +77,33 @@ export default function Login() {
 
   const disabled = loginLoading;
 
-  const headerSubtitle = useMemo(() => "Sign in with your ShopStack account", []);
+  const headerSubtitle = useMemo(
+    () => "Sign in with your ShopStack account",
+    []
+  );
 
   const goByRole = useCallback(
     async (user: any) => {
-      const role = String(user?.role || "").toUpperCase();
+      const role = String(user?.role || user?.roles?.[0] || "").toUpperCase();
       const shopIds: string[] = Array.isArray(user?.shopIds) ? user.shopIds : [];
 
-      // Reset shop context for admin-like roles
       if (role === "MASTER_ADMIN") {
         await setCurrentShopId(null);
         router.replace("/master/(tabs)");
         return;
       }
 
-      if (role === "SUB_ADMIN") {
+      if (
+        role === "SUB_ADMIN" ||
+        role === "MANAGER" ||
+        role === "SUPERVISOR" ||
+        role === "STAFF"
+      ) {
         await setCurrentShopId(null);
-        router.replace("/subadmin/(tabs)" as any);
+        router.replace("/subadmin/(tabs)/" as any);
         return;
       }
 
-      // For shop users:
       if (shopIds.length > 1) {
         router.replace("/shop-select");
         return;
@@ -97,11 +111,11 @@ export default function Login() {
 
       if (shopIds.length === 1) {
         await setCurrentShopId(shopIds[0]);
-        router.replace("/"); // your home/dashboard route
+        router.replace("/");
         return;
       }
 
-      router.replace("/"); // fallback
+      router.replace("/");
     },
     [router, setCurrentShopId]
   );
@@ -114,12 +128,11 @@ export default function Login() {
       Toast.show({
         type: "error",
         text1: "Validation Error",
-        text2: "Enter login/email and PIN",
+        text2: "Enter login/username/email and PIN",
       });
       return;
     }
 
-    // Optional stricter PIN check (you can relax if needed)
     if (!/^\d{4,6}$/.test(p)) {
       Toast.show({
         type: "error",
@@ -140,10 +153,10 @@ export default function Login() {
 
       let finalRes = masterRes;
 
-      // 2) SubAdmin fallback
+      // 2) Subadmin fallback
       if (!finalRes.ok || !finalRes.data?.success) {
         finalRes = await postJson<ApiResponse>(SummaryApi.subadmin_login.url, {
-          emailOrUsername: e,
+          username: e,
           pin: p,
         });
       }
@@ -197,7 +210,6 @@ export default function Login() {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <View className="px-6 pt-6 flex-1">
-          {/* Header */}
           <View className="items-center mt-2">
             <View className="w-16 h-16 rounded-2xl bg-white items-center justify-center border border-gray-100 shadow-sm">
               <Image
@@ -215,9 +227,7 @@ export default function Login() {
             </Text>
           </View>
 
-          {/* Card */}
           <View className="mt-8 bg-white rounded-3xl p-5 border border-gray-100 shadow-sm">
-            {/* Email */}
             <Text className="text-gray-800 font-semibold mb-2">
               Email / Username / Login
             </Text>
@@ -234,7 +244,7 @@ export default function Login() {
               <TextInput
                 value={emailOrUsername}
                 onChangeText={setEmailOrUsername}
-                placeholder="email or username or 5914"
+                placeholder="email or username"
                 autoCapitalize="none"
                 returnKeyType="next"
                 className="flex-1 ml-3 text-[15px] text-gray-900"
@@ -242,14 +252,16 @@ export default function Login() {
               />
             </View>
 
-            {/* Premium PIN block */}
             <View className="mt-5">
               <View className="flex-row items-center justify-between mb-2">
                 <Text className="text-gray-800 font-semibold">PIN</Text>
 
-                {/* subtle lock badge */}
                 <View className="flex-row items-center gap-1 px-2.5 py-1 rounded-full bg-gray-100">
-                  <MaterialCommunityIcons name="shield-lock-outline" size={14} color="#6B7280" />
+                  <MaterialCommunityIcons
+                    name="shield-lock-outline"
+                    size={14}
+                    color="#6B7280"
+                  />
                   <Text className="text-[11px] text-gray-500 font-semibold">
                     Secure
                   </Text>
@@ -267,7 +279,7 @@ export default function Login() {
 
                 <TextInput
                   value={pin}
-                  onChangeText={(t) => setPin(t.replace(/[^\d]/g, ""))} // numeric only
+                  onChangeText={(t) => setPin(t.replace(/[^\d]/g, ""))}
                   placeholder="Enter your PIN"
                   secureTextEntry={!showPin}
                   keyboardType="number-pad"
@@ -292,7 +304,6 @@ export default function Login() {
               </View>
             </View>
 
-            {/* Button */}
             <TouchableOpacity
               onPress={doLogin}
               disabled={disabled}
@@ -310,7 +321,11 @@ export default function Login() {
                 </>
               ) : (
                 <>
-                  <MaterialCommunityIcons name="login" size={22} color="#FFFFFF" />
+                  <MaterialCommunityIcons
+                    name="login"
+                    size={22}
+                    color="#FFFFFF"
+                  />
                   <Text className="ml-2 text-white text-[16px] font-extrabold">
                     Log In
                   </Text>
@@ -318,11 +333,14 @@ export default function Login() {
               )}
             </TouchableOpacity>
 
-            {/* Optional: quick hint row */}
             <View className="mt-4 flex-row items-center justify-center">
-              <MaterialCommunityIcons name="information-outline" size={14} color="#9CA3AF" />
+              <MaterialCommunityIcons
+                name="information-outline"
+                size={14}
+                color="#9CA3AF"
+              />
               <Text className="ml-2 text-[11px] text-gray-400">
-                Use master login (e.g., 5914) or your SubAdmin credentials
+                Use master login or your SubAdmin credentials
               </Text>
             </View>
           </View>

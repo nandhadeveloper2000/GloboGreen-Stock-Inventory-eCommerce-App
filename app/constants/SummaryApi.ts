@@ -1,5 +1,5 @@
 // app/constants/SummaryApi.ts
-export const baseURL = "https://globo-green-shop-stack2026.el.r.appspot.com";
+export const baseURL = "https://globogreen-server.onrender.com";
 const API_BASE = "/api";
 
 export const withQuery = (
@@ -17,6 +17,7 @@ export const withQuery = (
 const SummaryApi = {
   /* ===================== SUBADMIN AUTH ===================== */
   subadmin_login: { method: "POST", url: `${API_BASE}/subadmins/login` },
+subadmin_logout: { method: "POST", url: `${API_BASE}/subadmins/logout` },
 
   /* ===================== MASTER AUTH ===================== */
   master_login: { method: "POST", url: `${API_BASE}/master/login` },
@@ -46,15 +47,18 @@ const SummaryApi = {
   master_subadmin_avatar_remove: { method: "DELETE", url: (id: string) => `${API_BASE}/subadmins/${id}/avatar` },
 
   /* ===================== SHOP OWNERS (ADMIN) ===================== */
-  master_create_shopowner: { method: "POST", url: `${API_BASE}/shopowners` },
-  master_all_shopowners: { method: "GET", url: `${API_BASE}/shopowners` },
-  master_get_shopowner: { method: "GET", url: (id: string) => `${API_BASE}/shopowners/${id}` },
-  master_update_shopowner: { method: "PUT", url: (id: string) => `${API_BASE}/shopowners/${id}` },
-  master_delete_shopowner: { method: "DELETE", url: (id: string) => `${API_BASE}/shopowners/${id}` },
-  master_toggle_shopowner_active: { method: "PUT", url: (id: string) => `${API_BASE}/shopowners/${id}/activate` },
+master_create_shopowner: { method: "POST", url: `${API_BASE}/shopowners` },
+master_all_shopowners: { method: "GET", url: `${API_BASE}/shopowners` },
+master_get_shopowner: { method: "GET", url: (id: string) => `${API_BASE}/shopowners/${id}` },
+master_update_shopowner: { method: "PUT", url: (id: string) => `${API_BASE}/shopowners/${id}` },
+master_delete_shopowner: { method: "DELETE", url: (id: string) => `${API_BASE}/shopowners/${id}` },
+master_toggle_shopowner_active: { method: "PUT", url: (id: string) => `${API_BASE}/shopowners/${id}/activate` },
 
-  master_shopowner_avatar_upload: { method: "PUT", url: (id: string) => `${API_BASE}/shopowners/${id}/avatar` },
-  master_shopowner_avatar_remove: { method: "DELETE", url: (id: string) => `${API_BASE}/shopowners/${id}/avatar` },
+master_shopowner_avatar_upload: { method: "PUT", url: (id: string) => `${API_BASE}/shopowners/${id}/avatar` },
+master_shopowner_avatar_remove: { method: "DELETE", url: (id: string) => `${API_BASE}/shopowners/${id}/avatar` },
+
+master_shopowner_docs_upload: { method: "PUT", url: (id: string) => `${API_BASE}/shopowners/${id}/docs` },
+master_shopowner_docs_remove: { method: "DELETE", url: (id: string, key: string) => `${API_BASE}/shopowners/${id}/docs/${key}` },
 
   /* ===================== SHOP OWNER AUTH (PUBLIC) ===================== */
   shopowner_login: { method: "POST", url: `${API_BASE}/shopowners/login` },
@@ -90,9 +94,11 @@ const SummaryApi = {
   staff_avatar_upload: { method: "PUT", url: (id: string) => `${API_BASE}/staff/${id}/avatar` },
   staff_avatar_remove: { method: "DELETE", url: (id: string) => `${API_BASE}/staff/${id}/avatar` },
 
-  /* ===================== SHOP OWNER DOCS (ADMIN) ===================== */
-  master_shopowner_docs_upload: { method: "PUT", url: (id: string) => `${API_BASE}/shopowners/${id}/docs` },
-  master_shopowner_docs_remove: { method: "DELETE", url: (id: string, key: string) => `${API_BASE}/shopowners/${id}/docs/${key}` },
-};
+  /* ===================== SUBADMIN SELF ===================== */
+subadmin_me: { method: "GET", url: `${API_BASE}/subadmins/me` },
+subadmin_update_me: { method: "PUT", url: `${API_BASE}/subadmins/me` },
+subadmin_avatar_upload: { method: "POST", url: `${API_BASE}/subadmins/me/avatar` },
+subadmin_avatar_remove: { method: "DELETE", url: `${API_BASE}/subadmins/me/avatar` },
+ };
 
 export default SummaryApi;
