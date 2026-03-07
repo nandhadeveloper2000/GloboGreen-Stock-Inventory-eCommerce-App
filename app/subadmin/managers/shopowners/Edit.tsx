@@ -11,6 +11,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
@@ -21,6 +22,11 @@ import SummaryApi, { baseURL } from "../../../constants/SummaryApi";
 import { useAuth } from "../../../context/auth/AuthProvider";
 
 const apiUrl = (path: string) => `${baseURL}${path}`;
+
+const BRAND = "#16BB05";
+const BRAND_DARK = "#119304";
+const SURFACE = "#F4F7FB";
+const CARD = "#FFFFFF";
 
 const toastSuccess = (msg: string) =>
   Toast.show({ type: "success", text1: "Success", text2: msg });
@@ -67,14 +73,10 @@ type ShopOwner = {
   email: string;
   mobile?: string;
   additionalNumber?: string;
-
   shopControl?: "INVENTORY_ONLY" | "ALL_IN_ONE_ECOMMERCE";
   businessTypes?: string[];
-
   avatarUrl?: string;
-
   address?: Address;
-
   idProof?: DocInfo;
   gstCertificate?: DocInfo;
   udyamCertificate?: DocInfo;
@@ -99,6 +101,117 @@ const getShopControlLabel = (v: any) => {
 
 const DOC_TYPES = ["application/pdf", "image/*"];
 
+const cardStyle = {
+  backgroundColor: CARD,
+  borderWidth: 1,
+  borderColor: "#E8EDF3",
+  shadowColor: "#0F172A",
+  shadowOffset: { width: 0, height: 10 },
+  shadowOpacity: 0.06,
+  shadowRadius: 14,
+  elevation: 4,
+} as const;
+
+function HeaderMetric({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <View
+      className="flex-1 rounded-[18px] px-3 py-3"
+      style={{
+        backgroundColor: "rgba(255,255,255,0.14)",
+        borderWidth: 1,
+        borderColor: "rgba(255,255,255,0.18)",
+      }}
+    >
+      <Text className="text-white/80 text-[11px] font-semibold">{label}</Text>
+      <Text className="mt-1 text-white text-[16px] font-extrabold" numberOfLines={1}>
+        {value}
+      </Text>
+    </View>
+  );
+}
+
+function Input(props: any) {
+  const { label, ...rest } = props;
+  return (
+    <>
+      <Text className="mt-3 text-slate-700 font-semibold mb-2">{label}</Text>
+      <TextInput
+        {...rest}
+        className="text-slate-900"
+        style={{
+          backgroundColor: "#F8FAFC",
+          borderWidth: 1,
+          borderColor: "#E2E8F0",
+          borderRadius: 18,
+          paddingHorizontal: 16,
+          paddingVertical: 14,
+        }}
+        placeholderTextColor="#94A3B8"
+      />
+    </>
+  );
+}
+
+function ActionChip({
+  label,
+  onPress,
+  disabled,
+  primary = false,
+  dark = false,
+  danger = false,
+}: {
+  label: string;
+  onPress: () => void;
+  disabled?: boolean;
+  primary?: boolean;
+  dark?: boolean;
+  danger?: boolean;
+}) {
+  let backgroundColor = "#E5E7EB";
+  let textColor = "#111827";
+
+  if (primary) {
+    backgroundColor = disabled ? "rgba(22,187,5,0.6)" : BRAND;
+    textColor = "#FFFFFF";
+  }
+
+  if (dark) {
+    backgroundColor = disabled ? "rgba(17,24,39,0.5)" : "#111827";
+    textColor = "#FFFFFF";
+  }
+
+  if (danger) {
+    backgroundColor = disabled ? "rgba(220,38,38,0.6)" : "#DC2626";
+    textColor = "#FFFFFF";
+  }
+
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={{
+        paddingHorizontal: 16,
+        paddingVertical: 10,
+        borderRadius: 14,
+        backgroundColor,
+      }}
+    >
+      <Text style={{ color: textColor, fontWeight: "800" }}>{label}</Text>
+    </Pressable>
+  );
+}
+
+function formatBytes(bytes?: number) {
+  if (!bytes) return "";
+  return `${Math.round(bytes / 1024)} KB`;
+}
+
 export default function ShopOwnerEditScreen() {
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -113,7 +226,6 @@ export default function ShopOwnerEditScreen() {
 
   const [data, setData] = useState<ShopOwner | null>(null);
 
-  // form fields
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
@@ -130,7 +242,6 @@ export default function ShopOwnerEditScreen() {
   const [street, setStreet] = useState("");
   const [pincode, setPincode] = useState("");
 
-  // pickers
   const [newAvatar, setNewAvatar] = useState<ImagePicker.ImagePickerAsset | null>(null);
 
   const [idProof, setIdProof] = useState<PickedDoc | null>(null);
@@ -177,6 +288,7 @@ export default function ShopOwnerEditScreen() {
 
   const fetchDetails = useCallback(async () => {
     if (!id) return;
+
     try {
       setLoading(true);
       const url = SummaryApi.master_get_shopowner.url(String(id));
@@ -277,13 +389,9 @@ export default function ShopOwnerEditScreen() {
           name: n,
           username: u,
           email: e,
-
           mobile: mobile.trim(),
           additionalNumber: additionalNumber.trim(),
-
           shopControl,
-
-          // address fields (your backend maps these into address object)
           state: stateName.trim(),
           district: district.trim(),
           taluk: taluk.trim(),
@@ -415,7 +523,7 @@ export default function ShopOwnerEditScreen() {
 
       const res = await fetch(apiUrl(SummaryApi.master_shopowner_docs_upload.url(String(id))), {
         method: SummaryApi.master_shopowner_docs_upload.method,
-        headers: headersAuthOnly, // ✅ DON'T set Content-Type
+        headers: headersAuthOnly,
         body: form,
       });
 
@@ -474,7 +582,6 @@ export default function ShopOwnerEditScreen() {
 
   const DocRow = ({
     title,
-    keyName,
     current,
     picked,
     onPick,
@@ -482,7 +589,6 @@ export default function ShopOwnerEditScreen() {
     onRemoveServer,
   }: {
     title: string;
-    keyName: DocKey;
     current?: DocInfo;
     picked?: PickedDoc | null;
     onPick: () => void;
@@ -490,58 +596,61 @@ export default function ShopOwnerEditScreen() {
     onRemoveServer: () => void;
   }) => {
     const hasServer = !!current?.url;
+
     return (
-      <View className="mt-3 border border-gray-200 rounded-2xl p-3 bg-gray-50">
+      <View
+        className="mt-3 rounded-[18px] p-3"
+        style={{
+          backgroundColor: "#F8FAFC",
+          borderWidth: 1,
+          borderColor: "#E2E8F0",
+        }}
+      >
         <View className="flex-row items-start justify-between">
           <View className="flex-1 pr-2">
-            <Text className="text-gray-900 font-extrabold">{title}</Text>
+            <Text className="text-slate-900 font-extrabold">{title}</Text>
 
             {picked ? (
-              <Text className="text-gray-500 text-xs mt-1">Selected: {picked.name}</Text>
+              <Text className="text-slate-500 text-xs mt-1">Selected: {picked.name}</Text>
             ) : hasServer ? (
-              <Text className="text-gray-500 text-xs mt-1">
+              <Text className="text-slate-500 text-xs mt-1">
                 Uploaded: {current?.fileName || "document"}
               </Text>
             ) : (
-              <Text className="text-gray-500 text-xs mt-1">No document</Text>
+              <Text className="text-slate-500 text-xs mt-1">No document</Text>
             )}
 
             {hasServer ? (
-              <Text className="text-gray-400 text-[11px] mt-1">
-                {current?.mimeType ? current.mimeType : ""}{current?.bytes ? ` • ${Math.round((current.bytes || 0) / 1024)} KB` : ""}
+              <Text className="text-slate-400 text-[11px] mt-1">
+                {current?.mimeType || ""}
+                {current?.bytes ? ` • ${formatBytes(current.bytes)}` : ""}
               </Text>
             ) : null}
           </View>
 
           <View style={{ gap: 10 }}>
-            <Pressable
+            <ActionChip
+              label={picked ? "Replace" : "Choose"}
               onPress={onPick}
               disabled={saving || docsUploading}
-              className="px-3 py-2 rounded-xl bg-[#16BB05]"
-            >
-              <Text className="text-white font-extrabold text-xs">
-                {picked ? "Replace" : "Choose"}
-              </Text>
-            </Pressable>
+              primary
+            />
 
             {!!picked && (
-              <Pressable
+              <ActionChip
+                label="Clear"
                 onPress={onClearPick}
                 disabled={saving || docsUploading}
-                className="px-3 py-2 rounded-xl bg-gray-200"
-              >
-                <Text className="text-gray-900 font-extrabold text-xs">Clear</Text>
-              </Pressable>
+              />
             )}
 
             {hasServer && (
-              <Pressable
+              <ActionChip
+                label="Remove"
                 onPress={onRemoveServer}
                 disabled={saving || docsUploading}
-                className="px-3 py-2 rounded-xl bg-red-600"
-              >
-                <Text className="text-white font-extrabold text-xs">Remove</Text>
-              </Pressable>
+                danger
+              />
             )}
           </View>
         </View>
@@ -550,88 +659,174 @@ export default function ShopOwnerEditScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F7F8FB]" edges={["top"]}>
-      {/* Top bar */}
-      <View className="flex-row items-center justify-between px-4 py-2">
-        <Pressable onPress={() => router.back()} hitSlop={10} className="p-2">
-          <MaterialCommunityIcons name="chevron-left" size={30} color="#111827" />
+    <SafeAreaView className="flex-1" style={{ backgroundColor: SURFACE }} edges={["top"]}>
+      <View
+        className="flex-row items-center justify-between px-4 py-2"
+        style={{ backgroundColor: "#FFFFFF" }}
+      >
+        <Pressable
+          onPress={() => router.back()}
+          hitSlop={10}
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 14,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#F8FAFC",
+            borderWidth: 1,
+            borderColor: "#E2E8F0",
+          }}
+        >
+          <MaterialCommunityIcons name="chevron-left" size={24} color="#111827" />
         </Pressable>
-        <Text className="text-gray-900 text-lg font-extrabold">Edit ShopOwner</Text>
-        <View style={{ width: 32 }} />
+
+        <Text className="text-slate-900 text-[18px] font-extrabold">
+          Edit ShopOwner
+        </Text>
+
+        <View style={{ width: 40 }} />
       </View>
 
       {loading ? (
         <View className="flex-1 items-center justify-center">
-          <ActivityIndicator />
-          <Text className="mt-2 text-gray-600">Loading...</Text>
+          <ActivityIndicator size="large" color={BRAND} />
+          <Text className="mt-2 text-slate-600">Loading...</Text>
         </View>
       ) : !data ? (
         <View className="flex-1 items-center justify-center">
-          <Text className="text-gray-500">No data found</Text>
+          <Text className="text-slate-500">No data found</Text>
         </View>
       ) : (
         <ScrollView
           ref={scrollRef}
-          className="flex-1 bg-[#F7F8FB]"
+          className="flex-1"
+          style={{ backgroundColor: SURFACE }}
           contentContainerStyle={{ padding: 16, paddingBottom: 30 }}
           keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
         >
-          {/* Profile */}
-          <View className="bg-white rounded-3xl p-4 border border-gray-100 shadow-sm">
-            <Text className="text-gray-900 text-lg font-extrabold">Profile</Text>
+          <LinearGradient
+            colors={["#18C10A", "#109203"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={{
+              borderRadius: 28,
+              padding: 18,
+              overflow: "hidden",
+              marginBottom: 16,
+            }}
+          >
+            <View
+              style={{
+                position: "absolute",
+                top: -20,
+                right: -10,
+                width: 110,
+                height: 110,
+                borderRadius: 999,
+                backgroundColor: "rgba(255,255,255,0.12)",
+              }}
+            />
+            <View
+              style={{
+                position: "absolute",
+                bottom: -30,
+                left: -15,
+                width: 100,
+                height: 100,
+                borderRadius: 999,
+                backgroundColor: "rgba(255,255,255,0.08)",
+              }}
+            />
+
+            <Text className="text-white/90 text-[12px] font-semibold">
+              Edit Flow
+            </Text>
+            <Text className="mt-1 text-white text-[26px] font-extrabold">
+              {data?.name || "Shop Owner"}
+            </Text>
+            <Text className="text-white/90 text-sm font-medium">
+              Update profile, avatar and documents
+            </Text>
+
+            <View className="mt-4 flex-row" style={{ gap: 10 }}>
+              <HeaderMetric label="Username" value={data?.username || "-"} />
+              <HeaderMetric
+                label="Control"
+                value={shopControl === "ALL_IN_ONE_ECOMMERCE" ? "E-Com" : "Inventory"}
+              />
+              <HeaderMetric
+                label="Docs"
+                value={[
+                  data?.idProof?.url,
+                  data?.gstCertificate?.url,
+                  data?.udyamCertificate?.url,
+                ]
+                  .filter(Boolean)
+                  .length.toString()}
+              />
+            </View>
+          </LinearGradient>
+
+          <View style={cardStyle} className="rounded-[28px] p-4 mb-4">
+            <Text className="text-slate-900 text-[18px] font-extrabold">Profile</Text>
 
             <View className="items-center mt-4">
-              <View className="w-20 h-20 rounded-full bg-gray-100 overflow-hidden items-center justify-center border border-gray-200">
+              <View
+                className="w-24 h-24 rounded-full overflow-hidden items-center justify-center"
+                style={{
+                  backgroundColor: "#F1F5F9",
+                  borderWidth: 2,
+                  borderColor: "#E2E8F0",
+                }}
+              >
                 {newAvatar?.uri ? (
-                  <Image source={{ uri: newAvatar.uri }} style={{ width: 80, height: 80 }} />
+                  <Image source={{ uri: newAvatar.uri }} style={{ width: 96, height: 96 }} />
                 ) : data.avatarUrl ? (
-                  <Image source={{ uri: data.avatarUrl }} style={{ width: 80, height: 80 }} />
+                  <Image source={{ uri: data.avatarUrl }} style={{ width: 96, height: 96 }} />
                 ) : (
-                  <MaterialCommunityIcons name="account" size={40} color="#9CA3AF" />
+                  <LinearGradient
+                    colors={["#DCFCE7", "#F0FDF4"]}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <MaterialCommunityIcons name="account" size={42} color={BRAND_DARK} />
+                  </LinearGradient>
                 )}
               </View>
 
-              <View className="flex-row gap-3 mt-3">
-                <Pressable
+              <View className="flex-row mt-3" style={{ gap: 10 }}>
+                <ActionChip
+                  label="Choose Avatar"
                   onPress={pickAvatar}
                   disabled={avatarUploading || saving}
-                  className={`px-4 py-2 rounded-xl ${
-                    avatarUploading || saving ? "bg-[#16BB05]/60" : "bg-[#16BB05]"
-                  }`}
-                >
-                  <Text className="text-white font-extrabold">Choose Avatar</Text>
-                </Pressable>
+                  primary
+                />
 
-                <Pressable
+                <ActionChip
+                  label={avatarUploading ? "Uploading" : "Upload"}
                   onPress={uploadAvatar}
                   disabled={avatarUploading || saving || !newAvatar?.uri}
-                  className={`px-4 py-2 rounded-xl ${
-                    avatarUploading || saving || !newAvatar?.uri ? "bg-[#111827]/50" : "bg-[#111827]"
-                  }`}
-                >
-                  {avatarUploading ? (
-                    <View className="flex-row items-center">
-                      <ActivityIndicator color="#fff" />
-                      <Text className="ml-2 text-white font-extrabold">Uploading</Text>
-                    </View>
-                  ) : (
-                    <Text className="text-white font-extrabold">Upload</Text>
-                  )}
-                </Pressable>
+                  dark
+                />
 
-                <Pressable
+                <ActionChip
+                  label="Remove"
                   onPress={removeAvatar}
                   disabled={avatarUploading || saving}
-                  className={`px-4 py-2 rounded-xl ${
-                    avatarUploading || saving ? "bg-red-600/60" : "bg-red-600"
-                  }`}
-                >
-                  <Text className="text-white font-extrabold">Remove</Text>
-                </Pressable>
+                  danger
+                />
               </View>
 
-              <Text className="mt-2 text-[12px] text-gray-500">
-                Upload/Remove avatar via admin endpoints.
+              <Text className="mt-2 text-[12px] text-slate-500">
+                Upload or remove avatar via admin endpoints
               </Text>
             </View>
 
@@ -666,52 +861,79 @@ export default function ShopOwnerEditScreen() {
               keyboardType="phone-pad"
             />
 
-            <Text className="mt-4 text-gray-900 font-extrabold">Shop Control</Text>
+            <Text className="mt-4 text-slate-900 font-extrabold">Shop Control</Text>
             <Pressable
               onPress={() => setScOpen(true)}
-              className="mt-2 bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3"
+              className="mt-2"
+              style={{
+                backgroundColor: "#F8FAFC",
+                borderWidth: 1,
+                borderColor: "#E2E8F0",
+                borderRadius: 18,
+                paddingHorizontal: 16,
+                paddingVertical: 14,
+              }}
             >
-              <Text className="text-gray-900 font-extrabold">
+              <Text className="text-slate-900 font-extrabold">
                 {getShopControlLabel(shopControl)}
               </Text>
             </Pressable>
 
-            <Text className="mt-4 text-gray-900 font-extrabold">Address</Text>
+            <Text className="mt-4 text-slate-900 font-extrabold">Address</Text>
             <Input label="State" value={stateName} onChangeText={setStateName} placeholder="state" />
             <Input label="District" value={district} onChangeText={setDistrict} placeholder="district" />
             <Input label="Taluk" value={taluk} onChangeText={setTaluk} placeholder="taluk" />
             <Input label="Area" value={area} onChangeText={setArea} placeholder="area" />
             <Input label="Door No / Street" value={street} onChangeText={setStreet} placeholder="door no, street" />
-            <Input label="Pincode" value={pincode} onChangeText={setPincode} placeholder="pincode" keyboardType="number-pad" />
+            <Input
+              label="Pincode"
+              value={pincode}
+              onChangeText={setPincode}
+              placeholder="pincode"
+              keyboardType="number-pad"
+            />
 
             <Pressable
               onPress={submitUpdate}
               disabled={saving || docsUploading || avatarUploading}
-              className={`mt-5 rounded-2xl py-4 items-center ${
-                saving || docsUploading || avatarUploading ? "bg-[#16BB05]/60" : "bg-[#16BB05]"
-              }`}
+              className="mt-5 rounded-[20px] overflow-hidden"
             >
-              {saving ? (
-                <View className="flex-row items-center">
-                  <ActivityIndicator color="#fff" />
-                  <Text className="ml-3 text-white font-extrabold">Saving...</Text>
-                </View>
-              ) : (
-                <Text className="text-white font-extrabold">Save Changes</Text>
-              )}
+              <LinearGradient
+                colors={
+                  saving || docsUploading || avatarUploading
+                    ? ["rgba(22,187,5,0.6)", "rgba(17,147,4,0.6)"]
+                    : [BRAND, BRAND_DARK]
+                }
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  paddingVertical: 15,
+                  alignItems: "center",
+                  borderRadius: 20,
+                }}
+              >
+                {saving ? (
+                  <View className="flex-row items-center">
+                    <ActivityIndicator color="#fff" />
+                    <Text className="ml-3 text-white font-extrabold">Saving...</Text>
+                  </View>
+                ) : (
+                  <Text className="text-white font-extrabold">Save Changes</Text>
+                )}
+              </LinearGradient>
             </Pressable>
           </View>
 
-          {/* Documents */}
-          <View className="mt-4 bg-white rounded-3xl p-4 border border-gray-100 shadow-sm">
-            <Text className="text-gray-900 text-lg font-extrabold">Documents</Text>
-            <Text className="text-gray-500 text-[12px] mt-1">
+          <View style={cardStyle} className="rounded-[28px] p-4">
+            <Text className="text-slate-900 text-[18px] font-extrabold">
+              Documents
+            </Text>
+            <Text className="text-slate-500 text-[12px] mt-1">
               Upload PDF/JPEG/PNG/WEBP. Upload is optional and can be done anytime.
             </Text>
 
             <DocRow
               title="ID Proof"
-              keyName="idProof"
               current={data.idProof}
               picked={idProof}
               onPick={() => pickDoc("idProof")}
@@ -721,7 +943,6 @@ export default function ShopOwnerEditScreen() {
 
             <DocRow
               title="GST Certificate"
-              keyName="gstCertificate"
               current={data.gstCertificate}
               picked={gstCertificate}
               onPick={() => pickDoc("gstCertificate")}
@@ -731,7 +952,6 @@ export default function ShopOwnerEditScreen() {
 
             <DocRow
               title="Udyam Certificate"
-              keyName="udyamCertificate"
               current={data.udyamCertificate}
               picked={udyamCertificate}
               onPick={() => pickDoc("udyamCertificate")}
@@ -742,36 +962,57 @@ export default function ShopOwnerEditScreen() {
             <Pressable
               onPress={uploadDocs}
               disabled={docsUploading || saving || avatarUploading}
-              className={`mt-5 rounded-2xl py-4 items-center ${
-                docsUploading || saving || avatarUploading ? "bg-[#111827]/60" : "bg-[#111827]"
-              }`}
+              className="mt-5 rounded-[20px] overflow-hidden"
             >
-              {docsUploading ? (
-                <View className="flex-row items-center">
-                  <ActivityIndicator color="#fff" />
-                  <Text className="ml-3 text-white font-extrabold">Uploading...</Text>
-                </View>
-              ) : (
-                <Text className="text-white font-extrabold">Upload Selected Docs</Text>
-              )}
+              <LinearGradient
+                colors={
+                  docsUploading || saving || avatarUploading
+                    ? ["rgba(17,24,39,0.5)", "rgba(15,23,42,0.5)"]
+                    : ["#111827", "#0F172A"]
+                }
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={{
+                  paddingVertical: 15,
+                  alignItems: "center",
+                  borderRadius: 20,
+                }}
+              >
+                {docsUploading ? (
+                  <View className="flex-row items-center">
+                    <ActivityIndicator color="#fff" />
+                    <Text className="ml-3 text-white font-extrabold">Uploading...</Text>
+                  </View>
+                ) : (
+                  <Text className="text-white font-extrabold">Upload Selected Docs</Text>
+                )}
+              </LinearGradient>
             </Pressable>
 
             <Pressable
               onPress={clearPickedDocs}
               disabled={docsUploading || saving || avatarUploading}
-              className="mt-3 rounded-2xl py-3 items-center bg-gray-200"
+              style={{
+                backgroundColor: "#F1F5F9",
+                borderWidth: 1,
+                borderColor: "#E2E8F0",
+                borderRadius: 18,
+                paddingVertical: 14,
+                paddingHorizontal: 16,
+                marginTop: 12,
+                alignItems: "center",
+              }}
             >
-              <Text className="text-gray-900 font-extrabold">Clear Selected</Text>
+              <Text className="text-slate-900 font-extrabold">Clear Selected</Text>
             </Pressable>
           </View>
         </ScrollView>
       )}
 
-      {/* Shop Control Modal */}
       <Modal visible={scOpen} transparent animationType="fade" onRequestClose={() => setScOpen(false)}>
         <View className="flex-1 bg-black/40 items-center justify-center px-6">
           <View className="bg-white w-full rounded-3xl p-4">
-            <Text className="text-lg font-extrabold text-gray-900">Select Shop Control</Text>
+            <Text className="text-lg font-extrabold text-slate-900">Select Shop Control</Text>
 
             {SHOPCONTROL_OPTIONS.map((x) => {
               const on = shopControl === x.value;
@@ -782,11 +1023,13 @@ export default function ShopOwnerEditScreen() {
                     setShopControl(x.value);
                     setScOpen(false);
                   }}
-                  className={`mt-3 p-3 rounded-2xl border ${
-                    on ? "bg-[#16BB05]/10 border-[#16BB05]" : "bg-gray-50 border-gray-200"
-                  }`}
+                  className="mt-3 p-3 rounded-2xl border"
+                  style={{
+                    backgroundColor: on ? "rgba(22,187,5,0.10)" : "#F8FAFC",
+                    borderColor: on ? BRAND : "#E2E8F0",
+                  }}
                 >
-                  <Text className="text-gray-900 font-extrabold">{x.label}</Text>
+                  <Text className="text-slate-900 font-extrabold">{x.label}</Text>
                 </Pressable>
               );
             })}
@@ -794,19 +1037,5 @@ export default function ShopOwnerEditScreen() {
         </View>
       </Modal>
     </SafeAreaView>
-  );
-}
-
-function Input(props: any) {
-  const { label, ...rest } = props;
-  return (
-    <>
-      <Text className="mt-3 text-gray-700 font-semibold mb-2">{label}</Text>
-      <TextInput
-        {...rest}
-        className="bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 text-gray-900"
-        placeholderTextColor="#9CA3AF"
-      />
-    </>
   );
 }

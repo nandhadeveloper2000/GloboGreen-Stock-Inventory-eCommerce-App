@@ -6,8 +6,10 @@ import {
   Text,
   TextInput,
   View,
+  Image,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { LinearGradient } from "expo-linear-gradient";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { useNavigation } from "@react-navigation/native";
@@ -18,6 +20,11 @@ import SummaryApi, { baseURL } from "../../../constants/SummaryApi";
 import { useAuth } from "../../../context/auth/AuthProvider";
 
 const apiUrl = (path: string) => `${baseURL}${path}`;
+
+const BRAND = "#16BB05";
+const BRAND_DARK = "#119304";
+const SURFACE = "#F4F7FB";
+const CARD = "#FFFFFF";
 
 const toastSuccess = (msg: string) =>
   Toast.show({ type: "success", text1: "Success", text2: msg });
@@ -35,6 +42,55 @@ async function readResponse(res: Response) {
   } catch {
     return { text, json: null };
   }
+}
+
+function HeaderMetric({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <View
+      className="flex-1 rounded-[18px] px-3 py-3"
+      style={{
+        backgroundColor: "rgba(255,255,255,0.14)",
+        borderWidth: 1,
+        borderColor: "rgba(255,255,255,0.18)",
+      }}
+    >
+      <Text className="text-white/80 text-[11px] font-semibold">{label}</Text>
+      <Text className="mt-1 text-white text-[16px] font-extrabold">{value}</Text>
+    </View>
+  );
+}
+
+function Input({
+  label,
+  ...rest
+}: {
+  label: string;
+  [key: string]: any;
+}) {
+  return (
+    <>
+      <Text className="mt-3 text-slate-700 font-semibold mb-2">{label}</Text>
+      <TextInput
+        {...rest}
+        className="text-slate-900"
+        style={{
+          backgroundColor: "#F8FAFC",
+          borderWidth: 1,
+          borderColor: "#E2E8F0",
+          borderRadius: 18,
+          paddingHorizontal: 16,
+          paddingVertical: 14,
+        }}
+        placeholderTextColor="#94A3B8"
+      />
+    </>
+  );
 }
 
 export default function StaffCreateScreen() {
@@ -71,11 +127,31 @@ export default function StaffCreateScreen() {
   useLayoutEffect(() => {
     navigation.setOptions?.({
       headerTitle: "Create Staff",
+      headerTitleAlign: "center",
       headerShadowVisible: false,
-      headerStyle: { backgroundColor: "#F7F8FB" },
-      headerTitleStyle: { fontWeight: "800", color: "#111827" },
+      headerStyle: { backgroundColor: "#FFFFFF" },
+      headerTitleStyle: { fontWeight: "800", color: "#111827", fontSize: 20 },
+      headerLeft: () => (
+        <Pressable
+          onPress={() => router.back()}
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 14,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#F8FAFC",
+            borderWidth: 1,
+            borderColor: "#E2E8F0",
+            marginLeft: 10,
+          }}
+          hitSlop={10}
+        >
+          <MaterialCommunityIcons name="chevron-left" size={24} color="#111827" />
+        </Pressable>
+      ),
     });
-  }, [navigation]);
+  }, [navigation, router]);
 
   const toggleRole = (r: "STAFF" | "SUPERVISOR") => {
     setFRoles((prev) => {
@@ -111,7 +187,7 @@ export default function StaffCreateScreen() {
     else setIdproof(file);
   }, []);
 
-  const validate = () => {
+  const validate = useCallback(() => {
     if (!fName.trim() || !fUsername.trim() || !fEmail.trim() || !fPin.trim()) {
       toastError("name, username, email, pin required");
       return false;
@@ -121,7 +197,7 @@ export default function StaffCreateScreen() {
       return false;
     }
     return true;
-  };
+  }, [fName, fUsername, fEmail, fPin]);
 
   const onCreate = useCallback(async () => {
     if (!validate()) return;
@@ -129,8 +205,6 @@ export default function StaffCreateScreen() {
     try {
       setSaving(true);
 
-      // ✅ make sure SummaryApi has:
-      // staff_create: { method:"POST", url:"/api/staff" }
       const fd = new FormData();
       fd.append("name", fName.trim());
       fd.append("username", fUsername.trim().toLowerCase());
@@ -153,7 +227,7 @@ export default function StaffCreateScreen() {
 
       const res = await fetch(apiUrl(SummaryApi.staff_create.url), {
         method: SummaryApi.staff_create.method,
-        headers: headersAuthOnly, // ✅ don't set Content-Type
+        headers: headersAuthOnly,
         body: fd as any,
       });
 
@@ -190,27 +264,192 @@ export default function StaffCreateScreen() {
     fPincode,
     headersAuthOnly,
     router,
+    validate,
   ]);
 
   return (
-    <SafeAreaView className="flex-1 bg-[#F7F8FB] px-4" edges={["top"]}>
-      <ScrollView contentContainerStyle={{ paddingBottom: 28 }} showsVerticalScrollIndicator={false}>
-        <View className="bg-white border border-gray-200 rounded-2xl p-4 mt-3">
-          <Text className="text-gray-900 font-extrabold text-lg">Create Staff</Text>
+    <SafeAreaView className="flex-1" style={{ backgroundColor: SURFACE }} edges={["top"]}>
+      <ScrollView
+        contentContainerStyle={{ padding: 16, paddingBottom: 30 }}
+        showsVerticalScrollIndicator={false}
+        keyboardShouldPersistTaps="handled"
+      >
+        <LinearGradient
+          colors={["#18C10A", "#109203"]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={{
+            borderRadius: 28,
+            padding: 18,
+            overflow: "hidden",
+            marginBottom: 16,
+          }}
+        >
+          <View
+            style={{
+              position: "absolute",
+              top: -20,
+              right: -10,
+              width: 110,
+              height: 110,
+              borderRadius: 999,
+              backgroundColor: "rgba(255,255,255,0.12)",
+            }}
+          />
+          <View
+            style={{
+              position: "absolute",
+              bottom: -30,
+              left: -15,
+              width: 100,
+              height: 100,
+              borderRadius: 999,
+              backgroundColor: "rgba(255,255,255,0.08)",
+            }}
+          />
 
-          <Text className="text-gray-900 font-extrabold mt-3">Name</Text>
-          <TextInput value={fName} onChangeText={setFName} className="mt-1 bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2 text-gray-900" />
+          <Text className="text-white/90 text-[12px] font-semibold">
+            Create Flow
+          </Text>
+          <Text className="mt-1 text-white text-[26px] font-extrabold">
+            Staff Setup
+          </Text>
+          <Text className="text-white/90 text-sm font-medium">
+            Add staff profile, role, address and uploads
+          </Text>
 
-          <Text className="text-gray-900 font-extrabold mt-3">Username</Text>
-          <TextInput value={fUsername} onChangeText={setFUsername} autoCapitalize="none" className="mt-1 bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2 text-gray-900" />
+          <View className="mt-4 flex-row" style={{ gap: 10 }}>
+            <HeaderMetric label="Roles" value={String(fRoles.length)} />
+            <HeaderMetric label="Avatar" value={avatar ? "Added" : "Pending"} />
+            <HeaderMetric label="ID Proof" value={idproof ? "Added" : "Pending"} />
+          </View>
+        </LinearGradient>
 
-          <Text className="text-gray-900 font-extrabold mt-3">Email</Text>
-          <TextInput value={fEmail} onChangeText={setFEmail} autoCapitalize="none" keyboardType="email-address" className="mt-1 bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2 text-gray-900" />
+        <View
+          className="rounded-[28px] p-4"
+          style={{
+            backgroundColor: CARD,
+            borderWidth: 1,
+            borderColor: "#E8EDF3",
+            shadowColor: "#0F172A",
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.06,
+            shadowRadius: 14,
+            elevation: 4,
+          }}
+        >
+          <Text className="text-slate-900 font-extrabold text-[18px]">
+            Create Staff
+          </Text>
 
-          <Text className="text-gray-900 font-extrabold mt-3">PIN (required)</Text>
-          <TextInput value={fPin} onChangeText={setFPin} secureTextEntry keyboardType="number-pad" className="mt-1 bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2 text-gray-900" />
+          <View className="items-center mt-4">
+            <View className="flex-row" style={{ gap: 16 }}>
+              <View className="items-center">
+                <View
+                  className="w-24 h-24 rounded-full overflow-hidden items-center justify-center"
+                  style={{
+                    backgroundColor: "#F1F5F9",
+                    borderWidth: 2,
+                    borderColor: "#E2E8F0",
+                  }}
+                >
+                  {avatar?.uri ? (
+                    <Image source={{ uri: avatar.uri }} style={{ width: 96, height: 96 }} />
+                  ) : (
+                    <LinearGradient
+                      colors={["#DCFCE7", "#F0FDF4"]}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 1 }}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <MaterialCommunityIcons name="account" size={42} color={BRAND_DARK} />
+                    </LinearGradient>
+                  )}
+                </View>
+                <Text className="mt-2 text-slate-500 text-xs font-semibold">Avatar</Text>
+              </View>
 
-          <Text className="text-gray-900 font-extrabold mt-3">Roles</Text>
+              <View className="items-center">
+                <View
+                  className="w-24 h-24 rounded-[22px] overflow-hidden items-center justify-center"
+                  style={{
+                    backgroundColor: "#F1F5F9",
+                    borderWidth: 2,
+                    borderColor: "#E2E8F0",
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    name={idproof ? "file-document-check-outline" : "file-document-outline"}
+                    size={38}
+                    color={idproof ? BRAND_DARK : "#94A3B8"}
+                  />
+                </View>
+                <Text className="mt-2 text-slate-500 text-xs font-semibold">ID Proof</Text>
+              </View>
+            </View>
+
+            <View className="flex-row mt-4" style={{ gap: 10 }}>
+              <Pressable
+                onPress={() => pickImage("avatar")}
+                style={{
+                  backgroundColor: BRAND,
+                  borderRadius: 14,
+                  paddingHorizontal: 16,
+                  paddingVertical: 10,
+                }}
+              >
+                <Text className="text-white font-extrabold">
+                  {avatar ? "Change Avatar" : "Pick Avatar"}
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={() => pickImage("idproof")}
+                style={{
+                  backgroundColor: "#4F46E5",
+                  borderRadius: 14,
+                  paddingHorizontal: 16,
+                  paddingVertical: 10,
+                }}
+              >
+                <Text className="text-white font-extrabold">
+                  {idproof ? "Change IDProof" : "Pick IDProof"}
+                </Text>
+              </Pressable>
+            </View>
+          </View>
+
+          <Input label="Name" value={fName} onChangeText={setFName} placeholder="Full name" />
+          <Input
+            label="Username"
+            value={fUsername}
+            onChangeText={setFUsername}
+            placeholder="username"
+            autoCapitalize="none"
+          />
+          <Input
+            label="Email"
+            value={fEmail}
+            onChangeText={setFEmail}
+            placeholder="email@example.com"
+            autoCapitalize="none"
+            keyboardType="email-address"
+          />
+          <Input
+            label="PIN (required)"
+            value={fPin}
+            onChangeText={setFPin}
+            placeholder="Enter PIN"
+            secureTextEntry
+            keyboardType="number-pad"
+          />
+
+          <Text className="mt-4 text-slate-900 font-extrabold">Roles</Text>
           <View className="flex-row mt-2" style={{ gap: 10 }}>
             {(["STAFF", "SUPERVISOR"] as const).map((r) => {
               const on = fRoles.includes(r);
@@ -218,9 +457,23 @@ export default function StaffCreateScreen() {
                 <Pressable
                   key={r}
                   onPress={() => toggleRole(r)}
-                  className={`px-4 py-2 rounded-2xl border ${on ? "bg-indigo-600 border-indigo-600" : "bg-gray-50 border-gray-200"}`}
+                  style={{
+                    paddingHorizontal: 16,
+                    paddingVertical: 12,
+                    borderRadius: 16,
+                    borderWidth: 1,
+                    backgroundColor: on ? "#4F46E5" : "#F8FAFC",
+                    borderColor: on ? "#4F46E5" : "#E2E8F0",
+                  }}
                 >
-                  <Text className={`${on ? "text-white" : "text-gray-800"} font-extrabold`}>{r}</Text>
+                  <Text
+                    style={{
+                      color: on ? "#FFFFFF" : "#1F2937",
+                      fontWeight: "800",
+                    }}
+                  >
+                    {r}
+                  </Text>
                 </Pressable>
               );
             })}
@@ -228,55 +481,166 @@ export default function StaffCreateScreen() {
 
           <View className="flex-row mt-3" style={{ gap: 10 }}>
             <View className="flex-1">
-              <Text className="text-gray-900 font-extrabold">Mobile</Text>
-              <TextInput value={fMobile} onChangeText={setFMobile} keyboardType="phone-pad" className="mt-1 bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2 text-gray-900" />
+              <Input
+                label="Mobile"
+                value={fMobile}
+                onChangeText={setFMobile}
+                placeholder="mobile"
+                keyboardType="phone-pad"
+              />
             </View>
             <View className="flex-1">
-              <Text className="text-gray-900 font-extrabold">Additional</Text>
-              <TextInput value={fAdditional} onChangeText={setFAdditional} keyboardType="phone-pad" className="mt-1 bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2 text-gray-900" />
+              <Input
+                label="Additional"
+                value={fAdditional}
+                onChangeText={setFAdditional}
+                placeholder="additional"
+                keyboardType="phone-pad"
+              />
             </View>
           </View>
 
-          <Text className="text-gray-900 font-extrabold mt-4">Address</Text>
+          <Text className="mt-4 text-slate-900 font-extrabold">Address</Text>
           <View className="flex-row mt-2" style={{ gap: 10 }}>
-            <TextInput placeholder="State" placeholderTextColor="#9CA3AF" value={fState} onChangeText={setFState} className="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2 text-gray-900" />
-            <TextInput placeholder="District" placeholderTextColor="#9CA3AF" value={fDistrict} onChangeText={setFDistrict} className="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2 text-gray-900" />
+            <View className="flex-1">
+              <TextInput
+                placeholder="State"
+                placeholderTextColor="#94A3B8"
+                value={fState}
+                onChangeText={setFState}
+                style={{
+                  backgroundColor: "#F8FAFC",
+                  borderWidth: 1,
+                  borderColor: "#E2E8F0",
+                  borderRadius: 18,
+                  paddingHorizontal: 16,
+                  paddingVertical: 14,
+                  color: "#0F172A",
+                }}
+              />
+            </View>
+            <View className="flex-1">
+              <TextInput
+                placeholder="District"
+                placeholderTextColor="#94A3AF"
+                value={fDistrict}
+                onChangeText={setFDistrict}
+                style={{
+                  backgroundColor: "#F8FAFC",
+                  borderWidth: 1,
+                  borderColor: "#E2E8F0",
+                  borderRadius: 18,
+                  paddingHorizontal: 16,
+                  paddingVertical: 14,
+                  color: "#0F172A",
+                }}
+              />
+            </View>
           </View>
-          <View className="flex-row mt-2" style={{ gap: 10 }}>
-            <TextInput placeholder="Taluk" placeholderTextColor="#9CA3AF" value={fTaluk} onChangeText={setFTaluk} className="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2 text-gray-900" />
-            <TextInput placeholder="Area" placeholderTextColor="#9CA3AF" value={fArea} onChangeText={setFArea} className="flex-1 bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2 text-gray-900" />
-          </View>
-          <TextInput placeholder="Street" placeholderTextColor="#9CA3AF" value={fStreet} onChangeText={setFStreet} className="mt-2 bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2 text-gray-900" />
-          <TextInput placeholder="Pincode" placeholderTextColor="#9CA3AF" value={fPincode} onChangeText={setFPincode} keyboardType="number-pad" className="mt-2 bg-gray-50 border border-gray-200 rounded-2xl px-3 py-2 text-gray-900" />
 
-          <Text className="text-gray-900 font-extrabold mt-4">Uploads</Text>
           <View className="flex-row mt-2" style={{ gap: 10 }}>
-            <Pressable onPress={() => pickImage("avatar")} className="flex-1 bg-gray-900 rounded-2xl py-3 items-center flex-row justify-center">
-              <MaterialCommunityIcons name="image" size={18} color="#fff" />
-              <Text className="text-white font-extrabold ml-2">{avatar ? "Avatar Selected" : "Pick Avatar"}</Text>
-            </Pressable>
-            <Pressable onPress={() => pickImage("idproof")} className="flex-1 bg-indigo-600 rounded-2xl py-3 items-center flex-row justify-center">
-              <MaterialCommunityIcons name="file-document" size={18} color="#fff" />
-              <Text className="text-white font-extrabold ml-2">{idproof ? "IDProof Selected" : "Pick IDProof"}</Text>
-            </Pressable>
+            <View className="flex-1">
+              <TextInput
+                placeholder="Taluk"
+                placeholderTextColor="#94A3AF"
+                value={fTaluk}
+                onChangeText={setFTaluk}
+                style={{
+                  backgroundColor: "#F8FAFC",
+                  borderWidth: 1,
+                  borderColor: "#E2E8F0",
+                  borderRadius: 18,
+                  paddingHorizontal: 16,
+                  paddingVertical: 14,
+                  color: "#0F172A",
+                }}
+              />
+            </View>
+            <View className="flex-1">
+              <TextInput
+                placeholder="Area"
+                placeholderTextColor="#94A3AF"
+                value={fArea}
+                onChangeText={setFArea}
+                style={{
+                  backgroundColor: "#F8FAFC",
+                  borderWidth: 1,
+                  borderColor: "#E2E8F0",
+                  borderRadius: 18,
+                  paddingHorizontal: 16,
+                  paddingVertical: 14,
+                  color: "#0F172A",
+                }}
+              />
+            </View>
           </View>
+
+          <TextInput
+            placeholder="Street"
+            placeholderTextColor="#94A3AF"
+            value={fStreet}
+            onChangeText={setFStreet}
+            style={{
+              backgroundColor: "#F8FAFC",
+              borderWidth: 1,
+              borderColor: "#E2E8F0",
+              borderRadius: 18,
+              paddingHorizontal: 16,
+              paddingVertical: 14,
+              color: "#0F172A",
+              marginTop: 8,
+            }}
+          />
+
+          <TextInput
+            placeholder="Pincode"
+            placeholderTextColor="#94A3AF"
+            value={fPincode}
+            onChangeText={setFPincode}
+            keyboardType="number-pad"
+            style={{
+              backgroundColor: "#F8FAFC",
+              borderWidth: 1,
+              borderColor: "#E2E8F0",
+              borderRadius: 18,
+              paddingHorizontal: 16,
+              paddingVertical: 14,
+              color: "#0F172A",
+              marginTop: 8,
+            }}
+          />
 
           <Pressable
             onPress={onCreate}
             disabled={saving}
-            className={`mt-5 rounded-2xl py-3 items-center ${saving ? "bg-gray-400" : "bg-green-600"}`}
+            className="mt-5 rounded-[20px] overflow-hidden"
           >
-            {saving ? (
-              <View className="flex-row items-center">
-                <ActivityIndicator />
-                <Text className="text-white font-extrabold ml-2">Saving...</Text>
-              </View>
-            ) : (
-              <Text className="text-white font-extrabold">Create Staff</Text>
-            )}
+            <LinearGradient
+              colors={
+                saving
+                  ? ["rgba(22,187,5,0.6)", "rgba(17,147,4,0.6)"]
+                  : [BRAND, BRAND_DARK]
+              }
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={{
+                paddingVertical: 15,
+                alignItems: "center",
+                borderRadius: 20,
+              }}
+            >
+              {saving ? (
+                <View className="flex-row items-center">
+                  <ActivityIndicator color="#fff" />
+                  <Text className="text-white font-extrabold ml-2">Saving...</Text>
+                </View>
+              ) : (
+                <Text className="text-white font-extrabold">Create Staff</Text>
+              )}
+            </LinearGradient>
           </Pressable>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
-}
+} 
