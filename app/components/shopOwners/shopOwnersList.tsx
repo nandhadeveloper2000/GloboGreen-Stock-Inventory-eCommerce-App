@@ -19,6 +19,7 @@ import {
   Text,
   TextInput,
   View,
+  useWindowDimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
@@ -167,7 +168,6 @@ function getStatus(owner: Owner) {
       text: "#B91C1C",
       border: "#FECACA",
       dot: COLORS.danger,
-      icon: "clock-alert-outline" as const,
     };
   }
 
@@ -178,7 +178,6 @@ function getStatus(owner: Owner) {
       text: COLORS.successDark,
       border: "#BBF7D0",
       dot: COLORS.success,
-      icon: "check-decagram-outline" as const,
     };
   }
 
@@ -188,7 +187,6 @@ function getStatus(owner: Owner) {
     text: COLORS.secondaryText,
     border: COLORS.border,
     dot: COLORS.secondaryText,
-    icon: "pause-circle-outline" as const,
   };
 }
 
@@ -319,7 +317,6 @@ function getShopOwnerApis(role?: string | null): { list: ApiConfig | null } {
       return {
         list: SummaryApi.shopowner_list,
       };
-
     default:
       return {
         list: null,
@@ -347,6 +344,10 @@ export default function ShopOwnersList() {
   const router = useRouter();
   const navigation = useNavigation();
   const authCtx = useAuth() as unknown as AuthLike;
+  const { width } = useWindowDimensions();
+
+  const isSmall = width < 380;
+  const isTablet = width >= 768;
 
   const token = authCtx?.accessToken || authCtx?.token || null;
 
@@ -447,7 +448,6 @@ export default function ShopOwnersList() {
         return searchedItems.filter((x) => isOwnerCurrentlyInactive(x));
       case "EXPIRED":
         return searchedItems.filter((x) => isExpired(x.validTo));
-      case "ALL":
       default:
         return searchedItems;
     }
@@ -516,19 +516,13 @@ export default function ShopOwnersList() {
     </View>
   );
 
-  const renderItem = ({
-    item,
-    index,
-  }: {
-    item: Owner;
-    index: number;
-  }) => {
+  const renderItem = ({ item, index }: { item: Owner; index: number }) => {
     const status = getStatus(item);
     const shopCount = item.shopIds?.length || 0;
     const initials = getInitials(item.name, item.username);
 
     return (
-      <View style={{ paddingHorizontal: 14 }}>
+      <View style={{ paddingHorizontal: isTablet ? 20 : 12 }}>
         <View
           style={{
             backgroundColor: COLORS.card,
@@ -536,7 +530,7 @@ export default function ShopOwnersList() {
             borderRightWidth: 1,
             borderBottomWidth: 1,
             borderColor: COLORS.border,
-            paddingHorizontal: 10,
+            paddingHorizontal: isSmall ? 8 : 10,
             paddingVertical: 2,
           }}
         >
@@ -544,22 +538,21 @@ export default function ShopOwnersList() {
             style={{
               flexDirection: "row",
               alignItems: "center",
-              minHeight: 92,
+              minHeight: isSmall ? 88 : 96,
               paddingVertical: 10,
             }}
           >
             <View
               style={{
-                width: 56,
+                width: isSmall ? 42 : 52,
                 alignItems: "center",
                 justifyContent: "center",
-                paddingHorizontal: 2,
               }}
             >
               <View
                 style={{
-                  minWidth: 34,
-                  height: 34,
+                  minWidth: 32,
+                  height: 32,
                   paddingHorizontal: 8,
                   borderRadius: 999,
                   alignItems: "center",
@@ -571,7 +564,7 @@ export default function ShopOwnersList() {
                   style={{
                     color: COLORS.primaryText,
                     fontWeight: "900",
-                    fontSize: 12,
+                    fontSize: 11,
                   }}
                 >
                   {index + 1}
@@ -579,25 +572,25 @@ export default function ShopOwnersList() {
               </View>
             </View>
 
-            <View style={{ flex: 1.7, paddingHorizontal: 6 }}>
+            <View style={{ flex: 1.6, paddingHorizontal: 4 }}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <LinearGradient
                   colors={[COLORS.primaryDark, COLORS.primary]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
                   style={{
-                    width: 42,
-                    height: 42,
+                    width: isSmall ? 38 : 42,
+                    height: isSmall ? 38 : 42,
                     borderRadius: 14,
                     alignItems: "center",
                     justifyContent: "center",
-                    marginRight: 10,
+                    marginRight: 8,
                   }}
                 >
                   <Text
                     style={{
                       color: COLORS.white,
-                      fontSize: 13,
+                      fontSize: 12,
                       fontWeight: "900",
                     }}
                   >
@@ -611,7 +604,7 @@ export default function ShopOwnersList() {
                     style={{
                       color: COLORS.primaryText,
                       fontWeight: "800",
-                      fontSize: 14,
+                      fontSize: isSmall ? 13 : 14,
                     }}
                   >
                     {item.name || "-"}
@@ -623,7 +616,7 @@ export default function ShopOwnersList() {
                       marginTop: 4,
                       color: COLORS.secondaryText,
                       fontWeight: "600",
-                      fontSize: 12,
+                      fontSize: isSmall ? 11 : 12,
                     }}
                   >
                     {getOwnerMetaLine(item)}
@@ -649,13 +642,13 @@ export default function ShopOwnersList() {
               </View>
             </View>
 
-            <View style={{ flex: 1.25, paddingHorizontal: 6 }}>
+            <View style={{ flex: 1.2, paddingHorizontal: 4 }}>
               <Text
                 numberOfLines={1}
                 style={{
                   color: COLORS.primaryText,
                   fontWeight: "700",
-                  fontSize: 13,
+                  fontSize: isSmall ? 12 : 13,
                 }}
               >
                 @{item.username || "-"}
@@ -702,7 +695,7 @@ export default function ShopOwnersList() {
                 style={{
                   marginTop: 7,
                   color: COLORS.secondaryText,
-                  fontSize: 11,
+                  fontSize: 10.5,
                   fontWeight: "700",
                 }}
               >
@@ -712,10 +705,9 @@ export default function ShopOwnersList() {
 
             <View
               style={{
-                width: 78,
+                width: isSmall ? 58 : 70,
                 alignItems: "center",
                 justifyContent: "center",
-                paddingHorizontal: 4,
               }}
             >
               <Pressable
@@ -726,8 +718,8 @@ export default function ShopOwnersList() {
                   } as any)
                 }
                 style={({ pressed }) => ({
-                  width: 44,
-                  height: 44,
+                  width: isSmall ? 40 : 44,
+                  height: isSmall ? 40 : 44,
                   borderRadius: 14,
                   alignItems: "center",
                   justifyContent: "center",
@@ -741,7 +733,7 @@ export default function ShopOwnersList() {
               >
                 <MaterialCommunityIcons
                   name="eye-outline"
-                  size={20}
+                  size={isSmall ? 18 : 20}
                   color={COLORS.primaryText}
                 />
               </Pressable>
@@ -759,11 +751,11 @@ export default function ShopOwnersList() {
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{
-          minHeight: 238,
+          minHeight: isSmall ? 220 : 238,
           borderBottomLeftRadius: 34,
           borderBottomRightRadius: 34,
           overflow: "hidden",
-          paddingHorizontal: 20,
+          paddingHorizontal: isTablet ? 28 : 20,
           paddingTop: 12,
           paddingBottom: 26,
         }}
@@ -801,8 +793,8 @@ export default function ShopOwnersList() {
           <Pressable
             onPress={() => router.back()}
             style={({ pressed }) => ({
-              width: 46,
-              height: 46,
+              width: isSmall ? 42 : 46,
+              height: isSmall ? 42 : 46,
               borderRadius: 16,
               alignItems: "center",
               justifyContent: "center",
@@ -824,8 +816,8 @@ export default function ShopOwnersList() {
               onPress={() => loadOwners(true)}
               disabled={loading}
               style={({ pressed }) => ({
-                width: 46,
-                height: 46,
+                width: isSmall ? 42 : 46,
+                height: isSmall ? 42 : 46,
                 borderRadius: 16,
                 alignItems: "center",
                 justifyContent: "center",
@@ -845,8 +837,8 @@ export default function ShopOwnersList() {
             <Pressable
               onPress={() => router.push("/components/shopOwners/create" as any)}
               style={({ pressed }) => ({
-                width: 46,
-                height: 46,
+                width: isSmall ? 42 : 46,
+                height: isSmall ? 42 : 46,
                 borderRadius: 16,
                 alignItems: "center",
                 justifyContent: "center",
@@ -896,7 +888,7 @@ export default function ShopOwnersList() {
           <Text
             style={{
               marginTop: 14,
-              fontSize: 30,
+              fontSize: isSmall ? 26 : 30,
               fontWeight: "900",
               color: COLORS.white,
               textAlign: "center",
@@ -909,7 +901,7 @@ export default function ShopOwnersList() {
             style={{
               marginTop: 8,
               maxWidth: "92%",
-              fontSize: 14,
+              fontSize: isSmall ? 13 : 14,
               lineHeight: 22,
               color: "rgba(255,255,255,0.88)",
               textAlign: "center",
@@ -941,14 +933,14 @@ export default function ShopOwnersList() {
         </View>
       </LinearGradient>
 
-      <View style={{ marginTop: -18, paddingHorizontal: 16 }}>
+      <View style={{ marginTop: -18, paddingHorizontal: isTablet ? 20 : 16 }}>
         <View
           style={{
             borderRadius: 28,
             backgroundColor: COLORS.card,
             borderWidth: 1,
             borderColor: COLORS.border,
-            padding: 16,
+            padding: isSmall ? 14 : 16,
             shadowColor: "#000",
             shadowOpacity: 0.06,
             shadowRadius: 14,
@@ -994,7 +986,7 @@ export default function ShopOwnersList() {
                 marginLeft: 12,
                 flex: 1,
                 paddingVertical: Platform.OS === "ios" ? 10 : 8,
-                fontSize: 15,
+                fontSize: isSmall ? 14 : 15,
                 fontWeight: "600",
                 color: COLORS.primaryText,
               }}
@@ -1105,7 +1097,7 @@ export default function ShopOwnersList() {
       </View>
 
       {!loading && filtered.length > 0 ? (
-        <View style={{ paddingHorizontal: 14, marginTop: 18 }}>
+        <View style={{ paddingHorizontal: isTablet ? 20 : 12, marginTop: 18 }}>
           <View
             style={{
               backgroundColor: "#EEF2F7",
@@ -1113,15 +1105,15 @@ export default function ShopOwnersList() {
               borderColor: COLORS.border,
               borderTopLeftRadius: 20,
               borderTopRightRadius: 20,
-              paddingHorizontal: 10,
+              paddingHorizontal: isSmall ? 8 : 10,
               paddingVertical: 14,
             }}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TableHead width={56} label="S.No" center />
-              <TableHead flex={1.7} label="Owner Details" />
-              <TableHead flex={1.25} label="Username / Status" />
-              <TableHead width={78} label="View" center />
+              <TableHead width={isSmall ? 42 : 52} label="S.No" center />
+              <TableHead flex={1.6} label="Owner Details" />
+              <TableHead flex={1.2} label="Username / Status" />
+              <TableHead width={isSmall ? 58 : 70} label="View" center />
             </View>
           </View>
         </View>
@@ -1180,6 +1172,7 @@ function TableHead({
       }}
     >
       <Text
+        numberOfLines={1}
         style={{
           color: COLORS.secondaryText,
           fontSize: 12,
@@ -1232,7 +1225,6 @@ function FilterChip({
           size={14}
           color={active ? COLORS.white : COLORS.secondaryText}
         />
-
         <Text
           style={{
             marginLeft: 5,

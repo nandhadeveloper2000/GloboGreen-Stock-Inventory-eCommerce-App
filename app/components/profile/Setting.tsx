@@ -4,8 +4,8 @@ import { useRouter } from "expo-router";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   Image,
+  Modal,
   Pressable,
   RefreshControl,
   ScrollView,
@@ -14,6 +14,7 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import Toast from "react-native-toast-message";
 
 import { COLORS } from "../../constants/colors";
 import { ROLES } from "../../constants/roles";
@@ -237,13 +238,13 @@ function getSettingsApis(role?: string | null): SettingsApis {
     case ROLES.SUPERVISOR:
       return {
         me: SummaryApi.staff_me,
-        logout: SummaryApi.staffLogout,
+        logout: SummaryApi.staff_logout,
       };
 
     case ROLES.STAFF:
       return {
         me: SummaryApi.staff_me,
-        logout: SummaryApi.staffLogout,
+        logout: SummaryApi.staff_logout,
       };
 
     default:
@@ -293,6 +294,26 @@ function getRoleRoutes(role?: string | null) {
         forgotPin: "/Login",
       };
   }
+}
+
+function toastSuccess(message: string) {
+  Toast.show({
+    type: "success",
+    text1: "Success",
+    text2: message,
+    position: "top",
+    visibilityTime: 2500,
+  });
+}
+
+function toastError(message: string) {
+  Toast.show({
+    type: "error",
+    text1: "Error",
+    text2: message,
+    position: "top",
+    visibilityTime: 3000,
+  });
 }
 
 function SectionDivider() {
@@ -411,6 +432,8 @@ export default function MySettings() {
   const [profile, setProfile] = useState<AppUser | null>(authUser);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [logoutModalVisible, setLogoutModalVisible] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
 
   const user = profile || authUser || null;
 
@@ -435,8 +458,11 @@ export default function MySettings() {
   const fetchMyProfile = useCallback(
     async (isPullToRefresh = false) => {
       try {
-        if (isPullToRefresh) setRefreshing(true);
-        else setLoading(true);
+        if (isPullToRefresh) {
+          setRefreshing(true);
+        } else {
+          setLoading(true);
+        }
 
         if (!accessToken) {
           throw new Error("Missing access token. Please login again.");
@@ -471,7 +497,7 @@ export default function MySettings() {
 
         setProfile(nextUser);
       } catch (error: any) {
-        Alert.alert("Error", error?.message || "Unable to load profile. Please try again.");
+        toastError(error?.message || "Unable to load profile. Please try again.");
       } finally {
         setLoading(false);
         setRefreshing(false);
@@ -500,6 +526,8 @@ export default function MySettings() {
 
   const handleLogout = useCallback(async () => {
     try {
+      setLoggingOut(true);
+
       if (refreshToken && apis.logout?.url) {
         await fetch(`${baseURL}${apis.logout.url}`, {
           method: apis.logout.method || "POST",
@@ -517,24 +545,32 @@ export default function MySettings() {
         await setAuth(null, null, null);
       }
 
-      Alert.alert("Success", "Logged out successfully");
-      router.replace("/Login" as any);
+      setLogoutModalVisible(false);
+      toastSuccess("Logged out successfully");
+
+      setTimeout(() => {
+        router.replace("/Login" as any);
+      }, 300);
     } catch {
       if (typeof logout === "function") {
         await logout();
       } else if (typeof setAuth === "function") {
         await setAuth(null, null, null);
       }
-      router.replace("/Login" as any);
+
+      setLogoutModalVisible(false);
+
+      setTimeout(() => {
+        router.replace("/Login" as any);
+      }, 200);
+    } finally {
+      setLoggingOut(false);
     }
   }, [accessToken, apis.logout, logout, refreshToken, router, setAuth]);
 
   const confirmLogout = useCallback(() => {
-    Alert.alert("Logout", "Are you sure you want to logout?", [
-      { text: "Cancel", style: "cancel" },
-      { text: "Logout", style: "destructive", onPress: handleLogout },
-    ]);
-  }, [handleLogout]);
+    setLogoutModalVisible(true);
+  }, []);
 
   if (loading && !user) {
     return (
@@ -633,7 +669,11 @@ export default function MySettings() {
                   backgroundColor: "rgba(255,255,255,0.15)",
                 }}
               >
-                <MaterialCommunityIcons name="refresh" size={18} color={COLORS.white} />
+                <MaterialCommunityIcons
+                  name="refresh"
+                  size={18}
+                  color={COLORS.white}
+                />
               </Pressable>
             </View>
 
@@ -837,6 +877,149 @@ export default function MySettings() {
           </View>
         </View>
       </ScrollView>
+
+      <Modal
+        visible={logoutModalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={() => {
+          if (!loggingOut) setLogoutModalVisible(false);
+        }}
+      >
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: "rgba(0,0,0,0.45)",
+            justifyContent: "flex-end",
+          }}
+        >
+          <View
+            style={{
+              backgroundColor: COLORS.card,
+              borderTopLeftRadius: 28,
+              borderTopRightRadius: 28,
+              paddingHorizontal: 18,
+              paddingTop: 14,
+              paddingBottom: 26,
+            }}
+          >
+            <View
+              style={{
+                alignSelf: "center",
+                width: 52,
+                height: 5,
+                borderRadius: 999,
+                backgroundColor: COLORS.border,
+                marginBottom: 16,
+              }}
+            />
+
+            <View
+              style={{
+                alignSelf: "center",
+                height: 64,
+                width: 64,
+                borderRadius: 20,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: COLORS.inactiveBg,
+              }}
+            >
+              <MaterialCommunityIcons
+                name="logout"
+                size={28}
+                color={COLORS.danger}
+              />
+            </View>
+
+            <Text
+              style={{
+                marginTop: 16,
+                fontSize: 20,
+                fontWeight: "900",
+                color: COLORS.heading,
+                textAlign: "center",
+              }}
+            >
+              Confirm Logout
+            </Text>
+
+            <Text
+              style={{
+                marginTop: 8,
+                fontSize: 13,
+                lineHeight: 20,
+                color: COLORS.secondaryText,
+                textAlign: "center",
+              }}
+            >
+              Are you sure you want to logout from this device?
+            </Text>
+
+            <View
+              style={{
+                marginTop: 20,
+                flexDirection: "row",
+                gap: 12,
+              }}
+            >
+              <Pressable
+                onPress={() => {
+                  if (!loggingOut) setLogoutModalVisible(false);
+                }}
+                style={{
+                  flex: 1,
+                  height: 50,
+                  borderRadius: 16,
+                  borderWidth: 1,
+                  borderColor: COLORS.border,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: COLORS.background,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: "800",
+                    color: COLORS.heading,
+                  }}
+                >
+                  Cancel
+                </Text>
+              </Pressable>
+
+              <Pressable
+                onPress={handleLogout}
+                disabled={loggingOut}
+                style={{
+                  flex: 1,
+                  height: 50,
+                  borderRadius: 16,
+                  alignItems: "center",
+                  justifyContent: "center",
+                  backgroundColor: COLORS.danger,
+                  opacity: loggingOut ? 0.7 : 1,
+                }}
+              >
+                {loggingOut ? (
+                  <ActivityIndicator size="small" color={COLORS.white} />
+                ) : (
+                  <Text
+                    style={{
+                      fontSize: 14,
+                      fontWeight: "800",
+                      color: COLORS.white,
+                    }}
+                  >
+                    Logout
+                  </Text>
+                )}
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </SafeAreaView>
   );
 }

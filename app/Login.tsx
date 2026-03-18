@@ -52,7 +52,6 @@ async function postJson<T>(
   const controller = new AbortController();
 
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
-
   const mergedSignal = signal || controller.signal;
 
   try {
@@ -169,7 +168,11 @@ export default function Login() {
 
   const goByRole = useCallback(
     async (user: any) => {
-      const role = String(user?.role || user?.roles?.[0] || "").toUpperCase();
+      const role = String(
+        user?.role ?? (Array.isArray(user?.roles) ? user.roles[0] : "") ?? ""
+      )
+        .trim()
+        .toUpperCase();
 
       if (role === "MASTER_ADMIN" || role === "MASTER") {
         router.replace("/master/dashboard");
@@ -186,7 +189,7 @@ export default function Login() {
         return;
       }
 
-      if (role === "STAFF" || role === "EMPLOYEE") {
+      if (role === "STAFF") {
         router.replace("/staff/dashboard");
         return;
       }
@@ -225,6 +228,7 @@ export default function Login() {
 
       const masterController = new AbortController();
       const subadminController = new AbortController();
+      const supervisorController = new AbortController();
       const staffController = new AbortController();
 
       const masterPromise = createSuccessPromise(
@@ -247,9 +251,19 @@ export default function Login() {
         )
       );
 
+      const supervisorPromise = createSuccessPromise(
+        postJson<ApiResponse>(
+          SummaryApi.supervisor_login.url,
+          { login: e, pin: p },
+          "POST",
+          5000,
+          supervisorController.signal
+        )
+      );
+
       const staffPromise = createSuccessPromise(
         postJson<ApiResponse>(
-          SummaryApi.staffLogin.url,
+          SummaryApi.staff_login.url,
           { login: e, pin: p },
           "POST",
           5000,
@@ -257,14 +271,16 @@ export default function Login() {
         )
       );
 
-const finalData = await firstSuccessfulLogin([
-  masterPromise,
-  subadminPromise,
-  staffPromise,
-]);
+      const finalData = await firstSuccessfulLogin([
+        masterPromise,
+        subadminPromise,
+        supervisorPromise,
+        staffPromise,
+      ]);
 
       masterController.abort();
       subadminController.abort();
+      supervisorController.abort();
       staffController.abort();
 
       const { token, refreshToken, user } = pickAuth(finalData);

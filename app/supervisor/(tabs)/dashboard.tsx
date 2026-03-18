@@ -1,5 +1,5 @@
-import MyDashboard from "../../components/Dashboard/Dashboard";
+import MyLayout from "../../components/Tabs/layout";
 
 export default function Page() {
-  return <MyDashboard />;
+  return <MyLayout />;
 }
