@@ -570,7 +570,7 @@ export default function EditShopOwnerScreen() {
           }}
         >
           <ActivityIndicator color={COLORS.primary} />
-          <Text style={{ marginTop: 12, color: COLORS.secondaryText }}>
+          <Text style={{ marginTop: 10, color: COLORS.secondaryText }}>
             Loading shop owner details...
           </Text>
         </View>
@@ -616,7 +616,7 @@ export default function EditShopOwnerScreen() {
         style={{
           paddingHorizontal: 16,
           paddingTop: 6,
-          paddingBottom: 10,
+          paddingBottom: 8,
           flexDirection: "row",
           alignItems: "center",
           justifyContent: "space-between",
@@ -625,9 +625,9 @@ export default function EditShopOwnerScreen() {
         <Pressable
           onPress={() => router.back()}
           style={{
-            width: 42,
-            height: 42,
-            borderRadius: 14,
+            width: 40,
+            height: 40,
+            borderRadius: 12,
             backgroundColor: COLORS.card,
             borderWidth: 1,
             borderColor: COLORS.border,
@@ -637,18 +637,18 @@ export default function EditShopOwnerScreen() {
         >
           <MaterialCommunityIcons
             name="chevron-left"
-            size={24}
+            size={22}
             color={COLORS.heading}
           />
         </Pressable>
 
         <Text
-          style={{ color: COLORS.heading, fontSize: 18, fontWeight: "900" }}
+          style={{ color: COLORS.heading, fontSize: 17, fontWeight: "900" }}
         >
           Edit Shop Owner
         </Text>
 
-        <View style={{ width: 42 }} />
+        <View style={{ width: 40 }} />
       </View>
 
       <KeyboardAvoidingView
@@ -659,7 +659,7 @@ export default function EditShopOwnerScreen() {
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
             paddingHorizontal: 16,
-            paddingBottom: 28,
+            paddingBottom: 24,
           }}
           keyboardShouldPersistTaps="handled"
         >
@@ -667,14 +667,14 @@ export default function EditShopOwnerScreen() {
             <View style={{ alignItems: "center" }}>
               <View
                 style={{
-                  width: 96,
-                  height: 96,
-                  borderRadius: 48,
+                  width: 92,
+                  height: 92,
+                  borderRadius: 46,
                   overflow: "hidden",
                   alignItems: "center",
                   justifyContent: "center",
                   backgroundColor: COLORS.soft,
-                  borderWidth: 2,
+                  borderWidth: 1.5,
                   borderColor: COLORS.border,
                 }}
               >
@@ -686,13 +686,21 @@ export default function EditShopOwnerScreen() {
                 ) : (
                   <MaterialCommunityIcons
                     name="account"
-                    size={42}
+                    size={38}
                     color={COLORS.mutedText}
                   />
                 )}
               </View>
 
-              <View style={{ flexDirection: "row", gap: 8, marginTop: 16 }}>
+              <View
+                style={{
+                  flexDirection: "row",
+                  gap: 8,
+                  marginTop: 14,
+                  flexWrap: "wrap",
+                  justifyContent: "center",
+                }}
+              >
                 <ActionButton
                   title="Choose"
                   onPress={pickAvatar}
@@ -754,20 +762,21 @@ export default function EditShopOwnerScreen() {
             <Text
               style={{
                 color: COLORS.secondaryText,
-                fontWeight: "800",
+                fontWeight: "700",
                 fontSize: 11,
-                marginTop: 12,
-                marginBottom: 8,
+                marginTop: 8,
+                marginBottom: 5,
+                textTransform: "uppercase",
               }}
             >
-              SHOP CONTROL
+              Shop Control
             </Text>
 
             <Pressable
               onPress={() => setScOpen(true)}
               style={{
-                minHeight: 52,
-                borderRadius: 16,
+                height: 44,
+                borderRadius: 12,
                 backgroundColor: COLORS.soft,
                 borderWidth: 1,
                 borderColor: COLORS.border,
@@ -777,12 +786,18 @@ export default function EditShopOwnerScreen() {
                 justifyContent: "space-between",
               }}
             >
-              <Text style={{ color: COLORS.primaryText, fontWeight: "700" }}>
+              <Text
+                style={{
+                  color: COLORS.primaryText,
+                  fontWeight: "600",
+                  fontSize: 14,
+                }}
+              >
                 {getShopControlLabel(shopControl)}
               </Text>
               <MaterialCommunityIcons
                 name="chevron-down"
-                size={20}
+                size={18}
                 color={COLORS.secondaryText}
               />
             </Pressable>
@@ -806,7 +821,7 @@ export default function EditShopOwnerScreen() {
               maxLength={6}
             />
 
-            <View style={{ marginTop: 16 }}>
+            <View style={{ marginTop: 12 }}>
               <ActionButton
                 title="Save Changes"
                 onPress={submitUpdate}
@@ -830,7 +845,7 @@ export default function EditShopOwnerScreen() {
               docsUploading={docsUploading}
             />
 
-            <View style={{ marginTop: 16 }}>
+            <View style={{ marginTop: 12 }}>
               <ActionButton
                 title="Upload Selected Doc"
                 onPress={uploadDocs}
@@ -863,8 +878,8 @@ export default function EditShopOwnerScreen() {
             style={{
               width: "100%",
               backgroundColor: COLORS.card,
-              borderRadius: 24,
-              padding: 16,
+              borderRadius: 18,
+              padding: 14,
               borderWidth: 1,
               borderColor: COLORS.border,
             }}
@@ -872,7 +887,7 @@ export default function EditShopOwnerScreen() {
             <Text
               style={{
                 color: COLORS.heading,
-                fontSize: 18,
+                fontSize: 17,
                 fontWeight: "900",
                 textAlign: "center",
               }}
@@ -891,21 +906,21 @@ export default function EditShopOwnerScreen() {
                     setScOpen(false);
                   }}
                   style={{
-                    marginTop: 12,
-                    borderRadius: 18,
-                    borderWidth: 1.2,
+                    marginTop: 10,
+                    borderRadius: 14,
+                    borderWidth: 1,
                     borderColor: selected ? COLORS.primary : COLORS.border,
                     backgroundColor: selected ? COLORS.primarySoft : COLORS.soft,
-                    padding: 12,
+                    padding: 10,
                     flexDirection: "row",
                     alignItems: "center",
                   }}
                 >
                   <View
                     style={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: 13,
+                      width: 36,
+                      height: 36,
+                      borderRadius: 10,
                       backgroundColor: selected ? COLORS.primary : COLORS.white,
                       alignItems: "center",
                       justifyContent: "center",
@@ -915,7 +930,7 @@ export default function EditShopOwnerScreen() {
                   >
                     <MaterialCommunityIcons
                       name={item.icon}
-                      size={19}
+                      size={18}
                       color={selected ? COLORS.white : COLORS.primary}
                     />
                   </View>
@@ -924,7 +939,7 @@ export default function EditShopOwnerScreen() {
                     style={{
                       marginLeft: 10,
                       color: COLORS.heading,
-                      fontWeight: "800",
+                      fontWeight: "700",
                       fontSize: 14,
                       flex: 1,
                     }}
@@ -935,7 +950,7 @@ export default function EditShopOwnerScreen() {
                   {selected ? (
                     <MaterialCommunityIcons
                       name="check-circle"
-                      size={20}
+                      size={18}
                       color={COLORS.primary}
                     />
                   ) : null}
@@ -943,7 +958,7 @@ export default function EditShopOwnerScreen() {
               );
             })}
 
-            <View style={{ marginTop: 14 }}>
+            <View style={{ marginTop: 12 }}>
               <ActionButton
                 title="Close"
                 onPress={() => setScOpen(false)}
@@ -972,28 +987,28 @@ function SectionCard({
         backgroundColor: COLORS.card,
         borderWidth: 1,
         borderColor: COLORS.border,
-        borderRadius: 24,
-        padding: 14,
-        marginBottom: 14,
+        borderRadius: 18,
+        padding: 12,
+        marginBottom: 12,
       }}
     >
-      <Text style={{ color: COLORS.heading, fontSize: 16, fontWeight: "900" }}>
+      <Text style={{ color: COLORS.heading, fontSize: 15, fontWeight: "800" }}>
         {title}
       </Text>
 
       {!!subtitle && (
         <Text
           style={{
-            marginTop: 4,
+            marginTop: 3,
             color: COLORS.secondaryText,
-            fontSize: 12,
+            fontSize: 11,
           }}
         >
           {subtitle}
         </Text>
       )}
 
-      <View style={{ marginTop: 12 }}>{children}</View>
+      <View style={{ marginTop: 10 }}>{children}</View>
     </View>
   );
 }
@@ -1006,13 +1021,13 @@ function AppInput({
   [key: string]: any;
 }) {
   return (
-    <View style={{ marginBottom: 12 }}>
+    <View style={{ marginBottom: 10 }}>
       <Text
         style={{
           color: COLORS.secondaryText,
-          fontWeight: "800",
+          fontWeight: "700",
           fontSize: 11,
-          marginBottom: 7,
+          marginBottom: 4,
           textTransform: "uppercase",
         }}
       >
@@ -1022,14 +1037,15 @@ function AppInput({
       <TextInput
         {...rest}
         style={{
-          minHeight: 50,
-          borderRadius: 16,
+          height: 44,
+          borderRadius: 12,
           backgroundColor: COLORS.soft,
           borderWidth: 1,
           borderColor: COLORS.border,
-          paddingHorizontal: 14,
+          paddingHorizontal: 12,
+          fontSize: 14,
           color: COLORS.primaryText,
-          fontWeight: "600",
+          fontWeight: "500",
         }}
         placeholderTextColor={COLORS.labelText}
       />
@@ -1065,9 +1081,9 @@ function ActionButton({
       onPress={onPress}
       disabled={disabled || loading}
       style={{
-        minHeight: compact ? 42 : 50,
+        height: compact ? 40 : 44,
         paddingHorizontal: compact ? 14 : 16,
-        borderRadius: 16,
+        borderRadius: 12,
         backgroundColor: bg,
         borderWidth: 1,
         borderColor,
@@ -1084,15 +1100,15 @@ function ActionButton({
           {!!icon && (
             <MaterialCommunityIcons
               name={icon}
-              size={18}
+              size={16}
               color={textColor}
             />
           )}
           <Text
             style={{
-              marginLeft: icon ? 8 : 0,
+              marginLeft: icon ? 6 : 0,
               color: textColor,
-              fontWeight: "800",
+              fontWeight: "700",
               fontSize: 13,
             }}
           >
@@ -1126,14 +1142,16 @@ function DocCard({
   return (
     <View
       style={{
-        borderRadius: 18,
+        borderRadius: 14,
         backgroundColor: COLORS.soft,
         borderWidth: 1,
         borderColor: COLORS.border,
         padding: 12,
       }}
     >
-      <Text style={{ color: COLORS.heading, fontWeight: "800" }}>{title}</Text>
+      <Text style={{ color: COLORS.heading, fontWeight: "800", fontSize: 14 }}>
+        {title}
+      </Text>
 
       <Text
         style={{

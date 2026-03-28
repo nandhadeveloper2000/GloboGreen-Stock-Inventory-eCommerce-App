@@ -15,13 +15,12 @@ import {
   ActivityIndicator,
   FlatList,
   Image,
-  Platform,
   Pressable,
   RefreshControl,
   Text,
   TextInput,
   View,
-  useWindowDimensions,
+  useWindowDimensions
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
@@ -71,6 +70,22 @@ type RoleTheme = {
   title: string;
   subtitle: string;
   gradient: readonly [string, string, ...string[]];
+};
+
+const UI = {
+  headerMinHeightSmall: 165,
+  headerMinHeightLarge: 182,
+  cardRadius: 18,
+  inputHeight: 44,
+  chipHeight: 34,
+  avatarSizeSmall: 36,
+  avatarSize: 40,
+  rowHeightSmall: 70,
+  rowHeight: 76,
+  actionSizeSmall: 32,
+  actionSize: 34,
+  sectionPaddingSmall: 12,
+  sectionPadding: 14,
 };
 
 function toastError(message: string) {
@@ -128,8 +143,7 @@ function getRoleTheme(role?: string | null): RoleTheme {
       return {
         badge: "MANAGER",
         title: "Staff Management",
-        subtitle:
-          "Manage records created under your own operational hierarchy.",
+        subtitle: "Manage records created under your operational hierarchy.",
         gradient: [COLORS.heroGreenDark, COLORS.primaryDark, COLORS.primary],
       };
 
@@ -146,8 +160,7 @@ function getRoleTheme(role?: string | null): RoleTheme {
       return {
         badge: "STAFF",
         title: "Staff Directory",
-        subtitle:
-          "Browse the current staff directory and review available team information.",
+        subtitle: "Browse the current staff directory and review team details.",
         gradient: [COLORS.primaryDark, COLORS.successDark, COLORS.primary],
       };
 
@@ -165,9 +178,7 @@ function getInitials(name?: string, username?: string) {
   const value = (name || username || "ST").trim();
   const parts = value.split(/\s+/).filter(Boolean);
 
-  if (parts.length === 1) {
-    return parts[0].slice(0, 2).toUpperCase();
-  }
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
 
   return `${parts[0]?.[0] || ""}${parts[1]?.[0] || ""}`.toUpperCase();
 }
@@ -258,7 +269,7 @@ function AvatarCell({
   avatarUrl,
   name,
   username,
-  size = 46,
+  size = UI.avatarSize,
 }: {
   avatarUrl?: string;
   name?: string;
@@ -272,7 +283,7 @@ function AvatarCell({
       style={{
         width: size,
         height: size,
-        borderRadius: 14,
+        borderRadius: 12,
         overflow: "hidden",
         borderWidth: 1,
         borderColor: COLORS.border,
@@ -300,7 +311,7 @@ function AvatarCell({
             style={{
               color: COLORS.white,
               fontWeight: "900",
-              fontSize: size < 44 ? 12 : 13,
+              fontSize: size <= 36 ? 11 : 12,
             }}
           >
             {initials}
@@ -344,21 +355,15 @@ export default function StaffOverList() {
       "Content-Type": "application/json",
     };
 
-    if (token) {
-      h.Authorization = `Bearer ${token}`;
-    }
-
+    if (token) h.Authorization = `Bearer ${token}`;
     return h;
   }, [token]);
 
   const loadStaff = useCallback(
     async (isRefresh = false) => {
       try {
-        if (isRefresh) {
-          setRefreshing(true);
-        } else {
-          setLoading(true);
-        }
+        if (isRefresh) setRefreshing(true);
+        else setLoading(true);
 
         const res = await fetch(apiUrl(SummaryApi.staff_list.url), {
           method: SummaryApi.staff_list.method || "GET",
@@ -368,9 +373,7 @@ export default function StaffOverList() {
         const { text, json } = await readResponse<StaffPayload>(res);
 
         if (!res.ok || !json?.success) {
-          if (!json) {
-            console.log("RAW_STAFF_LIST_RESPONSE:", text);
-          }
+          if (!json) console.log("RAW_STAFF_LIST_RESPONSE:", text);
           throw new Error(json?.message || `HTTP ${res.status}`);
         }
 
@@ -437,7 +440,6 @@ export default function StaffOverList() {
         return searchedItems.filter(
           (item) => getPrimaryStaffRole(item) === "SUPERVISOR"
         );
-      case "ALL":
       default:
         return searchedItems;
     }
@@ -464,7 +466,7 @@ export default function StaffOverList() {
         alignItems: "center",
         justifyContent: "center",
         paddingHorizontal: 24,
-        paddingVertical: 64,
+        paddingVertical: 54,
       }}
     >
       <LinearGradient
@@ -472,8 +474,8 @@ export default function StaffOverList() {
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{
-          width: 96,
-          height: 96,
+          width: 82,
+          height: 82,
           borderRadius: 999,
           alignItems: "center",
           justifyContent: "center",
@@ -481,15 +483,15 @@ export default function StaffOverList() {
       >
         <MaterialCommunityIcons
           name="account-group-outline"
-          size={42}
+          size={36}
           color={COLORS.mutedText}
         />
       </LinearGradient>
 
       <Text
         style={{
-          marginTop: 18,
-          fontSize: 18,
+          marginTop: 14,
+          fontSize: 17,
           fontWeight: "900",
           color: COLORS.primaryText,
         }}
@@ -502,11 +504,11 @@ export default function StaffOverList() {
           marginTop: 8,
           textAlign: "center",
           color: COLORS.secondaryText,
-          lineHeight: 22,
+          lineHeight: 21,
+          fontSize: 13,
         }}
       >
-        Try changing your search or filter selection to view matching staff
-        records.
+        Try changing your search or filter to view matching staff records.
       </Text>
     </View>
   );
@@ -533,28 +535,28 @@ export default function StaffOverList() {
             borderBottomWidth: 1,
             borderColor: COLORS.border,
             paddingHorizontal: isSmallScreen ? 8 : 10,
-            paddingVertical: 2,
+            paddingVertical: 0,
           }}
         >
           <View
             style={{
               flexDirection: "row",
               alignItems: "center",
-              minHeight: isSmallScreen ? 82 : 88,
-              paddingVertical: 10,
+              minHeight: isSmallScreen ? UI.rowHeightSmall : UI.rowHeight,
+              paddingVertical: 8,
             }}
           >
             <View
               style={{
-                width: isSmallScreen ? 40 : 50,
+                width: isSmallScreen ? 40 : 46,
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
               <View
                 style={{
-                  minWidth: isSmallScreen ? 30 : 34,
-                  height: isSmallScreen ? 30 : 34,
+                  minWidth: 28,
+                  height: 28,
                   paddingHorizontal: 8,
                   borderRadius: 999,
                   alignItems: "center",
@@ -564,7 +566,7 @@ export default function StaffOverList() {
               >
                 <Text
                   style={{
-                    fontSize: isSmallScreen ? 11 : 12,
+                    fontSize: 11,
                     fontWeight: "900",
                     color: COLORS.primaryText,
                   }}
@@ -580,7 +582,7 @@ export default function StaffOverList() {
                   avatarUrl={item.avatarUrl}
                   name={item.name}
                   username={item.username}
-                  size={isSmallScreen ? 40 : 46}
+                  size={isSmallScreen ? UI.avatarSizeSmall : UI.avatarSize}
                 />
 
                 <View style={{ flex: 1, marginLeft: 10 }}>
@@ -598,10 +600,10 @@ export default function StaffOverList() {
                   <Text
                     numberOfLines={1}
                     style={{
-                      marginTop: 4,
+                      marginTop: 3,
                       color: COLORS.secondaryText,
                       fontWeight: "600",
-                      fontSize: isSmallScreen ? 11 : 12,
+                      fontSize: 11,
                     }}
                   >
                     {getPrimaryStaffRole(item)}
@@ -616,7 +618,7 @@ export default function StaffOverList() {
                 style={{
                   color: COLORS.primaryText,
                   fontWeight: "700",
-                  fontSize: isSmallScreen ? 12 : 13,
+                  fontSize: 12,
                 }}
               >
                 @{item.username || "-"}
@@ -625,9 +627,9 @@ export default function StaffOverList() {
               <View
                 style={{
                   alignSelf: "flex-start",
-                  marginTop: 7,
-                  paddingHorizontal: isSmallScreen ? 8 : 10,
-                  paddingVertical: 5,
+                  marginTop: 6,
+                  paddingHorizontal: 8,
+                  paddingVertical: 4,
                   borderRadius: 999,
                   backgroundColor: status.bg,
                   borderWidth: 1,
@@ -639,18 +641,18 @@ export default function StaffOverList() {
               >
                 <View
                   style={{
-                    width: 7,
-                    height: 7,
+                    width: 6,
+                    height: 6,
                     borderRadius: 99,
                     backgroundColor: status.dot,
-                    marginRight: 6,
+                    marginRight: 5,
                   }}
                 />
                 <Text
                   numberOfLines={1}
                   style={{
                     color: status.text,
-                    fontSize: isSmallScreen ? 10 : 11,
+                    fontSize: 10,
                     fontWeight: "800",
                   }}
                 >
@@ -661,7 +663,7 @@ export default function StaffOverList() {
 
             <View
               style={{
-                width: isSmallScreen ? 52 : 70,
+                width: isSmallScreen ? 48 : 58,
                 alignItems: "center",
                 justifyContent: "center",
               }}
@@ -672,8 +674,8 @@ export default function StaffOverList() {
                   color="#2563EB"
                   bg="#EFF6FF"
                   border="#BFDBFE"
-                  size={isSmallScreen ? 34 : 36}
-                  iconSize={isSmallScreen ? 17 : 18}
+                  size={isSmallScreen ? UI.actionSizeSmall : UI.actionSize}
+                  iconSize={16}
                   onPress={() =>
                     router.push({
                       pathname: "/components/staff/staffDetails",
@@ -706,13 +708,15 @@ export default function StaffOverList() {
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{
-          minHeight: isSmallScreen ? 220 : 240,
-          borderBottomLeftRadius: 34,
-          borderBottomRightRadius: 34,
+          minHeight: isSmallScreen
+            ? UI.headerMinHeightSmall
+            : UI.headerMinHeightLarge,
+          borderBottomLeftRadius: 28,
+          borderBottomRightRadius: 28,
           overflow: "hidden",
-          paddingHorizontal: isTablet ? 24 : 20,
-          paddingTop: 12,
-          paddingBottom: 26,
+          paddingHorizontal: isTablet ? 24 : 18,
+          paddingTop: 28,
+          paddingBottom: 18,
         }}
       >
         <View
@@ -720,21 +724,21 @@ export default function StaffOverList() {
             position: "absolute",
             right: -26,
             top: -32,
-            width: 190,
-            height: 190,
+            width: 160,
+            height: 160,
             borderRadius: 999,
-            backgroundColor: "rgba(255,255,255,0.10)",
+            backgroundColor: "rgba(255,255,255,0.08)",
           }}
         />
         <View
           style={{
             position: "absolute",
             left: -24,
-            bottom: 10,
-            width: 136,
-            height: 136,
+            bottom: 8,
+            width: 110,
+            height: 110,
             borderRadius: 999,
-            backgroundColor: "rgba(255,255,255,0.10)",
+            backgroundColor: "rgba(255,255,255,0.08)",
           }}
         />
 
@@ -748,9 +752,9 @@ export default function StaffOverList() {
           <Pressable
             onPress={() => router.back()}
             style={({ pressed }) => ({
-              width: 46,
-              height: 46,
-              borderRadius: 16,
+              width: 40,
+              height: 40,
+              borderRadius: 12,
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: "rgba(255,255,255,0.10)",
@@ -761,25 +765,19 @@ export default function StaffOverList() {
           >
             <MaterialCommunityIcons
               name="chevron-left"
-              size={24}
+              size={22}
               color={COLORS.white}
             />
           </Pressable>
 
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: 10,
-            }}
-          >
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
             <Pressable
               onPress={() => loadStaff(true)}
               disabled={loading}
               style={({ pressed }) => ({
-                width: 46,
-                height: 46,
-                borderRadius: 16,
+                width: 40,
+                height: 40,
+                borderRadius: 12,
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: "rgba(255,255,255,0.10)",
@@ -790,7 +788,7 @@ export default function StaffOverList() {
             >
               <MaterialCommunityIcons
                 name="refresh"
-                size={22}
+                size={20}
                 color={COLORS.white}
               />
             </Pressable>
@@ -806,20 +804,20 @@ export default function StaffOverList() {
                   } as never)
                 }
                 style={({ pressed }) => ({
-                  width: 46,
-                  height: 46,
-                  borderRadius: 16,
+                  width: 40,
+                  height: 40,
+                  borderRadius: 12,
                   alignItems: "center",
                   justifyContent: "center",
-                  backgroundColor: "rgba(255,255,255,0.15)",
+                  backgroundColor: "rgba(255,255,255,0.14)",
                   borderWidth: 1,
-                  borderColor: "rgba(255,255,255,0.18)",
+                  borderColor: "rgba(255,255,255,0.16)",
                   opacity: pressed ? 0.85 : 1,
                 })}
               >
                 <MaterialCommunityIcons
                   name="plus"
-                  size={22}
+                  size={20}
                   color={COLORS.white}
                 />
               </Pressable>
@@ -829,7 +827,7 @@ export default function StaffOverList() {
 
         <View
           style={{
-            marginTop: 22,
+            marginTop: 18,
             alignItems: "center",
             justifyContent: "center",
           }}
@@ -837,14 +835,14 @@ export default function StaffOverList() {
           <View
             style={{
               borderRadius: 999,
-              backgroundColor: "rgba(255,255,255,0.15)",
-              paddingHorizontal: 12,
-              paddingVertical: 6,
+              backgroundColor: "rgba(255,255,255,0.14)",
+              paddingHorizontal: 10,
+              paddingVertical: 5,
             }}
           >
             <Text
               style={{
-                fontSize: 11,
+                fontSize: 10,
                 fontWeight: "800",
                 color: COLORS.white,
                 letterSpacing: 0.7,
@@ -857,8 +855,8 @@ export default function StaffOverList() {
 
           <Text
             style={{
-              marginTop: 14,
-              fontSize: isSmallScreen ? 24 : 30,
+              marginTop: 12,
+              fontSize: isSmallScreen ? 22 : 26,
               fontWeight: "900",
               color: COLORS.white,
               textAlign: "center",
@@ -869,10 +867,10 @@ export default function StaffOverList() {
 
           <Text
             style={{
-              marginTop: 8,
+              marginTop: 6,
               maxWidth: "92%",
-              fontSize: isSmallScreen ? 13 : 14,
-              lineHeight: isSmallScreen ? 20 : 22,
+              fontSize: 13,
+              lineHeight: 19,
               color: "rgba(255,255,255,0.88)",
               textAlign: "center",
             }}
@@ -882,17 +880,17 @@ export default function StaffOverList() {
 
           <View
             style={{
-              marginTop: 16,
-              borderRadius: 16,
+              marginTop: 12,
+              borderRadius: 12,
               backgroundColor: "rgba(255,255,255,0.10)",
-              paddingHorizontal: 12,
-              paddingVertical: 8,
+              paddingHorizontal: 10,
+              paddingVertical: 6,
             }}
           >
             <Text
               style={{
                 color: COLORS.white,
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: "700",
                 textAlign: "center",
               }}
@@ -905,31 +903,31 @@ export default function StaffOverList() {
 
       <View
         style={{
-          marginTop: -18,
-          paddingHorizontal: isTablet ? 20 : 16,
+          marginTop: -14,
+          paddingHorizontal: isTablet ? 20 : 14,
         }}
       >
         <View
           style={{
-            borderRadius: 28,
+            borderRadius: UI.cardRadius,
             backgroundColor: COLORS.card,
             borderWidth: 1,
             borderColor: COLORS.border,
-            padding: isSmallScreen ? 12 : 16,
+            padding: isSmallScreen ? UI.sectionPaddingSmall : UI.sectionPadding,
             shadowColor: "#000",
-            shadowOpacity: 0.06,
-            shadowRadius: 14,
-            shadowOffset: { width: 0, height: 6 },
-            elevation: 4,
+            shadowOpacity: 0.04,
+            shadowRadius: 10,
+            shadowOffset: { width: 0, height: 4 },
+            elevation: 3,
           }}
         >
           <View
             style={{
               flexDirection: "row",
               alignItems: "center",
-              borderRadius: 22,
-              paddingHorizontal: 14,
-              paddingVertical: 10,
+              borderRadius: 14,
+              height: UI.inputHeight,
+              paddingHorizontal: 10,
               backgroundColor: COLORS.white,
               borderWidth: 1,
               borderColor: COLORS.border,
@@ -937,8 +935,8 @@ export default function StaffOverList() {
           >
             <View
               style={{
-                width: 40,
-                height: 40,
+                width: 32,
+                height: 32,
                 alignItems: "center",
                 justifyContent: "center",
                 borderRadius: 999,
@@ -947,7 +945,7 @@ export default function StaffOverList() {
             >
               <MaterialCommunityIcons
                 name="magnify"
-                size={22}
+                size={18}
                 color={COLORS.secondaryText}
               />
             </View>
@@ -958,10 +956,10 @@ export default function StaffOverList() {
               placeholder="Search by name, username, email, mobile..."
               placeholderTextColor={COLORS.labelText}
               style={{
-                marginLeft: 12,
+                marginLeft: 10,
                 flex: 1,
-                paddingVertical: Platform.OS === "ios" ? 10 : 8,
-                fontSize: isSmallScreen ? 14 : 15,
+                paddingVertical: 0,
+                fontSize: 14,
                 fontWeight: "600",
                 color: COLORS.primaryText,
               }}
@@ -971,8 +969,8 @@ export default function StaffOverList() {
               <Pressable
                 onPress={() => setQuery("")}
                 style={{
-                  width: 32,
-                  height: 32,
+                  width: 28,
+                  height: 28,
                   alignItems: "center",
                   justifyContent: "center",
                   borderRadius: 999,
@@ -981,7 +979,7 @@ export default function StaffOverList() {
               >
                 <MaterialCommunityIcons
                   name="close"
-                  size={18}
+                  size={16}
                   color={COLORS.secondaryText}
                 />
               </Pressable>
@@ -990,10 +988,10 @@ export default function StaffOverList() {
 
           <View
             style={{
-              marginTop: 16,
+              marginTop: 12,
               flexDirection: "row",
               flexWrap: "wrap",
-              gap: 10,
+              gap: 8,
             }}
           >
             <FilterChip
@@ -1038,8 +1036,8 @@ export default function StaffOverList() {
               style={{
                 alignItems: "center",
                 justifyContent: "center",
-                paddingTop: 22,
-                paddingBottom: 8,
+                paddingTop: 18,
+                paddingBottom: 4,
               }}
             >
               <LinearGradient
@@ -1047,8 +1045,8 @@ export default function StaffOverList() {
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={{
-                  width: 82,
-                  height: 82,
+                  width: 72,
+                  height: 72,
                   alignItems: "center",
                   justifyContent: "center",
                   borderRadius: 999,
@@ -1059,8 +1057,8 @@ export default function StaffOverList() {
 
               <Text
                 style={{
-                  marginTop: 16,
-                  fontSize: 16,
+                  marginTop: 12,
+                  fontSize: 15,
                   fontWeight: "800",
                   color: COLORS.primaryText,
                 }}
@@ -1073,6 +1071,7 @@ export default function StaffOverList() {
                   marginTop: 4,
                   textAlign: "center",
                   color: COLORS.secondaryText,
+                  fontSize: 12,
                 }}
               >
                 Please wait while the latest staff records are fetched.
@@ -1086,7 +1085,7 @@ export default function StaffOverList() {
         <View
           style={{
             paddingHorizontal: isTablet ? 20 : 14,
-            marginTop: 18,
+            marginTop: 16,
           }}
         >
           <View
@@ -1094,17 +1093,17 @@ export default function StaffOverList() {
               backgroundColor: "#EEF2F7",
               borderWidth: 1,
               borderColor: COLORS.border,
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
-              paddingHorizontal: isSmallScreen ? 8 : 10,
-              paddingVertical: 14,
+              borderTopLeftRadius: 16,
+              borderTopRightRadius: 16,
+              paddingHorizontal: 8,
+              paddingVertical: 10,
             }}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TableHead width={isSmallScreen ? 40 : 50} label="S.No" center />
+              <TableHead width={isSmallScreen ? 40 : 46} label="S.No" center />
               <TableHead flex={1.8} label="Staff" />
               <TableHead flex={1.15} label="Username / Status" />
-              <TableHead width={isSmallScreen ? 52 : 70} label="Action" center />
+              <TableHead width={isSmallScreen ? 48 : 58} label="Action" center />
             </View>
           </View>
         </View>
@@ -1129,9 +1128,10 @@ export default function StaffOverList() {
           <ActivityIndicator size="large" color={COLORS.primary} />
           <Text
             style={{
-              marginTop: 14,
+              marginTop: 12,
               color: COLORS.secondaryText,
               fontWeight: "600",
+              fontSize: 13,
             }}
           >
             Loading authentication...
@@ -1154,7 +1154,7 @@ export default function StaffOverList() {
         ListEmptyComponent={!loading ? renderEmpty : null}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingBottom: 28,
+          paddingBottom: 24,
           flexGrow: !loading && filtered.length === 0 ? 1 : undefined,
         }}
         refreshControl={
@@ -1195,7 +1195,7 @@ function TableHead({
         numberOfLines={1}
         style={{
           color: COLORS.secondaryText,
-          fontSize: 12,
+          fontSize: 11,
           fontWeight: "800",
         }}
       >
@@ -1223,20 +1223,16 @@ function FilterChip({
       onPress={onPress}
       style={{
         borderRadius: 999,
-        shadowColor: active ? COLORS.primary : COLORS.heroDark,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: active ? 0.12 : 0.03,
-        shadowRadius: 6,
-        elevation: 1,
       }}
     >
       <View
         style={{
+          minHeight: UI.chipHeight,
           flexDirection: "row",
           alignItems: "center",
           borderRadius: 999,
-          paddingHorizontal: small ? 10 : 12,
-          paddingVertical: small ? 7 : 8,
+          paddingHorizontal: small ? 10 : 11,
+          paddingVertical: 6,
           backgroundColor: active ? COLORS.primary : COLORS.white,
           borderWidth: 1,
           borderColor: active ? COLORS.primary : COLORS.border,
@@ -1251,7 +1247,7 @@ function FilterChip({
         <Text
           style={{
             marginLeft: 5,
-            fontSize: small ? 11 : 12,
+            fontSize: 11,
             fontWeight: "800",
             color: active ? COLORS.white : COLORS.primaryText,
           }}
@@ -1270,8 +1266,8 @@ function ActionButton({
   border,
   onPress,
   disabled,
-  size = 36,
-  iconSize = 18,
+  size = 34,
+  iconSize = 16,
 }: {
   icon: ComponentProps<typeof MaterialCommunityIcons>["name"];
   color: string;
@@ -1289,14 +1285,14 @@ function ActionButton({
       style={({ pressed }) => ({
         width: size,
         height: size,
-        borderRadius: 12,
+        borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: bg,
         borderWidth: 1,
         borderColor: border,
         opacity: disabled ? 0.5 : pressed ? 0.85 : 1,
-        transform: [{ scale: pressed ? 0.96 : 1 }],
+        transform: [{ scale: pressed ? 0.97 : 1 }],
       })}
     >
       <MaterialCommunityIcons name={icon} size={iconSize} color={color} />

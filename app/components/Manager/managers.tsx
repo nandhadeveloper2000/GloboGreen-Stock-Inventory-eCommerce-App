@@ -1,4 +1,5 @@
 // app/components/Manager/managers.tsx
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { useRouter } from "expo-router";
@@ -54,6 +55,39 @@ const CREATE_ROUTE = "/components/Manager/create";
 
 const apiUrl = (path: string) => `${baseURL}${path}`;
 
+const UI = {
+  radius: {
+    xs: 10,
+    sm: 12,
+    md: 14,
+    lg: 16,
+    xl: 18,
+  },
+  font: {
+    xs: 11,
+    sm: 12,
+    md: 13,
+    lg: 14,
+    xl: 16,
+    xxl: 18,
+  },
+  height: {
+    headerBtn: 36,
+    searchBar: 46,
+    iconBox: 30,
+    actionBtn: 32,
+    avatar: 38,
+  },
+  spacing: {
+    xs: 6,
+    sm: 8,
+    md: 10,
+    lg: 12,
+    xl: 14,
+    xxl: 16,
+  },
+};
+
 const toastError = (title: string, msg?: string) =>
   Toast.show({
     type: "error",
@@ -85,9 +119,9 @@ function HeaderIconButton({
       hitSlop={10}
       style={[
         {
-          width: 40,
-          height: 40,
-          borderRadius: 14,
+          width: UI.height.headerBtn,
+          height: UI.height.headerBtn,
+          borderRadius: UI.radius.md,
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: bgColor,
@@ -95,15 +129,15 @@ function HeaderIconButton({
           borderColor,
           opacity: disabled ? 0.55 : 1,
           shadowColor: COLORS.heroDark,
-          shadowOffset: { width: 0, height: 6 },
-          shadowOpacity: 0.06,
-          shadowRadius: 10,
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.05,
+          shadowRadius: 8,
           elevation: 2,
         },
         style,
       ]}
     >
-      <MaterialCommunityIcons name={icon} size={22} color={iconColor} />
+      <MaterialCommunityIcons name={icon} size={20} color={iconColor} />
     </Pressable>
   );
 }
@@ -122,26 +156,28 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
     >
       <View
         style={{
-          width: 86,
-          height: 86,
-          borderRadius: 24,
+          width: 68,
+          height: 68,
+          borderRadius: 20,
           backgroundColor: COLORS.inactiveBg,
           alignItems: "center",
           justifyContent: "center",
+          borderWidth: 1,
+          borderColor: COLORS.border,
         }}
       >
         <MaterialCommunityIcons
           name="shield-lock-outline"
-          size={40}
+          size={32}
           color={COLORS.danger}
         />
       </View>
 
       <Text
         style={{
-          marginTop: 18,
+          marginTop: 14,
           color: COLORS.primaryText,
-          fontSize: 22,
+          fontSize: UI.font.xxl,
           fontWeight: "900",
         }}
       >
@@ -153,8 +189,9 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
           marginTop: 8,
           color: COLORS.secondaryText,
           textAlign: "center",
-          lineHeight: 22,
-          fontSize: 14,
+          lineHeight: 20,
+          fontSize: UI.font.md,
+          maxWidth: 290,
         }}
       >
         Only Master Admin can access the Managers module.
@@ -163,11 +200,11 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
       <Pressable
         onPress={onBack}
         style={{
-          marginTop: 18,
-          paddingHorizontal: 18,
-          paddingVertical: 12,
-          borderRadius: 16,
-          backgroundColor: COLORS.soft,
+          marginTop: 16,
+          paddingHorizontal: 16,
+          paddingVertical: 10,
+          borderRadius: UI.radius.md,
+          backgroundColor: COLORS.card,
           borderWidth: 1,
           borderColor: COLORS.border,
         }}
@@ -176,6 +213,7 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
           style={{
             color: COLORS.primaryText,
             fontWeight: "800",
+            fontSize: UI.font.md,
           }}
         >
           Go Back
@@ -196,38 +234,40 @@ function EmptyState({
     <View
       style={{
         flex: 1,
-        marginTop: 30,
+        marginTop: 18,
         backgroundColor: COLORS.card,
         borderWidth: 1,
         borderColor: COLORS.border,
-        borderRadius: 24,
-        paddingVertical: 34,
-        paddingHorizontal: 20,
+        borderRadius: UI.radius.lg,
+        paddingVertical: 24,
+        paddingHorizontal: 18,
         alignItems: "center",
       }}
     >
       <View
         style={{
-          width: 68,
-          height: 68,
-          borderRadius: 22,
+          width: 56,
+          height: 56,
+          borderRadius: 18,
           backgroundColor: COLORS.successSoft,
           alignItems: "center",
           justifyContent: "center",
+          borderWidth: 1,
+          borderColor: COLORS.successLight,
         }}
       >
         <MaterialCommunityIcons
           name="account-group-outline"
-          size={32}
+          size={26}
           color={BRAND}
         />
       </View>
 
       <Text
         style={{
-          marginTop: 16,
+          marginTop: 14,
           color: COLORS.primaryText,
-          fontSize: 17,
+          fontSize: UI.font.lg,
           fontWeight: "900",
         }}
       >
@@ -238,23 +278,24 @@ function EmptyState({
         style={{
           marginTop: 6,
           color: COLORS.secondaryText,
-          fontSize: 13,
+          fontSize: UI.font.sm,
           textAlign: "center",
-          lineHeight: 20,
+          lineHeight: 18,
+          maxWidth: 300,
         }}
       >
         {hasSearch
-          ? "No matching managers are available right now. Try changing the search keyword."
-          : "There are no managers in the list right now. Try refreshing to load the latest data."}
+          ? "No matching managers are available right now. Try another search keyword."
+          : "There are no managers in the list right now. Refresh to load the latest data."}
       </Text>
 
       <Pressable
         onPress={onRefresh}
         style={{
-          marginTop: 18,
-          paddingHorizontal: 18,
-          paddingVertical: 12,
-          borderRadius: 16,
+          marginTop: 16,
+          paddingHorizontal: 16,
+          paddingVertical: 10,
+          borderRadius: UI.radius.md,
           backgroundColor: COLORS.successSoft,
           borderWidth: 1,
           borderColor: COLORS.successLight,
@@ -264,11 +305,145 @@ function EmptyState({
           style={{
             color: BRAND_DARK,
             fontWeight: "800",
+            fontSize: UI.font.md,
           }}
         >
           Refresh List
         </Text>
       </Pressable>
+    </View>
+  );
+}
+
+function SearchBar({
+  value,
+  onChange,
+  onClear,
+}: {
+  value: string;
+  onChange: (v: string) => void;
+  onClear: () => void;
+}) {
+  return (
+    <View
+      style={{
+        marginBottom: 12,
+        backgroundColor: COLORS.card,
+        borderWidth: 1,
+        borderColor: COLORS.border,
+        borderRadius: UI.radius.lg,
+        minHeight: UI.height.searchBar,
+        paddingHorizontal: 12,
+        flexDirection: "row",
+        alignItems: "center",
+        shadowColor: COLORS.heroDark,
+        shadowOffset: { width: 0, height: 5 },
+        shadowOpacity: 0.04,
+        shadowRadius: 8,
+        elevation: 2,
+      }}
+    >
+      <View
+        style={{
+          width: UI.height.iconBox,
+          height: UI.height.iconBox,
+          borderRadius: UI.radius.sm,
+          backgroundColor: COLORS.soft,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <MaterialCommunityIcons
+          name="magnify"
+          size={17}
+          color={COLORS.secondaryText}
+        />
+      </View>
+
+      <TextInput
+        value={value}
+        onChangeText={onChange}
+        placeholder="Search managers by name, username, email, or role"
+        placeholderTextColor={COLORS.labelText}
+        style={{
+          flex: 1,
+          marginLeft: 10,
+          color: COLORS.primaryText,
+          fontSize: UI.font.md,
+          fontWeight: "500",
+          paddingVertical: 0,
+        }}
+      />
+
+      {!!value && (
+        <Pressable
+          onPress={onClear}
+          hitSlop={10}
+          style={{
+            width: 28,
+            height: 28,
+            borderRadius: 10,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <MaterialCommunityIcons
+            name="close-circle"
+            size={18}
+            color={COLORS.labelText}
+          />
+        </Pressable>
+      )}
+    </View>
+  );
+}
+
+function SectionSummary({
+  total,
+  filtered,
+}: {
+  total: number;
+  filtered: number;
+}) {
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        marginBottom: 10,
+      }}
+    >
+      <Text
+        style={{
+          color: COLORS.primaryText,
+          fontSize: UI.font.lg,
+          fontWeight: "900",
+        }}
+      >
+        Managers
+      </Text>
+
+      <View
+        style={{
+          paddingHorizontal: 10,
+          paddingVertical: 6,
+          borderRadius: 999,
+          backgroundColor: COLORS.successSoft,
+          borderWidth: 1,
+          borderColor: COLORS.successLight,
+        }}
+      >
+        <Text
+          style={{
+            color: BRAND_DARK,
+            fontSize: UI.font.sm,
+            fontWeight: "800",
+          }}
+        >
+          {filtered}/{total}
+        </Text>
+      </View>
     </View>
   );
 }
@@ -334,10 +509,7 @@ export default function Managers() {
           console.log("RAW_MANAGERS_RESPONSE:", text);
         }
 
-        toastError(
-          "Failed to load",
-          json?.message || `HTTP ${res.status}`
-        );
+        toastError("Failed to load", json?.message || `HTTP ${res.status}`);
         return;
       }
 
@@ -385,7 +557,7 @@ export default function Managers() {
       },
       headerTitleStyle: {
         color: COLORS.primaryText,
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: "800",
       },
       headerLeft: () => (
@@ -466,17 +638,17 @@ export default function Managers() {
           backgroundColor: COLORS.soft,
           borderWidth: 1,
           borderColor: COLORS.border,
-          borderTopLeftRadius: 18,
-          borderTopRightRadius: 18,
-          paddingVertical: 12,
+          borderTopLeftRadius: UI.radius.lg,
+          borderTopRightRadius: UI.radius.lg,
+          paddingVertical: 9,
           paddingHorizontal: 10,
         }}
       >
         <Text
           style={{
-            width: 46,
+            width: 44,
             color: COLORS.secondaryText,
-            fontSize: 12,
+            fontSize: UI.font.xs,
             fontWeight: "800",
           }}
         >
@@ -485,9 +657,9 @@ export default function Managers() {
 
         <Text
           style={{
-            width: 64,
+            width: 58,
             color: COLORS.secondaryText,
-            fontSize: 12,
+            fontSize: UI.font.xs,
             fontWeight: "800",
           }}
         >
@@ -498,7 +670,7 @@ export default function Managers() {
           style={{
             flex: 1.25,
             color: COLORS.secondaryText,
-            fontSize: 12,
+            fontSize: UI.font.xs,
             fontWeight: "800",
           }}
         >
@@ -509,7 +681,7 @@ export default function Managers() {
           style={{
             flex: 1.1,
             color: COLORS.secondaryText,
-            fontSize: 12,
+            fontSize: UI.font.xs,
             fontWeight: "800",
           }}
         >
@@ -518,10 +690,10 @@ export default function Managers() {
 
         <Text
           style={{
-            width: 68,
+            width: 60,
             textAlign: "center",
             color: COLORS.secondaryText,
-            fontSize: 12,
+            fontSize: UI.font.xs,
             fontWeight: "800",
           }}
         >
@@ -546,15 +718,15 @@ export default function Managers() {
             borderRightWidth: 1,
             borderBottomWidth: 1,
             borderColor: COLORS.border,
-            paddingVertical: 12,
+            paddingVertical: 9,
             paddingHorizontal: 10,
           }}
         >
           <Text
             style={{
-              width: 46,
+              width: 44,
               color: COLORS.primaryText,
-              fontSize: 13,
+              fontSize: UI.font.sm,
               fontWeight: "700",
             }}
           >
@@ -563,16 +735,16 @@ export default function Managers() {
 
           <View
             style={{
-              width: 64,
+              width: 58,
               alignItems: "flex-start",
               justifyContent: "center",
             }}
           >
             <View
               style={{
-                width: 42,
-                height: 42,
-                borderRadius: 12,
+                width: UI.height.avatar,
+                height: UI.height.avatar,
+                borderRadius: 11,
                 backgroundColor: COLORS.soft,
                 borderWidth: 1,
                 borderColor: COLORS.border,
@@ -584,38 +756,60 @@ export default function Managers() {
               {showAvatar ? (
                 <Image
                   source={{ uri: item.avatarUrl }}
-                  style={{ width: 42, height: 42 }}
+                  style={{
+                    width: UI.height.avatar,
+                    height: UI.height.avatar,
+                  }}
                   resizeMode="cover"
                 />
               ) : (
                 <MaterialCommunityIcons
                   name="account"
-                  size={20}
+                  size={18}
                   color={COLORS.mutedText}
                 />
               )}
             </View>
           </View>
 
-          <Text
-            numberOfLines={1}
+          <View
             style={{
               flex: 1.25,
-              color: COLORS.primaryText,
-              fontSize: 13,
-              fontWeight: "800",
               paddingRight: 8,
             }}
           >
-            {item.name || "-"}
-          </Text>
+            <Text
+              numberOfLines={1}
+              style={{
+                color: COLORS.primaryText,
+                fontSize: UI.font.sm,
+                fontWeight: "800",
+              }}
+            >
+              {item.name || "-"}
+            </Text>
+
+            {!!item.email && (
+              <Text
+                numberOfLines={1}
+                style={{
+                  marginTop: 2,
+                  color: COLORS.secondaryText,
+                  fontSize: UI.font.xs,
+                  fontWeight: "500",
+                }}
+              >
+                {item.email}
+              </Text>
+            )}
+          </View>
 
           <Text
             numberOfLines={1}
             style={{
               flex: 1.1,
               color: COLORS.secondaryText,
-              fontSize: 13,
+              fontSize: UI.font.sm,
               fontWeight: "700",
               paddingRight: 8,
             }}
@@ -625,7 +819,7 @@ export default function Managers() {
 
           <View
             style={{
-              width: 68,
+              width: 60,
               alignItems: "center",
               justifyContent: "center",
             }}
@@ -633,9 +827,9 @@ export default function Managers() {
             <Pressable
               onPress={() => goToView(item)}
               style={{
-                width: 38,
-                height: 38,
-                borderRadius: 12,
+                width: UI.height.actionBtn,
+                height: UI.height.actionBtn,
+                borderRadius: UI.radius.sm,
                 backgroundColor: COLORS.successSoft,
                 borderWidth: 1,
                 borderColor: COLORS.successLight,
@@ -645,7 +839,7 @@ export default function Managers() {
             >
               <MaterialCommunityIcons
                 name="eye-outline"
-                size={18}
+                size={16}
                 color={BRAND}
               />
             </Pressable>
@@ -673,6 +867,7 @@ export default function Managers() {
             marginTop: 12,
             color: COLORS.secondaryText,
             fontWeight: "700",
+            fontSize: UI.font.md,
           }}
         >
           Loading authentication...
@@ -690,79 +885,17 @@ export default function Managers() {
       style={{
         flex: 1,
         backgroundColor: COLORS.background,
-        paddingHorizontal: 16,
+        paddingHorizontal: 14,
       }}
       edges={["top"]}
     >
-      <View
-        style={{
-          marginBottom: 14,
-          backgroundColor: COLORS.card,
-          borderWidth: 1,
-          borderColor: COLORS.border,
-          borderRadius: 22,
-          paddingHorizontal: 14,
-          paddingVertical: 12,
-          flexDirection: "row",
-          alignItems: "center",
-          shadowColor: COLORS.heroDark,
-          shadowOffset: { width: 0, height: 6 },
-          shadowOpacity: 0.04,
-          shadowRadius: 10,
-          elevation: 2,
-        }}
-      >
-        <View
-          style={{
-            width: 34,
-            height: 34,
-            borderRadius: 12,
-            backgroundColor: COLORS.soft,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <MaterialCommunityIcons
-            name="magnify"
-            size={18}
-            color={COLORS.secondaryText}
-          />
-        </View>
+      <SearchBar
+        value={search}
+        onChange={setSearch}
+        onClear={() => setSearch("")}
+      />
 
-        <TextInput
-          value={search}
-          onChangeText={setSearch}
-          placeholder="Search managers by name, username, email, or role"
-          placeholderTextColor={COLORS.labelText}
-          style={{
-            flex: 1,
-            marginLeft: 10,
-            color: COLORS.primaryText,
-            fontSize: 14,
-            fontWeight: "500",
-          }}
-        />
-
-        {!!search && (
-          <Pressable
-            onPress={() => setSearch("")}
-            hitSlop={10}
-            style={{
-              width: 30,
-              height: 30,
-              borderRadius: 10,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <MaterialCommunityIcons
-              name="close-circle"
-              size={18}
-              color={COLORS.labelText}
-            />
-          </Pressable>
-        )}
-      </View>
+      <SectionSummary total={list.length} filtered={filteredList.length} />
 
       {loading && list.length === 0 ? (
         <View
@@ -774,12 +907,14 @@ export default function Managers() {
         >
           <View
             style={{
-              width: 64,
-              height: 64,
-              borderRadius: 22,
+              width: 58,
+              height: 58,
+              borderRadius: 18,
               backgroundColor: COLORS.successSoft,
               alignItems: "center",
               justifyContent: "center",
+              borderWidth: 1,
+              borderColor: COLORS.successLight,
             }}
           >
             <ActivityIndicator color={BRAND} />
@@ -790,7 +925,7 @@ export default function Managers() {
               marginTop: 14,
               color: COLORS.primaryText,
               fontWeight: "800",
-              fontSize: 16,
+              fontSize: UI.font.lg,
             }}
           >
             Loading managers...
@@ -800,7 +935,7 @@ export default function Managers() {
             style={{
               marginTop: 4,
               color: COLORS.secondaryText,
-              fontSize: 13,
+              fontSize: UI.font.sm,
             }}
           >
             Please wait while we fetch the latest list
@@ -810,8 +945,8 @@ export default function Managers() {
         <View
           style={{
             flex: 1,
-            backgroundColor: COLORS.card,
-            borderRadius: 18,
+            borderRadius: UI.radius.lg,
+            overflow: "hidden",
           }}
         >
           {filteredList.length > 0 && renderTableHeader()}
@@ -846,10 +981,11 @@ export default function Managers() {
                     borderRightWidth: 1,
                     borderBottomWidth: 1,
                     borderColor: COLORS.border,
-                    borderBottomLeftRadius: 18,
-                    borderBottomRightRadius: 18,
+                    borderBottomLeftRadius: UI.radius.lg,
+                    borderBottomRightRadius: UI.radius.lg,
                     height: 1,
                     overflow: "hidden",
+                    backgroundColor: COLORS.card,
                   }}
                 />
               ) : null

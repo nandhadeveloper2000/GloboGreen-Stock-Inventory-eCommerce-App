@@ -11,6 +11,7 @@ import {
   Text,
   TextInput,
   View,
+  useWindowDimensions,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
@@ -23,6 +24,29 @@ import { normalizeRole } from "../../utils/permissions";
 
 const apiUrl = (path: string) => `${baseURL}${path}`;
 
+const NORMAL = {
+  inputHeight: 48,
+  buttonHeight: 48,
+  iconBox: 40,
+  uploadBoxMinHeight: 120,
+  uploadPreview: 64,
+  uploadIconWrap: 52,
+  cardRadius: 18,
+  inputRadius: 12,
+  chipRadius: 16,
+  uploadRadius: 16,
+  buttonRadius: 14,
+  pageHorizontal: 16,
+  pageHorizontalSmall: 12,
+  cardPadding: 14,
+  cardMarginTop: 12,
+  gap: 10,
+  inputFont: 15,
+  labelFont: 12,
+  titleFont: 16,
+  subtitleFont: 11,
+};
+
 const toastSuccess = (msg: string) =>
   Toast.show({ type: "success", text1: "Success", text2: msg });
 
@@ -34,7 +58,6 @@ const isValidEmail = (email: string) =>
 
 async function readResponse(res: Response) {
   const text = await res.text();
-
   try {
     return { text, json: JSON.parse(text) };
   } catch {
@@ -55,7 +78,6 @@ type AppInputProps = {
   value: string;
   onChangeText: (text: string) => void;
   placeholder?: string;
-  icon?: keyof typeof MaterialCommunityIcons.glyphMap;
   keyboardType?: "default" | "email-address" | "number-pad" | "phone-pad";
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
   secureTextEntry?: boolean;
@@ -66,73 +88,50 @@ function AppInput({
   value,
   onChangeText,
   placeholder,
-  icon = "text-box-outline",
   keyboardType = "default",
   autoCapitalize = "sentences",
   secureTextEntry = false,
 }: AppInputProps) {
+  const [focused, setFocused] = useState(false);
+
   return (
-    <View style={{ marginTop: 14 }}>
+    <View style={{ marginTop: 10 }}>
       <Text
         style={{
           color: COLORS.secondaryText,
-          fontSize: 12,
-          fontWeight: "800",
-          marginBottom: 8,
+          fontSize: NORMAL.labelFont,
+          fontWeight: "700",
+          marginBottom: 4,
           textTransform: "uppercase",
-          letterSpacing: 0.7,
+          letterSpacing: 0.4,
         }}
       >
         {label}
       </Text>
 
-      <View
+      <TextInput
+        value={value}
+        onChangeText={onChangeText}
+        placeholder={placeholder}
+        placeholderTextColor={COLORS.labelText}
+        keyboardType={keyboardType}
+        autoCapitalize={autoCapitalize}
+        secureTextEntry={secureTextEntry}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
         style={{
-          flexDirection: "row",
-          alignItems: "center",
           backgroundColor: COLORS.card,
-          borderColor: COLORS.border,
+          borderColor: focused ? COLORS.primary : COLORS.border,
           borderWidth: 1,
-          borderRadius: 18,
+          borderRadius: NORMAL.inputRadius,
+          height: NORMAL.inputHeight,
           paddingHorizontal: 14,
-          minHeight: 56,
+          paddingVertical: 0,
+          color: COLORS.primaryText,
+          fontSize: NORMAL.inputFont,
+          fontWeight: "500",
         }}
-      >
-        <View
-          style={{
-            width: 38,
-            height: 38,
-            borderRadius: 14,
-            backgroundColor: COLORS.primarySoft,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <MaterialCommunityIcons
-            name={icon}
-            size={18}
-            color={COLORS.primary}
-          />
-        </View>
-
-        <TextInput
-          value={value}
-          onChangeText={onChangeText}
-          placeholder={placeholder}
-          placeholderTextColor={COLORS.labelText}
-          keyboardType={keyboardType}
-          autoCapitalize={autoCapitalize}
-          secureTextEntry={secureTextEntry}
-          style={{
-            flex: 1,
-            marginLeft: 12,
-            color: COLORS.primaryText,
-            fontSize: 15,
-            fontWeight: "600",
-            paddingVertical: 14,
-          }}
-        />
-      </View>
+      />
     </View>
   );
 }
@@ -152,23 +151,30 @@ function SectionCard({
     <View
       style={{
         backgroundColor: COLORS.card,
-        borderRadius: 24,
+        borderRadius: NORMAL.cardRadius,
         borderWidth: 1,
         borderColor: COLORS.border,
-        padding: 16,
-        marginTop: 14,
+        padding: NORMAL.cardPadding,
+        marginTop: NORMAL.cardMarginTop,
+        shadowColor: "#000",
         shadowOpacity: 0.05,
-        shadowRadius: 14,
-        shadowOffset: { width: 0, height: 8 },
-        elevation: 3,
+        shadowRadius: 6,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 2,
       }}
     >
-      <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 8 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginBottom: 8,
+        }}
+      >
         <View
           style={{
-            width: 44,
-            height: 44,
-            borderRadius: 15,
+            width: NORMAL.iconBox,
+            height: NORMAL.iconBox,
+            borderRadius: 12,
             backgroundColor: COLORS.primarySoft,
             alignItems: "center",
             justifyContent: "center",
@@ -181,11 +187,11 @@ function SectionCard({
           />
         </View>
 
-        <View style={{ marginLeft: 12, flex: 1 }}>
+        <View style={{ marginLeft: 10, flex: 1 }}>
           <Text
             style={{
               color: COLORS.heading,
-              fontSize: 17,
+              fontSize: NORMAL.titleFont,
               fontWeight: "800",
             }}
           >
@@ -196,8 +202,8 @@ function SectionCard({
             <Text
               style={{
                 color: COLORS.secondaryText,
-                fontSize: 12,
-                marginTop: 3,
+                fontSize: NORMAL.subtitleFont,
+                marginTop: 2,
                 fontWeight: "500",
               }}
             >
@@ -228,10 +234,10 @@ function RoleChip({
       onPress={onPress}
       style={{
         flex: 1,
-        borderRadius: 20,
-        paddingVertical: 14,
-        paddingHorizontal: 12,
-        borderWidth: 1.2,
+        borderRadius: NORMAL.chipRadius,
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+        borderWidth: 1,
         borderColor: active ? COLORS.primary : COLORS.border,
         backgroundColor: active ? COLORS.primary : COLORS.soft,
       }}
@@ -239,9 +245,9 @@ function RoleChip({
       <View style={{ alignItems: "center", justifyContent: "center" }}>
         <View
           style={{
-            width: 44,
-            height: 44,
-            borderRadius: 15,
+            width: 40,
+            height: 40,
+            borderRadius: 12,
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: active
@@ -260,7 +266,7 @@ function RoleChip({
           style={{
             marginTop: 8,
             fontWeight: "800",
-            fontSize: 14,
+            fontSize: 13,
             color: active ? COLORS.white : COLORS.heading,
           }}
         >
@@ -295,8 +301,8 @@ function UploadBox({
       onPress={onPress}
       style={{
         flex: 1,
-        borderRadius: 22,
-        padding: 14,
+        borderRadius: NORMAL.uploadRadius,
+        padding: 12,
         borderWidth: 1,
         borderColor: selected
           ? COLORS.successLight
@@ -308,7 +314,7 @@ function UploadBox({
           : dark
           ? COLORS.heroDark
           : COLORS.primary,
-        minHeight: 165,
+        minHeight: NORMAL.uploadBoxMinHeight,
       }}
     >
       <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
@@ -316,29 +322,29 @@ function UploadBox({
           <Image
             source={{ uri: previewUri }}
             style={{
-              width: 78,
-              height: 78,
-              borderRadius: 22,
-              marginBottom: 12,
+              width: NORMAL.uploadPreview,
+              height: NORMAL.uploadPreview,
+              borderRadius: 14,
+              marginBottom: 10,
             }}
           />
         ) : (
           <View
             style={{
-              width: 62,
-              height: 62,
-              borderRadius: 20,
+              width: NORMAL.uploadIconWrap,
+              height: NORMAL.uploadIconWrap,
+              borderRadius: 14,
               backgroundColor: selected
                 ? COLORS.white
                 : "rgba(255,255,255,0.14)",
               alignItems: "center",
               justifyContent: "center",
-              marginBottom: 12,
+              marginBottom: 10,
             }}
           >
             <MaterialCommunityIcons
               name={selected ? "check-circle" : icon}
-              size={28}
+              size={24}
               color={selected ? COLORS.success : COLORS.white}
             />
           </View>
@@ -348,7 +354,7 @@ function UploadBox({
           style={{
             color: selected ? COLORS.successDark : COLORS.white,
             fontWeight: "800",
-            fontSize: 14,
+            fontSize: 13,
             textAlign: "center",
           }}
         >
@@ -358,8 +364,8 @@ function UploadBox({
         <Text
           style={{
             color: selected ? COLORS.successDark : "rgba(255,255,255,0.76)",
-            fontSize: 12,
-            marginTop: 6,
+            fontSize: 11,
+            marginTop: 4,
             textAlign: "center",
             fontWeight: "500",
           }}
@@ -373,7 +379,11 @@ function UploadBox({
 
 export default function StaffCreateScreen() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
   const { token, user, isReady, loading } = useAuth();
+
+  const isSmallScreen = width < 380;
+  const useSingleColumn = width < 680;
 
   const currentRole = useMemo(() => {
     const rawRole = user?.role || user?.roles?.[0] || null;
@@ -640,9 +650,9 @@ export default function StaffCreateScreen() {
         >
           <View
             style={{
-              width: 84,
-              height: 84,
-              borderRadius: 28,
+              width: 80,
+              height: 80,
+              borderRadius: 24,
               backgroundColor: COLORS.primarySoft,
               alignItems: "center",
               justifyContent: "center",
@@ -651,7 +661,7 @@ export default function StaffCreateScreen() {
           >
             <MaterialCommunityIcons
               name="shield-alert-outline"
-              size={38}
+              size={34}
               color={COLORS.primary}
             />
           </View>
@@ -659,7 +669,7 @@ export default function StaffCreateScreen() {
           <Text
             style={{
               color: COLORS.heading,
-              fontSize: 22,
+              fontSize: 20,
               fontWeight: "900",
               textAlign: "center",
             }}
@@ -683,10 +693,10 @@ export default function StaffCreateScreen() {
           <Pressable
             onPress={() => router.back()}
             style={{
-              marginTop: 22,
-              minHeight: 52,
-              paddingHorizontal: 22,
-              borderRadius: 16,
+              marginTop: 20,
+              height: NORMAL.buttonHeight,
+              paddingHorizontal: 20,
+              borderRadius: NORMAL.buttonRadius,
               backgroundColor: COLORS.primary,
               alignItems: "center",
               justifyContent: "center",
@@ -695,14 +705,14 @@ export default function StaffCreateScreen() {
           >
             <MaterialCommunityIcons
               name="arrow-left"
-              size={20}
+              size={18}
               color={COLORS.white}
             />
             <Text
               style={{
                 color: COLORS.white,
                 fontWeight: "800",
-                fontSize: 15,
+                fontSize: 14,
                 marginLeft: 8,
               }}
             >
@@ -723,9 +733,11 @@ export default function StaffCreateScreen() {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
-            paddingHorizontal: 16,
-            paddingTop: 10,
-            paddingBottom: 130,
+            paddingHorizontal: isSmallScreen
+              ? NORMAL.pageHorizontalSmall
+              : NORMAL.pageHorizontal,
+            paddingTop: 8,
+            paddingBottom: 100,
           }}
         >
           <View
@@ -733,15 +745,15 @@ export default function StaffCreateScreen() {
               flexDirection: "row",
               alignItems: "center",
               justifyContent: "space-between",
-              marginBottom: 14,
+              marginBottom: 12,
             }}
           >
             <Pressable
               onPress={() => router.back()}
               style={{
-                width: 44,
-                height: 44,
-                borderRadius: 16,
+                width: 42,
+                height: 42,
+                borderRadius: 14,
                 backgroundColor: COLORS.card,
                 borderWidth: 1,
                 borderColor: COLORS.border,
@@ -751,17 +763,20 @@ export default function StaffCreateScreen() {
             >
               <MaterialCommunityIcons
                 name="chevron-left"
-                size={26}
+                size={24}
                 color={COLORS.heading}
               />
             </Pressable>
 
-            <View style={{ alignItems: "center" }}>
+            <View
+              style={{ alignItems: "center", flex: 1, paddingHorizontal: 8 }}
+            >
               <Text
                 style={{
                   color: COLORS.heading,
-                  fontSize: 18,
+                  fontSize: 16,
                   fontWeight: "900",
+                  textAlign: "center",
                 }}
               >
                 Create Staff
@@ -769,9 +784,10 @@ export default function StaffCreateScreen() {
               <Text
                 style={{
                   color: COLORS.secondaryText,
-                  fontSize: 12,
+                  fontSize: 11,
                   fontWeight: "600",
                   marginTop: 2,
+                  textAlign: "center",
                 }}
               >
                 Add employee profile and access
@@ -780,9 +796,9 @@ export default function StaffCreateScreen() {
 
             <View
               style={{
-                width: 44,
-                height: 44,
-                borderRadius: 16,
+                width: 42,
+                height: 42,
+                borderRadius: 14,
                 backgroundColor: COLORS.primarySoft,
                 alignItems: "center",
                 justifyContent: "center",
@@ -790,7 +806,7 @@ export default function StaffCreateScreen() {
             >
               <MaterialCommunityIcons
                 name="account-plus-outline"
-                size={22}
+                size={20}
                 color={COLORS.primary}
               />
             </View>
@@ -806,7 +822,6 @@ export default function StaffCreateScreen() {
               value={fName}
               onChangeText={setFName}
               placeholder="Enter full name"
-              icon="account-outline"
             />
 
             <AppInput
@@ -815,7 +830,6 @@ export default function StaffCreateScreen() {
               onChangeText={setFUsername}
               placeholder="Enter username"
               autoCapitalize="none"
-              icon="at"
             />
 
             <AppInput
@@ -825,7 +839,6 @@ export default function StaffCreateScreen() {
               placeholder="Enter email address"
               keyboardType="email-address"
               autoCapitalize="none"
-              icon="email-outline"
             />
 
             <AppInput
@@ -836,7 +849,6 @@ export default function StaffCreateScreen() {
               keyboardType="number-pad"
               secureTextEntry
               autoCapitalize="none"
-              icon="shield-lock-outline"
             />
           </SectionCard>
 
@@ -845,7 +857,13 @@ export default function StaffCreateScreen() {
             title="Role Access"
             subtitle={`Logged in as ${currentRole ?? "UNKNOWN"}`}
           >
-            <View style={{ flexDirection: "row", gap: 12, marginTop: 10 }}>
+            <View
+              style={{
+                flexDirection: useSingleColumn ? "column" : "row",
+                gap: NORMAL.gap,
+                marginTop: 8,
+              }}
+            >
               {allowedAssignableRoles.includes("STAFF") && (
                 <RoleChip
                   active={fRoles.includes("STAFF")}
@@ -871,7 +889,12 @@ export default function StaffCreateScreen() {
             title="Contact Details"
             subtitle="Phone numbers and reachability"
           >
-            <View style={{ flexDirection: "row", gap: 12 }}>
+            <View
+              style={{
+                flexDirection: useSingleColumn ? "column" : "row",
+                gap: NORMAL.gap,
+              }}
+            >
               <View style={{ flex: 1 }}>
                 <AppInput
                   label="Mobile"
@@ -879,7 +902,6 @@ export default function StaffCreateScreen() {
                   onChangeText={setFMobile}
                   placeholder="Primary mobile number"
                   keyboardType="phone-pad"
-                  icon="phone-outline"
                 />
               </View>
 
@@ -890,7 +912,6 @@ export default function StaffCreateScreen() {
                   onChangeText={setFAdditional}
                   placeholder="Optional number"
                   keyboardType="phone-pad"
-                  icon="phone-plus-outline"
                 />
               </View>
             </View>
@@ -901,14 +922,18 @@ export default function StaffCreateScreen() {
             title="Address Information"
             subtitle="Location and postal details"
           >
-            <View style={{ flexDirection: "row", gap: 12 }}>
+            <View
+              style={{
+                flexDirection: useSingleColumn ? "column" : "row",
+                gap: NORMAL.gap,
+              }}
+            >
               <View style={{ flex: 1 }}>
                 <AppInput
                   label="State"
                   value={fState}
                   onChangeText={setFState}
                   placeholder="Enter state"
-                  icon="map-outline"
                 />
               </View>
 
@@ -918,19 +943,22 @@ export default function StaffCreateScreen() {
                   value={fDistrict}
                   onChangeText={setFDistrict}
                   placeholder="Enter district"
-                  icon="office-building-marker-outline"
                 />
               </View>
             </View>
 
-            <View style={{ flexDirection: "row", gap: 12 }}>
+            <View
+              style={{
+                flexDirection: useSingleColumn ? "column" : "row",
+                gap: NORMAL.gap,
+              }}
+            >
               <View style={{ flex: 1 }}>
                 <AppInput
                   label="Taluk"
                   value={fTaluk}
                   onChangeText={setFTaluk}
                   placeholder="Enter taluk"
-                  icon="city-variant-outline"
                 />
               </View>
 
@@ -940,7 +968,6 @@ export default function StaffCreateScreen() {
                   value={fArea}
                   onChangeText={setFArea}
                   placeholder="Enter area"
-                  icon="map-marker-radius-outline"
                 />
               </View>
             </View>
@@ -950,7 +977,6 @@ export default function StaffCreateScreen() {
               value={fStreet}
               onChangeText={setFStreet}
               placeholder="Street / Landmark"
-              icon="road-variant"
             />
 
             <AppInput
@@ -960,7 +986,6 @@ export default function StaffCreateScreen() {
               placeholder="Enter pincode"
               keyboardType="number-pad"
               autoCapitalize="none"
-              icon="mailbox-outline"
             />
           </SectionCard>
 
@@ -969,7 +994,13 @@ export default function StaffCreateScreen() {
             title="Profile & Verification"
             subtitle="Upload visual identity and ID proof"
           >
-            <View style={{ flexDirection: "row", gap: 12, marginTop: 8 }}>
+            <View
+              style={{
+                flexDirection: useSingleColumn ? "column" : "row",
+                gap: NORMAL.gap,
+                marginTop: 6,
+              }}
+            >
               <UploadBox
                 title="Upload Avatar"
                 subtitle="Profile photo"
@@ -996,26 +1027,31 @@ export default function StaffCreateScreen() {
         <View
           style={{
             position: "absolute",
-            left: 16,
-            right: 16,
+            left: isSmallScreen
+              ? NORMAL.pageHorizontalSmall
+              : NORMAL.pageHorizontal,
+            right: isSmallScreen
+              ? NORMAL.pageHorizontalSmall
+              : NORMAL.pageHorizontal,
             bottom: 16,
             backgroundColor: COLORS.card,
-            borderRadius: 24,
+            borderRadius: NORMAL.cardRadius,
             borderWidth: 1,
             borderColor: COLORS.border,
-            padding: 12,
+            padding: 10,
+            shadowColor: "#000",
             shadowOpacity: 0.08,
-            shadowRadius: 16,
-            shadowOffset: { width: 0, height: 8 },
-            elevation: 6,
+            shadowRadius: 8,
+            shadowOffset: { width: 0, height: 4 },
+            elevation: 4,
           }}
         >
           <Pressable
             onPress={onCreate}
             disabled={saving}
             style={{
-              minHeight: 58,
-              borderRadius: 18,
+              height: NORMAL.buttonHeight,
+              borderRadius: NORMAL.buttonRadius,
               backgroundColor: saving ? COLORS.mutedText : COLORS.success,
               alignItems: "center",
               justifyContent: "center",
@@ -1029,7 +1065,7 @@ export default function StaffCreateScreen() {
                   style={{
                     color: COLORS.white,
                     fontWeight: "800",
-                    fontSize: 15,
+                    fontSize: 14,
                     marginLeft: 10,
                   }}
                 >
@@ -1040,14 +1076,14 @@ export default function StaffCreateScreen() {
               <>
                 <MaterialCommunityIcons
                   name="check-circle-outline"
-                  size={22}
+                  size={20}
                   color={COLORS.white}
                 />
                 <Text
                   style={{
                     color: COLORS.white,
                     fontWeight: "900",
-                    fontSize: 15,
+                    fontSize: 14,
                     marginLeft: 8,
                   }}
                 >

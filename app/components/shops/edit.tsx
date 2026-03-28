@@ -1,5 +1,10 @@
 // app/master/managers/shops/edit.tsx
-import  { useCallback, useEffect, useMemo, useRef, useState } from "react";
+
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -10,15 +15,11 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
-import * as ImagePicker from "expo-image-picker";
-import * as DocumentPicker from "expo-document-picker";
 
+import { COLORS } from "../../constants/colors";
 import SummaryApi, { baseURL } from "../../constants/SummaryApi";
 import { useAuth } from "../../context/auth/AuthProvider";
-import { COLORS } from "../../constants/colors";
 
 const apiUrl = (path: string) => `${baseURL}${path}`;
 
@@ -94,50 +95,51 @@ function SectionCard({
   return (
     <View
       style={{
-        marginTop: 16,
+        marginTop: 10,
         backgroundColor: COLORS.card,
-        borderRadius: 28,
-        padding: 18,
+        borderRadius: 14,
+        padding: 12,
         borderWidth: 1,
         borderColor: COLORS.border,
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.05,
-        shadowRadius: 18,
-        elevation: 3,
       }}
     >
       <View
-        style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginBottom: 8,
+        }}
       >
         <View
           style={{
-            width: 44,
-            height: 44,
-            borderRadius: 16,
+            width: 34,
+            height: 34,
+            borderRadius: 10,
             backgroundColor: COLORS.primarySoft,
             alignItems: "center",
             justifyContent: "center",
-            marginRight: 12,
+            marginRight: 10,
           }}
         >
-          <MaterialCommunityIcons name={icon} size={20} color={COLORS.primary} />
+          <MaterialCommunityIcons name={icon} size={17} color={COLORS.primary} />
         </View>
 
         <View style={{ flex: 1 }}>
           <Text
             style={{
               color: COLORS.heading,
-              fontSize: 18,
-              fontWeight: "900",
+              fontSize: 15,
+              fontWeight: "800",
             }}
           >
             {title}
           </Text>
+
           {!!subtitle && (
             <Text
               style={{
                 color: COLORS.secondaryText,
-                fontSize: 12,
+                fontSize: 11,
                 marginTop: 2,
                 fontWeight: "500",
               }}
@@ -171,15 +173,14 @@ function AppInput({
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
 }) {
   return (
-    <View style={{ marginTop: 14 }}>
+    <View style={{ marginTop: 10 }}>
       <Text
         style={{
           color: COLORS.secondaryText,
-          fontWeight: "800",
-          fontSize: 12,
-          marginBottom: 8,
-          textTransform: "uppercase",
-          letterSpacing: 0.6,
+          fontWeight: "600",
+          fontSize: 10,
+          marginBottom: 4,
+          letterSpacing: 0.2,
         }}
       >
         {label}
@@ -189,28 +190,15 @@ function AppInput({
         style={{
           flexDirection: "row",
           alignItems: "center",
-          minHeight: 56,
-          borderRadius: 18,
+          height: 42,
+          borderRadius: 10,
           backgroundColor: COLORS.soft,
           borderWidth: 1,
           borderColor: COLORS.border,
-          paddingHorizontal: 14,
+          paddingHorizontal: 10,
         }}
       >
-        <View
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 12,
-            backgroundColor: COLORS.white,
-            borderWidth: 1,
-            borderColor: COLORS.border,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <MaterialCommunityIcons name={icon} size={18} color={COLORS.primary} />
-        </View>
+        <MaterialCommunityIcons name={icon} size={16} color={COLORS.primary} />
 
         <TextInput
           value={value}
@@ -221,18 +209,17 @@ function AppInput({
           autoCapitalize={autoCapitalize}
           style={{
             flex: 1,
-            marginLeft: 12,
+            marginLeft: 8,
             color: COLORS.primaryText,
-            fontSize: 15,
-            fontWeight: "600",
-            paddingVertical: 14,
+            fontSize: 13,
+            fontWeight: "500",
+            paddingVertical: 0,
           }}
         />
       </View>
     </View>
   );
 }
-
 
 function DocCard({
   title,
@@ -258,23 +245,25 @@ function DocCard({
     ? `${Math.round((current.bytes || 0) / 1024)} KB`
     : "";
 
+  const disabled = saving || docsUploading;
+
   return (
     <View
       style={{
-        marginTop: 14,
-        borderRadius: 22,
+        marginTop: 10,
+        borderRadius: 12,
         backgroundColor: COLORS.soft,
         borderWidth: 1,
         borderColor: COLORS.border,
-        padding: 14,
+        padding: 10,
       }}
     >
       <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
         <View
           style={{
-            width: 52,
-            height: 52,
-            borderRadius: 16,
+            width: 40,
+            height: 40,
+            borderRadius: 10,
             backgroundColor: COLORS.white,
             borderWidth: 1,
             borderColor: COLORS.border,
@@ -290,17 +279,17 @@ function DocCard({
                 ? "file-document-outline"
                 : "file-outline"
             }
-            size={24}
+            size={18}
             color={picked ? COLORS.success : COLORS.primary}
           />
         </View>
 
-        <View style={{ flex: 1, marginLeft: 12 }}>
+        <View style={{ flex: 1, marginLeft: 10 }}>
           <Text
             style={{
               color: COLORS.heading,
-              fontSize: 15,
-              fontWeight: "800",
+              fontSize: 13,
+              fontWeight: "700",
             }}
           >
             {title}
@@ -310,9 +299,9 @@ function DocCard({
             <Text
               style={{
                 color: COLORS.primaryText,
-                fontSize: 13,
+                fontSize: 11,
                 marginTop: 4,
-                fontWeight: "600",
+                fontWeight: "500",
               }}
             >
               Selected: {picked.name}
@@ -321,9 +310,9 @@ function DocCard({
             <Text
               style={{
                 color: COLORS.primaryText,
-                fontSize: 13,
+                fontSize: 11,
                 marginTop: 4,
-                fontWeight: "600",
+                fontWeight: "500",
               }}
             >
               Uploaded: {current?.fileName || "document"}
@@ -332,7 +321,7 @@ function DocCard({
             <Text
               style={{
                 color: COLORS.secondaryText,
-                fontSize: 13,
+                fontSize: 11,
                 marginTop: 4,
                 fontWeight: "500",
               }}
@@ -345,9 +334,9 @@ function DocCard({
             <Text
               style={{
                 color: COLORS.mutedText,
-                fontSize: 11,
-                marginTop: 4,
-                fontWeight: "600",
+                fontSize: 10,
+                marginTop: 3,
+                fontWeight: "500",
               }}
             >
               {current?.mimeType || ""}
@@ -360,23 +349,25 @@ function DocCard({
       <View
         style={{
           flexDirection: "row",
-          gap: 10,
-          marginTop: 14,
           flexWrap: "wrap",
+          gap: 8,
+          marginTop: 10,
         }}
       >
         <Pressable
           onPress={onPick}
-          disabled={saving || docsUploading}
+          disabled={disabled}
           style={{
-            paddingHorizontal: 14,
-            paddingVertical: 11,
-            borderRadius: 14,
+            minHeight: 36,
+            paddingHorizontal: 12,
+            borderRadius: 10,
             backgroundColor: COLORS.primary,
-            opacity: saving || docsUploading ? 0.65 : 1,
+            alignItems: "center",
+            justifyContent: "center",
+            opacity: disabled ? 0.65 : 1,
           }}
         >
-          <Text style={{ color: COLORS.white, fontWeight: "900", fontSize: 12 }}>
+          <Text style={{ color: COLORS.white, fontWeight: "800", fontSize: 12 }}>
             {picked ? "Replace" : "Choose"}
           </Text>
         </Pressable>
@@ -384,21 +375,23 @@ function DocCard({
         {!!picked && (
           <Pressable
             onPress={onClearPick}
-            disabled={saving || docsUploading}
+            disabled={disabled}
             style={{
-              paddingHorizontal: 14,
-              paddingVertical: 11,
-              borderRadius: 14,
+              minHeight: 36,
+              paddingHorizontal: 12,
+              borderRadius: 10,
               backgroundColor: COLORS.white,
               borderWidth: 1,
               borderColor: COLORS.border,
-              opacity: saving || docsUploading ? 0.65 : 1,
+              alignItems: "center",
+              justifyContent: "center",
+              opacity: disabled ? 0.65 : 1,
             }}
           >
             <Text
               style={{
                 color: COLORS.primaryText,
-                fontWeight: "900",
+                fontWeight: "800",
                 fontSize: 12,
               }}
             >
@@ -410,16 +403,18 @@ function DocCard({
         {hasServer && (
           <Pressable
             onPress={onRemoveServer}
-            disabled={saving || docsUploading}
+            disabled={disabled}
             style={{
-              paddingHorizontal: 14,
-              paddingVertical: 11,
-              borderRadius: 14,
+              minHeight: 36,
+              paddingHorizontal: 12,
+              borderRadius: 10,
               backgroundColor: COLORS.danger,
-              opacity: saving || docsUploading ? 0.65 : 1,
+              alignItems: "center",
+              justifyContent: "center",
+              opacity: disabled ? 0.65 : 1,
             }}
           >
-            <Text style={{ color: COLORS.white, fontWeight: "900", fontSize: 12 }}>
+            <Text style={{ color: COLORS.white, fontWeight: "800", fontSize: 12 }}>
               Remove
             </Text>
           </Pressable>
@@ -539,8 +534,8 @@ export default function ShopEditScreen() {
     });
 
     if (!result.canceled) {
-      const a = result.assets?.[0];
-      if (a?.uri) setNewFrontImage(a);
+      const asset = result.assets?.[0];
+      if (asset?.uri) setNewFrontImage(asset);
     }
   };
 
@@ -553,14 +548,14 @@ export default function ShopEditScreen() {
 
     if (result.canceled) return;
 
-    const a = result.assets?.[0];
-    if (!a?.uri) return toastError("File not selected");
+    const asset = result.assets?.[0];
+    if (!asset?.uri) return toastError("File not selected");
 
     const doc: PickedDoc = {
-      uri: a.uri,
-      name: a.name || `${key}_${Date.now()}`,
-      mimeType: a.mimeType || "application/octet-stream",
-      size: a.size,
+      uri: asset.uri,
+      name: asset.name || `${key}_${Date.now()}`,
+      mimeType: asset.mimeType || "application/octet-stream",
+      size: asset.size,
     };
 
     if (key === "gstCertificate") setGstCertificate(doc);
@@ -772,7 +767,12 @@ export default function ShopEditScreen() {
         return toastError(json?.message || "Remove failed");
       }
 
-      toastSuccess(`${key} removed`);
+      toastSuccess(
+        key === "gstCertificate"
+          ? "GST Certificate removed"
+          : "Udyam Certificate removed"
+      );
+
       await fetchDetails();
     } catch {
       toastError("Network error");
@@ -782,6 +782,7 @@ export default function ShopEditScreen() {
   };
 
   const heroFrontImage = newFrontImage?.uri || data?.frontImageUrl || "";
+  const actionDisabled = saving || docsUploading || frontUploading;
 
   return (
     <SafeAreaView
@@ -799,9 +800,9 @@ export default function ShopEditScreen() {
         >
           <View
             style={{
-              width: 58,
-              height: 58,
-              borderRadius: 999,
+              width: 48,
+              height: 48,
+              borderRadius: 24,
               backgroundColor: COLORS.card,
               alignItems: "center",
               justifyContent: "center",
@@ -811,11 +812,13 @@ export default function ShopEditScreen() {
           >
             <ActivityIndicator color={COLORS.primary} />
           </View>
+
           <Text
             style={{
-              marginTop: 14,
+              marginTop: 10,
               color: COLORS.secondaryText,
-              fontWeight: "700",
+              fontWeight: "600",
+              fontSize: 12,
             }}
           >
             Loading shop details...
@@ -832,9 +835,9 @@ export default function ShopEditScreen() {
         >
           <View
             style={{
-              width: 84,
-              height: 84,
-              borderRadius: 999,
+              width: 68,
+              height: 68,
+              borderRadius: 34,
               backgroundColor: COLORS.soft,
               alignItems: "center",
               justifyContent: "center",
@@ -842,25 +845,28 @@ export default function ShopEditScreen() {
           >
             <MaterialCommunityIcons
               name="store-remove-outline"
-              size={38}
+              size={30}
               color={COLORS.mutedText}
             />
           </View>
+
           <Text
             style={{
-              marginTop: 14,
-              fontSize: 19,
-              fontWeight: "900",
+              marginTop: 10,
+              fontSize: 16,
+              fontWeight: "800",
               color: COLORS.heading,
             }}
           >
             No data found
           </Text>
+
           <Text
             style={{
               marginTop: 6,
               textAlign: "center",
               color: COLORS.secondaryText,
+              fontSize: 12,
             }}
           >
             This shop record is unavailable or may have been removed.
@@ -870,8 +876,8 @@ export default function ShopEditScreen() {
         <>
           <View
             style={{
-              paddingHorizontal: 16,
-              paddingTop: 8,
+              paddingHorizontal: 14,
+              paddingTop: 6,
               paddingBottom: 8,
               flexDirection: "row",
               alignItems: "center",
@@ -882,33 +888,29 @@ export default function ShopEditScreen() {
               onPress={() => router.back()}
               hitSlop={10}
               style={{
-                width: 44,
-                height: 44,
-                borderRadius: 16,
+                width: 38,
+                height: 38,
+                borderRadius: 10,
                 backgroundColor: COLORS.card,
                 borderWidth: 1,
                 borderColor: COLORS.border,
                 alignItems: "center",
                 justifyContent: "center",
-                shadowOpacity: 0.05,
-                shadowRadius: 10,
-                shadowOffset: { width: 0, height: 4 },
-                elevation: 2,
               }}
             >
               <MaterialCommunityIcons
                 name="chevron-left"
-                size={26}
+                size={22}
                 color={COLORS.heading}
               />
             </Pressable>
 
-            <View style={{ flex: 1, alignItems: "center", paddingHorizontal: 12 }}>
+            <View style={{ flex: 1, alignItems: "center", paddingHorizontal: 10 }}>
               <Text
                 style={{
                   color: COLORS.heading,
-                  fontSize: 18,
-                  fontWeight: "900",
+                  fontSize: 16,
+                  fontWeight: "800",
                 }}
               >
                 Edit Shop
@@ -916,9 +918,9 @@ export default function ShopEditScreen() {
               <Text
                 style={{
                   color: COLORS.secondaryText,
-                  fontSize: 12,
+                  fontSize: 10,
                   marginTop: 2,
-                  fontWeight: "600",
+                  fontWeight: "500",
                 }}
               >
                 Admin shop editor
@@ -927,9 +929,9 @@ export default function ShopEditScreen() {
 
             <View
               style={{
-                width: 44,
-                height: 44,
-                borderRadius: 16,
+                width: 38,
+                height: 38,
+                borderRadius: 10,
                 backgroundColor: COLORS.primarySoft,
                 alignItems: "center",
                 justifyContent: "center",
@@ -937,7 +939,7 @@ export default function ShopEditScreen() {
             >
               <MaterialCommunityIcons
                 name="store-edit-outline"
-                size={22}
+                size={18}
                 color={COLORS.primary}
               />
             </View>
@@ -946,28 +948,28 @@ export default function ShopEditScreen() {
           <ScrollView
             ref={scrollRef}
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingHorizontal: 16,
-              paddingBottom: 34,
-            }}
             keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{
+              paddingHorizontal: 14,
+              paddingBottom: 24,
+            }}
           >
             <SectionCard
               title="Front Image Management"
               subtitle="Choose, upload, or remove the shop front image"
               icon="image-outline"
             >
-              <View style={{ alignItems: "center", marginTop: 6 }}>
+              <View style={{ alignItems: "center", marginTop: 4 }}>
                 <View
                   style={{
                     width: "100%",
-                    height: 180,
-                    borderRadius: 24,
+                    height: 120,
+                    borderRadius: 14,
                     overflow: "hidden",
                     alignItems: "center",
                     justifyContent: "center",
                     backgroundColor: COLORS.soft,
-                    borderWidth: 2,
+                    borderWidth: 1,
                     borderColor: COLORS.border,
                   }}
                 >
@@ -980,7 +982,7 @@ export default function ShopEditScreen() {
                   ) : (
                     <MaterialCommunityIcons
                       name="storefront-outline"
-                      size={56}
+                      size={40}
                       color={COLORS.mutedText}
                     />
                   )}
@@ -989,9 +991,9 @@ export default function ShopEditScreen() {
                 <View
                   style={{
                     flexDirection: "row",
-                    gap: 10,
-                    marginTop: 18,
                     flexWrap: "wrap",
+                    gap: 8,
+                    marginTop: 10,
                     justifyContent: "center",
                   }}
                 >
@@ -999,15 +1001,17 @@ export default function ShopEditScreen() {
                     onPress={pickFrontImage}
                     disabled={frontUploading || saving}
                     style={{
-                      paddingHorizontal: 16,
-                      paddingVertical: 12,
-                      borderRadius: 16,
+                      minHeight: 38,
+                      paddingHorizontal: 12,
+                      borderRadius: 10,
                       backgroundColor: COLORS.primary,
+                      alignItems: "center",
+                      justifyContent: "center",
                       opacity: frontUploading || saving ? 0.65 : 1,
                     }}
                   >
-                    <Text style={{ color: COLORS.white, fontWeight: "900" }}>
-                      Choose Front Image
+                    <Text style={{ color: COLORS.white, fontWeight: "800", fontSize: 12 }}>
+                      Choose Image
                     </Text>
                   </Pressable>
 
@@ -1015,30 +1019,33 @@ export default function ShopEditScreen() {
                     onPress={uploadFrontImage}
                     disabled={frontUploading || saving || !newFrontImage?.uri}
                     style={{
-                      paddingHorizontal: 16,
-                      paddingVertical: 12,
-                      borderRadius: 16,
+                      minHeight: 38,
+                      paddingHorizontal: 12,
+                      borderRadius: 10,
                       backgroundColor: COLORS.heading,
+                      alignItems: "center",
+                      justifyContent: "center",
                       opacity:
                         frontUploading || saving || !newFrontImage?.uri ? 0.45 : 1,
                     }}
                   >
                     {frontUploading ? (
                       <View style={{ flexDirection: "row", alignItems: "center" }}>
-                        <ActivityIndicator color={COLORS.white} />
+                        <ActivityIndicator color={COLORS.white} size="small" />
                         <Text
                           style={{
                             marginLeft: 8,
                             color: COLORS.white,
-                            fontWeight: "900",
+                            fontWeight: "800",
+                            fontSize: 12,
                           }}
                         >
                           Uploading
                         </Text>
                       </View>
                     ) : (
-                      <Text style={{ color: COLORS.white, fontWeight: "900" }}>
-                        Upload Front Image
+                      <Text style={{ color: COLORS.white, fontWeight: "800", fontSize: 12 }}>
+                        Upload Image
                       </Text>
                     )}
                   </Pressable>
@@ -1047,14 +1054,16 @@ export default function ShopEditScreen() {
                     onPress={removeFrontImage}
                     disabled={frontUploading || saving}
                     style={{
-                      paddingHorizontal: 16,
-                      paddingVertical: 12,
-                      borderRadius: 16,
+                      minHeight: 38,
+                      paddingHorizontal: 12,
+                      borderRadius: 10,
                       backgroundColor: COLORS.danger,
+                      alignItems: "center",
+                      justifyContent: "center",
                       opacity: frontUploading || saving ? 0.65 : 1,
                     }}
                   >
-                    <Text style={{ color: COLORS.white, fontWeight: "900" }}>
+                    <Text style={{ color: COLORS.white, fontWeight: "800", fontSize: 12 }}>
                       Remove
                     </Text>
                   </Pressable>
@@ -1062,9 +1071,9 @@ export default function ShopEditScreen() {
 
                 <Text
                   style={{
-                    marginTop: 12,
+                    marginTop: 8,
                     color: COLORS.secondaryText,
-                    fontSize: 12,
+                    fontSize: 10,
                     textAlign: "center",
                   }}
                 >
@@ -1104,7 +1113,7 @@ export default function ShopEditScreen() {
                 label="State"
                 value={stateName}
                 onChangeText={setStateName}
-                placeholder="state"
+                placeholder="State"
                 icon="map-outline"
               />
 
@@ -1112,7 +1121,7 @@ export default function ShopEditScreen() {
                 label="District"
                 value={district}
                 onChangeText={setDistrict}
-                placeholder="district"
+                placeholder="District"
                 icon="office-building-marker-outline"
               />
 
@@ -1120,7 +1129,7 @@ export default function ShopEditScreen() {
                 label="Taluk"
                 value={taluk}
                 onChangeText={setTaluk}
-                placeholder="taluk"
+                placeholder="Taluk"
                 icon="city-variant-outline"
               />
 
@@ -1128,7 +1137,7 @@ export default function ShopEditScreen() {
                 label="Area"
                 value={area}
                 onChangeText={setArea}
-                placeholder="area"
+                placeholder="Area"
                 icon="map-marker-radius-outline"
               />
 
@@ -1136,7 +1145,7 @@ export default function ShopEditScreen() {
                 label="Door No / Street"
                 value={street}
                 onChangeText={setStreet}
-                placeholder="door no, street"
+                placeholder="Door no, street"
                 icon="road-variant"
               />
 
@@ -1144,34 +1153,34 @@ export default function ShopEditScreen() {
                 label="Pincode"
                 value={pincode}
                 onChangeText={setPincode}
-                placeholder="pincode"
+                placeholder="Pincode"
                 icon="mailbox-outline"
                 keyboardType="number-pad"
               />
 
               <Pressable
                 onPress={submitUpdate}
-                disabled={saving || docsUploading || frontUploading}
+                disabled={actionDisabled}
                 style={{
-                  marginTop: 22,
-                  minHeight: 56,
-                  borderRadius: 18,
+                  marginTop: 14,
+                  height: 42,
+                  borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
                   backgroundColor: COLORS.success,
-                  opacity: saving || docsUploading || frontUploading ? 0.65 : 1,
+                  opacity: actionDisabled ? 0.65 : 1,
                   flexDirection: "row",
                 }}
               >
                 {saving ? (
                   <>
-                    <ActivityIndicator color={COLORS.white} />
+                    <ActivityIndicator color={COLORS.white} size="small" />
                     <Text
                       style={{
-                        marginLeft: 10,
+                        marginLeft: 8,
                         color: COLORS.white,
-                        fontWeight: "900",
-                        fontSize: 15,
+                        fontWeight: "800",
+                        fontSize: 13,
                       }}
                     >
                       Saving Changes...
@@ -1181,15 +1190,15 @@ export default function ShopEditScreen() {
                   <>
                     <MaterialCommunityIcons
                       name="content-save-outline"
-                      size={20}
+                      size={17}
                       color={COLORS.white}
                     />
                     <Text
                       style={{
                         marginLeft: 8,
                         color: COLORS.white,
-                        fontWeight: "900",
-                        fontSize: 15,
+                        fontWeight: "800",
+                        fontSize: 13,
                       }}
                     >
                       Save Changes
@@ -1230,9 +1239,9 @@ export default function ShopEditScreen() {
                 onPress={uploadDocs}
                 disabled={docsUploading || saving || frontUploading}
                 style={{
-                  marginTop: 20,
-                  minHeight: 54,
-                  borderRadius: 18,
+                  marginTop: 12,
+                  height: 42,
+                  borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
                   backgroundColor: COLORS.heading,
@@ -1242,12 +1251,13 @@ export default function ShopEditScreen() {
               >
                 {docsUploading ? (
                   <>
-                    <ActivityIndicator color={COLORS.white} />
+                    <ActivityIndicator color={COLORS.white} size="small" />
                     <Text
                       style={{
-                        marginLeft: 10,
+                        marginLeft: 8,
                         color: COLORS.white,
-                        fontWeight: "900",
+                        fontWeight: "800",
+                        fontSize: 13,
                       }}
                     >
                       Uploading...
@@ -1257,14 +1267,15 @@ export default function ShopEditScreen() {
                   <>
                     <MaterialCommunityIcons
                       name="cloud-upload-outline"
-                      size={20}
+                      size={17}
                       color={COLORS.white}
                     />
                     <Text
                       style={{
                         marginLeft: 8,
                         color: COLORS.white,
-                        fontWeight: "900",
+                        fontWeight: "800",
+                        fontSize: 13,
                       }}
                     >
                       Upload Selected Docs
@@ -1277,9 +1288,9 @@ export default function ShopEditScreen() {
                 onPress={clearPickedDocs}
                 disabled={docsUploading || saving || frontUploading}
                 style={{
-                  marginTop: 12,
-                  minHeight: 50,
-                  borderRadius: 16,
+                  marginTop: 10,
+                  height: 40,
+                  borderRadius: 10,
                   alignItems: "center",
                   justifyContent: "center",
                   backgroundColor: COLORS.soft,
@@ -1291,7 +1302,8 @@ export default function ShopEditScreen() {
                 <Text
                   style={{
                     color: COLORS.primaryText,
-                    fontWeight: "900",
+                    fontWeight: "800",
+                    fontSize: 12,
                   }}
                 >
                   Clear Selected

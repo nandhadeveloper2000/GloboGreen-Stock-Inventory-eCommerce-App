@@ -246,6 +246,27 @@ const SummaryApi = {
     url: (id: string) => `${API_BASE}/shopowners/${id}`,
   },
 
+  shopowner_admin_avatar_upload: {
+    method: "POST",
+    url: (id: string) => `${API_BASE}/shopowners/${id}/avatar`,
+  },
+shopowner_admin_avatar_remove: {
+  method: "DELETE",
+  url: (id: string) => `${API_BASE}/shopowners/${id}/avatar`,
+},
+  shopowner_admin_docs_upload: {
+    method: "POST",
+    url: (id: string) => `${API_BASE}/shopowners/${id}/docs`,
+  },
+  shopowner_admin_docs_remove: {
+  method: "DELETE",
+  url: (id: string, key: string) =>
+    `${API_BASE}/shopowners/${id}/docs/${key}`,
+},
+shopowner_toggle_active: {
+  method: "PUT",
+  url: (id: string) => `${API_BASE}/shopowners/${id}/activate`,
+},
   /* ===================== SHOPS ===================== */
   master_create_shop: { method: "POST", url: `${API_BASE}/shops` },
   master_list_shops: { method: "GET", url: `${API_BASE}/shops` },
@@ -261,6 +282,33 @@ const SummaryApi = {
     method: "DELETE",
     url: (id: string) => `${API_BASE}/shops/${id}`,
   },
+
+  shop_docs_upload_admin: {
+    method: "POST",
+    url: (id: string) => `${API_BASE}/shops/${id}/docs`,
+  },
+    shop_docs_remove_admin: {
+    method: "DELETE",
+    url: (id: string, key: "gstCertificate" | "udyamCertificate") =>
+      `${API_BASE}/shops/${id}/docs/${key}/admin`,
+  },
+    shop_front_upload_owner: {
+    method: "POST",
+    url: (id: string) => `${API_BASE}/shops/${id}/front`,
+  },
+  shop_front_remove_owner: {
+    method: "DELETE",
+    url: (id: string) => `${API_BASE}/shops/${id}/front`,
+  },
+  shop_front_upload_admin: {
+    method: "POST",
+    url: (id: string) => `${API_BASE}/shops/${id}/front/admin`,
+  },
+  shop_front_remove_admin: {
+    method: "DELETE",
+    url: (id: string) => `${API_BASE}/shops/${id}/front/admin`,
+  },
+
 };
 
 export default SummaryApi;

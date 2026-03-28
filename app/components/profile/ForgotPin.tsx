@@ -138,16 +138,12 @@ function getForgotPinApi(role?: string | null): ApiConfig | null {
   switch (normalized) {
     case ROLES.MASTER_ADMIN:
       return SummaryApi.master_forgot_pin;
-
     case ROLES.MANAGER:
       return SummaryApi.subadmin_forgot_pin;
-
     case ROLES.SUPERVISOR:
       return SummaryApi.staff_forgot_pin;
-
     case ROLES.STAFF:
       return SummaryApi.staff_forgot_pin;
-
     default:
       return null;
   }
@@ -159,16 +155,12 @@ function getResetPinApi(role?: string | null): ApiConfig | null {
   switch (normalized) {
     case ROLES.MASTER_ADMIN:
       return SummaryApi.master_reset_pin;
-
     case ROLES.MANAGER:
       return SummaryApi.subadmin_reset_pin;
-
     case ROLES.SUPERVISOR:
       return SummaryApi.staff_reset_pin;
-
     case ROLES.STAFF:
       return SummaryApi.staff_reset_pin;
-
     default:
       return null;
   }
@@ -185,7 +177,7 @@ function OtpBox({
   const digits = Array.from({ length: 6 }, (_, i) => value[i] || "");
 
   return (
-    <Pressable onPress={() => inputRef.current?.focus()} className="mb-4 mt-1">
+    <Pressable onPress={() => inputRef.current?.focus()} className="mb-3 mt-1">
       <TextInput
         ref={inputRef}
         value={value}
@@ -199,9 +191,9 @@ function OtpBox({
         {digits.map((digit, index) => (
           <View
             key={index}
-            className="h-[58px] w-[14.8%] items-center justify-center rounded-[18px] border border-border bg-soft"
+            className="h-[46px] w-[15%] items-center justify-center rounded-[12px] border border-border bg-soft"
           >
-            <Text className="text-[22px] font-black text-heading">{digit}</Text>
+            <Text className="text-[18px] font-bold text-heading">{digit}</Text>
           </View>
         ))}
       </View>
@@ -214,7 +206,6 @@ function InputField({
   placeholder,
   value,
   onChangeText,
-  icon,
   autoCapitalize = "none",
   secure = false,
   onToggleSecure,
@@ -225,7 +216,6 @@ function InputField({
   placeholder: string;
   value: string;
   onChangeText: (v: string) => void;
-  icon: keyof typeof MaterialCommunityIcons.glyphMap;
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
   secure?: boolean;
   onToggleSecure?: () => void;
@@ -233,18 +223,12 @@ function InputField({
   maxLength?: number;
 }) {
   return (
-    <View className="mb-4">
-      <Text className="mb-2 text-sm font-extrabold text-heading">{label}</Text>
+    <View className="mb-3">
+      <Text className="mb-1.5 text-[13px] font-semibold text-heading">
+        {label}
+      </Text>
 
-      <View className="min-h-14 flex-row items-center rounded-[20px] border border-border bg-soft px-4">
-        <View className="w-7 items-start justify-center">
-          <MaterialCommunityIcons
-            name={icon}
-            size={18}
-            color={COLORS.secondaryText}
-          />
-        </View>
-
+      <View className="h-[48px] flex-row items-center rounded-[14px] border border-border bg-soft px-3">
         <TextInput
           value={value}
           onChangeText={onChangeText}
@@ -255,18 +239,14 @@ function InputField({
           secureTextEntry={secure}
           keyboardType={keyboardType}
           maxLength={maxLength}
-          className="flex-1 py-4 text-[15px] font-extrabold text-primaryText"
+          className="flex-1 text-[14px] font-semibold text-primaryText"
         />
 
         {onToggleSecure ? (
-          <Pressable
-            onPress={onToggleSecure}
-            hitSlop={10}
-            className="w-8 items-end justify-center"
-          >
+          <Pressable onPress={onToggleSecure} hitSlop={10}>
             <MaterialCommunityIcons
               name={secure ? "eye-off-outline" : "eye-outline"}
-              size={20}
+              size={18}
               color={COLORS.secondaryText}
             />
           </Pressable>
@@ -286,19 +266,19 @@ function PinRule({
   return (
     <View className="mb-2 flex-row items-center">
       <View
-        className={`mr-2 h-[18px] w-[18px] items-center justify-center rounded-full ${
+        className={`mr-2 h-4 w-4 items-center justify-center rounded-full ${
           active ? "bg-primary" : "bg-soft"
         }`}
       >
         <MaterialCommunityIcons
           name={active ? "check" : "minus"}
-          size={12}
+          size={10}
           color={active ? COLORS.white : COLORS.secondaryText}
         />
       </View>
 
       <Text
-        className={`text-[12px] font-semibold ${
+        className={`text-[12px] font-medium ${
           active ? "text-primaryText" : "text-secondaryText"
         }`}
       >
@@ -339,6 +319,7 @@ export default function ForgotPinScreen() {
   const isValidPin = useCallback((pin: string) => /^\d{4,6}$/.test(pin.trim()), []);
 
   const pinHasLength = useMemo(() => /^\d{4,6}$/.test(newPin.trim()), [newPin]);
+
   const pinMatched = useMemo(() => {
     return (
       !!newPin.trim() &&
@@ -488,7 +469,7 @@ export default function ForgotPinScreen() {
       >
         <ScrollView
           className="flex-1"
-          contentContainerStyle={{ paddingBottom: 36 }}
+          contentContainerStyle={{ paddingBottom: 28 }}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
         >
@@ -496,59 +477,59 @@ export default function ForgotPinScreen() {
             colors={theme.gradient}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            className="min-h-[300px] overflow-hidden rounded-b-[34px] px-5 pb-8 pt-3"
+            className="min-h-[250px] overflow-hidden rounded-b-[26px] px-4 pb-6 pt-3"
           >
-            <View className="absolute right-[-20px] top-[-30px] h-[180px] w-[180px] rounded-full bg-white/10" />
-            <View className="absolute bottom-6 left-[-20px] h-[130px] w-[130px] rounded-full bg-white/10" />
-            <View className="absolute right-10 top-24 h-[90px] w-[90px] rounded-full bg-white/5" />
+            <View className="absolute right-[-20px] top-[-30px] h-[150px] w-[150px] rounded-full bg-white/10" />
+            <View className="absolute bottom-5 left-[-20px] h-[100px] w-[100px] rounded-full bg-white/10" />
+            <View className="absolute right-8 top-20 h-[70px] w-[70px] rounded-full bg-white/5" />
 
             <Pressable
               onPress={() => router.back()}
-              className="mb-5 h-[44px] w-[44px] items-center justify-center rounded-2xl border border-white/15 bg-white/10"
+              className="mb-4 h-[40px] w-[40px] items-center justify-center rounded-[12px] border border-white/15 bg-white/10"
             >
               <MaterialCommunityIcons
                 name="chevron-left"
-                size={24}
+                size={22}
                 color={COLORS.white}
               />
             </Pressable>
 
             <View className="self-start rounded-full bg-white/15 px-3 py-1.5">
-              <Text className="text-[11px] font-extrabold tracking-wide text-white">
+              <Text className="text-[10px] font-extrabold tracking-wide text-white">
                 {theme.badge}
               </Text>
             </View>
 
-            <Text className="mt-4 text-[30px] font-black text-white">
+            <Text className="mt-3 text-[24px] font-black text-white">
               {stepTitle}
             </Text>
 
-            <Text className="mt-2 max-w-[94%] text-[14px] leading-[22px] text-white/85">
+            <Text className="mt-2 max-w-[95%] text-[13px] leading-[20px] text-white/85">
               {stepSubtitle}
             </Text>
 
-            <View className="mt-5 h-2 w-full overflow-hidden rounded-full bg-white/15">
+            <View className="mt-4 h-[7px] w-full overflow-hidden rounded-full bg-white/15">
               <View
                 className="h-full rounded-full bg-white"
                 style={{ width: `${stepProgress}%`, opacity: 0.95 }}
               />
             </View>
 
-            <View className="mt-5 flex-row items-center">
+            <View className="mt-4 flex-row items-center">
               {[1, 2, 3].map((n) => {
                 const isActive = step >= (n as Step);
 
                 return (
                   <View key={n} className="mr-4 items-center">
                     <View
-                      className={`h-10 w-10 items-center justify-center rounded-full border ${
+                      className={`h-9 w-9 items-center justify-center rounded-full border ${
                         isActive
                           ? "border-white bg-white"
                           : "border-white/20 bg-white/10"
                       }`}
                     >
                       <Text
-                        className={`text-[13px] font-black ${
+                        className={`text-[12px] font-bold ${
                           isActive ? "text-heading" : "text-white"
                         }`}
                       >
@@ -557,7 +538,7 @@ export default function ForgotPinScreen() {
                     </View>
 
                     <Text
-                      className={`mt-1.5 text-[11px] font-bold ${
+                      className={`mt-1 text-[10px] font-semibold ${
                         isActive ? "text-white" : "text-white/70"
                       }`}
                     >
@@ -569,24 +550,24 @@ export default function ForgotPinScreen() {
             </View>
           </LinearGradient>
 
-          <View className="-mt-6 px-4">
+          <View className="-mt-5 px-4">
             <View
-              className="rounded-[28px] border border-border bg-card p-4"
+              className="rounded-[18px] border border-border bg-card p-4"
               style={{
                 shadowColor: "#000",
-                shadowOpacity: 0.06,
-                shadowRadius: 14,
-                shadowOffset: { width: 0, height: 6 },
-                elevation: 4,
+                shadowOpacity: 0.05,
+                shadowRadius: 10,
+                shadowOffset: { width: 0, height: 4 },
+                elevation: 3,
               }}
             >
               {step === 1 && (
                 <>
-                  <View className="mb-5">
-                    <Text className="mb-1 text-[18px] font-black text-heading">
+                  <View className="mb-4">
+                    <Text className="mb-1 text-[17px] font-bold text-heading">
                       Identify Your Account
                     </Text>
-                    <Text className="text-[13px] font-medium leading-[20px] text-secondaryText">
+                    <Text className="text-[12.5px] leading-[18px] text-secondaryText">
                       Enter your registered email or username to receive a secure one-time password.
                     </Text>
                   </View>
@@ -596,25 +577,21 @@ export default function ForgotPinScreen() {
                     placeholder="Enter email or username"
                     value={login}
                     onChangeText={setLogin}
-                    icon="account-circle-outline"
                     autoCapitalize="none"
                   />
 
-                  <View className="mb-4 rounded-[22px] border border-border bg-soft p-4">
+                  <View className="mb-3 rounded-[14px] border border-border bg-soft p-3">
                     <View className="flex-row items-start">
-                      <View className="mr-3 mt-0.5">
-                        <MaterialCommunityIcons
-                          name="email-fast-outline"
-                          size={18}
-                          color={COLORS.primaryDark}
-                        />
-                      </View>
-
-                      <View className="flex-1">
-                        <Text className="mb-1 text-sm font-extrabold text-heading">
+                      <MaterialCommunityIcons
+                        name="email-fast-outline"
+                        size={16}
+                        color={COLORS.primaryDark}
+                      />
+                      <View className="ml-2 flex-1">
+                        <Text className="mb-1 text-[13px] font-semibold text-heading">
                           OTP Verification
                         </Text>
-                        <Text className="text-[12.5px] font-semibold leading-[18px] text-secondaryText">
+                        <Text className="text-[12px] leading-[17px] text-secondaryText">
                           A one-time verification code will be sent to your registered email address.
                         </Text>
                       </View>
@@ -624,7 +601,7 @@ export default function ForgotPinScreen() {
                   <Pressable
                     onPress={handleSendOtp}
                     disabled={loading}
-                    className={`h-[56px] flex-row items-center justify-center rounded-[20px] ${
+                    className={`h-[48px] flex-row items-center justify-center rounded-[14px] ${
                       loading ? "bg-primary/70" : "bg-primary active:opacity-90"
                     }`}
                   >
@@ -634,10 +611,10 @@ export default function ForgotPinScreen() {
                       <>
                         <MaterialCommunityIcons
                           name="send-outline"
-                          size={18}
+                          size={16}
                           color={COLORS.white}
                         />
-                        <Text className="ml-2 text-[15px] font-extrabold text-white">
+                        <Text className="ml-2 text-[14px] font-semibold text-white">
                           Send OTP
                         </Text>
                       </>
@@ -648,36 +625,33 @@ export default function ForgotPinScreen() {
 
               {step === 2 && (
                 <>
-                  <View className="mb-5">
-                    <Text className="mb-1 text-[18px] font-black text-heading">
+                  <View className="mb-4">
+                    <Text className="mb-1 text-[17px] font-bold text-heading">
                       Enter Verification Code
                     </Text>
-                    <Text className="text-[13px] font-medium leading-[20px] text-secondaryText">
+                    <Text className="text-[12.5px] leading-[18px] text-secondaryText">
                       Check your email and enter the 6-digit verification code below.
                     </Text>
                   </View>
 
-                  <Text className="mb-2 text-sm font-extrabold text-heading">
+                  <Text className="mb-1.5 text-[13px] font-semibold text-heading">
                     OTP Code
                   </Text>
 
                   <OtpBox value={otp} onChange={setOtp} />
 
-                  <View className="mb-4 rounded-[22px] border border-border bg-soft p-4">
+                  <View className="mb-3 rounded-[14px] border border-border bg-soft p-3">
                     <View className="flex-row items-start">
-                      <View className="mr-3 mt-0.5">
-                        <MaterialCommunityIcons
-                          name="shield-key-outline"
-                          size={18}
-                          color={COLORS.primaryDark}
-                        />
-                      </View>
-
-                      <View className="flex-1">
-                        <Text className="mb-1 text-sm font-extrabold text-heading">
+                      <MaterialCommunityIcons
+                        name="shield-key-outline"
+                        size={16}
+                        color={COLORS.primaryDark}
+                      />
+                      <View className="ml-2 flex-1">
+                        <Text className="mb-1 text-[13px] font-semibold text-heading">
                           Secure Verification
                         </Text>
-                        <Text className="text-[12.5px] font-semibold leading-[18px] text-secondaryText">
+                        <Text className="text-[12px] leading-[17px] text-secondaryText">
                           Enter the exact OTP from your email to continue the recovery flow.
                         </Text>
                       </View>
@@ -687,14 +661,14 @@ export default function ForgotPinScreen() {
                   <Pressable
                     onPress={handleOtpNext}
                     disabled={loading}
-                    className="h-[56px] flex-row items-center justify-center rounded-[20px] bg-primary active:opacity-90"
+                    className="h-[48px] flex-row items-center justify-center rounded-[14px] bg-primary active:opacity-90"
                   >
                     <MaterialCommunityIcons
                       name="arrow-right"
-                      size={18}
+                      size={16}
                       color={COLORS.white}
                     />
-                    <Text className="ml-2 text-[15px] font-extrabold text-white">
+                    <Text className="ml-2 text-[14px] font-semibold text-white">
                       Continue
                     </Text>
                   </Pressable>
@@ -702,14 +676,14 @@ export default function ForgotPinScreen() {
                   <Pressable
                     onPress={handleSendOtp}
                     disabled={loading}
-                    className="mt-3 h-[54px] flex-row items-center justify-center rounded-[20px] border border-border bg-soft active:opacity-90"
+                    className="mt-3 h-[46px] flex-row items-center justify-center rounded-[14px] border border-border bg-soft active:opacity-90"
                   >
                     <MaterialCommunityIcons
                       name="refresh"
-                      size={18}
+                      size={16}
                       color={COLORS.primaryText}
                     />
-                    <Text className="ml-2 text-[14px] font-extrabold text-primaryText">
+                    <Text className="ml-2 text-[13px] font-semibold text-primaryText">
                       Resend OTP
                     </Text>
                   </Pressable>
@@ -718,11 +692,11 @@ export default function ForgotPinScreen() {
 
               {step === 3 && (
                 <>
-                  <View className="mb-5">
-                    <Text className="mb-1 text-[18px] font-black text-heading">
+                  <View className="mb-4">
+                    <Text className="mb-1 text-[17px] font-bold text-heading">
                       Create New PIN
                     </Text>
-                    <Text className="text-[13px] font-medium leading-[20px] text-secondaryText">
+                    <Text className="text-[12.5px] leading-[18px] text-secondaryText">
                       Set a new secure PIN and confirm it to complete the reset process.
                     </Text>
                   </View>
@@ -734,7 +708,6 @@ export default function ForgotPinScreen() {
                     onChangeText={(t) =>
                       setNewPin(t.replace(/[^\d]/g, "").slice(0, 6))
                     }
-                    icon="lock-outline"
                     keyboardType="number-pad"
                     secure={secureNew}
                     onToggleSecure={() => setSecureNew((prev) => !prev)}
@@ -748,28 +721,24 @@ export default function ForgotPinScreen() {
                     onChangeText={(t) =>
                       setConfirmPin(t.replace(/[^\d]/g, "").slice(0, 6))
                     }
-                    icon="lock-check-outline"
                     keyboardType="number-pad"
                     secure={secureConfirm}
                     onToggleSecure={() => setSecureConfirm((prev) => !prev)}
                     maxLength={6}
                   />
 
-                  <View className="mb-4 rounded-[22px] border border-border bg-soft p-4">
-                    <View className="mb-3 flex-row items-start">
-                      <View className="mr-3 mt-0.5">
-                        <MaterialCommunityIcons
-                          name="information-outline"
-                          size={18}
-                          color={COLORS.primaryDark}
-                        />
-                      </View>
-
-                      <View className="flex-1">
-                        <Text className="mb-1 text-sm font-extrabold text-heading">
+                  <View className="mb-3 rounded-[14px] border border-border bg-soft p-3">
+                    <View className="mb-2 flex-row items-start">
+                      <MaterialCommunityIcons
+                        name="information-outline"
+                        size={16}
+                        color={COLORS.primaryDark}
+                      />
+                      <View className="ml-2 flex-1">
+                        <Text className="mb-1 text-[13px] font-semibold text-heading">
                           PIN Guidelines
                         </Text>
-                        <Text className="text-[12.5px] font-semibold leading-[18px] text-secondaryText">
+                        <Text className="text-[12px] leading-[17px] text-secondaryText">
                           Your new PIN must be 4 to 6 digits and should not be easy to guess.
                         </Text>
                       </View>
@@ -782,7 +751,7 @@ export default function ForgotPinScreen() {
                   <Pressable
                     onPress={handleResetPin}
                     disabled={loading}
-                    className={`h-[56px] flex-row items-center justify-center rounded-[20px] ${
+                    className={`h-[48px] flex-row items-center justify-center rounded-[14px] ${
                       loading ? "bg-primary/70" : "bg-primary active:opacity-90"
                     }`}
                   >
@@ -792,10 +761,10 @@ export default function ForgotPinScreen() {
                       <>
                         <MaterialCommunityIcons
                           name="check-circle-outline"
-                          size={18}
+                          size={16}
                           color={COLORS.white}
                         />
-                        <Text className="ml-2 text-[15px] font-extrabold text-white">
+                        <Text className="ml-2 text-[14px] font-semibold text-white">
                           Reset PIN
                         </Text>
                       </>

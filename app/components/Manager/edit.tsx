@@ -1,4 +1,5 @@
 // app/components/Manager/edit.tsx
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
@@ -87,11 +88,11 @@ function SectionTitle({
   subtitle?: string;
 }) {
   return (
-    <View style={{ marginBottom: 18 }}>
+    <View style={{ marginBottom: 12 }}>
       <Text
         style={{
           color: COLORS.primaryText,
-          fontSize: 19,
+          fontSize: 17,
           fontWeight: "900",
           letterSpacing: 0.2,
         }}
@@ -102,10 +103,10 @@ function SectionTitle({
       {!!subtitle && (
         <Text
           style={{
-            marginTop: 6,
+            marginTop: 4,
             color: COLORS.secondaryText,
-            fontSize: 13,
-            lineHeight: 20,
+            fontSize: 12,
+            lineHeight: 18,
           }}
         >
           {subtitle}
@@ -119,10 +120,10 @@ function FieldLabel({ label }: { label: string }) {
   return (
     <Text
       style={{
-        marginBottom: 8,
+        marginBottom: 6,
         color: COLORS.primaryText,
         fontWeight: "800",
-        fontSize: 13,
+        fontSize: 12,
       }}
     >
       {label}
@@ -152,19 +153,14 @@ function InputField({
   return (
     <View
       style={{
-        minHeight: 58,
-        borderRadius: 18,
+        height: 44,
+        borderRadius: 12,
         backgroundColor: COLORS.white,
         borderWidth: 1,
         borderColor: COLORS.border,
-        paddingHorizontal: 16,
+        paddingHorizontal: 12,
         flexDirection: "row",
         alignItems: "center",
-        shadowColor: COLORS.heroDark,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.03,
-        shadowRadius: 8,
-        elevation: 1,
       }}
     >
       <TextInput
@@ -179,8 +175,8 @@ function InputField({
         style={{
           flex: 1,
           color: COLORS.primaryText,
-          fontSize: 14,
-          paddingVertical: 16,
+          fontSize: 13,
+          paddingVertical: Platform.OS === "ios" ? 10 : 8,
         }}
       />
       {right}
@@ -194,25 +190,20 @@ function HeaderBackButton({ onPress }: { onPress: () => void }) {
       onPress={onPress}
       hitSlop={10}
       style={{
-        width: 40,
-        height: 40,
-        borderRadius: 14,
+        width: 36,
+        height: 36,
+        borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: COLORS.soft,
         borderWidth: 1,
         borderColor: COLORS.border,
         marginLeft: 10,
-        shadowColor: COLORS.heroDark,
-        shadowOffset: { width: 0, height: 6 },
-        shadowOpacity: 0.05,
-        shadowRadius: 10,
-        elevation: 2,
       }}
     >
       <MaterialCommunityIcons
         name="chevron-left"
-        size={24}
+        size={22}
         color={COLORS.primaryText}
       />
     </Pressable>
@@ -233,9 +224,9 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
     >
       <View
         style={{
-          width: 84,
-          height: 84,
-          borderRadius: 24,
+          width: 72,
+          height: 72,
+          borderRadius: 20,
           backgroundColor: COLORS.inactiveBg,
           alignItems: "center",
           justifyContent: "center",
@@ -243,16 +234,16 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
       >
         <MaterialCommunityIcons
           name="shield-lock-outline"
-          size={40}
+          size={34}
           color={COLORS.danger}
         />
       </View>
 
       <Text
         style={{
-          marginTop: 16,
+          marginTop: 14,
           color: COLORS.primaryText,
-          fontSize: 22,
+          fontSize: 20,
           fontWeight: "900",
         }}
       >
@@ -261,10 +252,11 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
 
       <Text
         style={{
-          marginTop: 8,
+          marginTop: 6,
           color: COLORS.secondaryText,
           textAlign: "center",
-          lineHeight: 22,
+          lineHeight: 20,
+          fontSize: 13,
         }}
       >
         Only Master Admin can edit managers.
@@ -273,10 +265,10 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
       <Pressable
         onPress={onBack}
         style={{
-          marginTop: 18,
-          paddingHorizontal: 18,
-          paddingVertical: 12,
-          borderRadius: 16,
+          marginTop: 16,
+          paddingHorizontal: 16,
+          paddingVertical: 10,
+          borderRadius: 12,
           backgroundColor: COLORS.soft,
           borderWidth: 1,
           borderColor: COLORS.border,
@@ -286,6 +278,7 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
           style={{
             color: COLORS.primaryText,
             fontWeight: "800",
+            fontSize: 13,
           }}
         >
           Go Back
@@ -326,20 +319,13 @@ export default function EditManagerScreen() {
       "Content-Type": "application/json",
     };
 
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-    }
-
+    if (token) headers.Authorization = `Bearer ${token}`;
     return headers;
   }, [token]);
 
   const headersAuthOnly = useMemo(() => {
     const headers: Record<string, string> = {};
-
-    if (token) {
-      headers.Authorization = `Bearer ${token}`;
-    }
-
+    if (token) headers.Authorization = `Bearer ${token}`;
     return headers;
   }, [token]);
 
@@ -428,9 +414,7 @@ export default function EditManagerScreen() {
       const { text, json } = await readResponse(res);
 
       if (!res.ok || !json?.success) {
-        if (!json) {
-          console.log("RAW_AVATAR_UPLOAD_RESPONSE:", text);
-        }
+        if (!json) console.log("RAW_AVATAR_UPLOAD_RESPONSE:", text);
         toastError("Upload Failed", json?.message || `HTTP ${res.status}`);
         return;
       }
@@ -490,9 +474,7 @@ export default function EditManagerScreen() {
       const { text, json } = await readResponse(res);
 
       if (!res.ok || !json?.success) {
-        if (!json) {
-          console.log("RAW_IDPROOF_UPLOAD_RESPONSE:", text);
-        }
+        if (!json) console.log("RAW_IDPROOF_UPLOAD_RESPONSE:", text);
         toastError("Upload Failed", json?.message || `HTTP ${res.status}`);
         return;
       }
@@ -560,9 +542,7 @@ export default function EditManagerScreen() {
         email: finalEmail,
       };
 
-      if (finalPin) {
-        payload.pin = finalPin;
-      }
+      if (finalPin) payload.pin = finalPin;
 
       const res = await fetch(
         apiUrl(SummaryApi.master_update_subadmin.url(managerId)),
@@ -576,9 +556,7 @@ export default function EditManagerScreen() {
       const { text, json } = await readResponse(res);
 
       if (!res.ok || !json?.success) {
-        if (!json) {
-          console.log("RAW_MANAGER_UPDATE_RESPONSE:", text);
-        }
+        if (!json) console.log("RAW_MANAGER_UPDATE_RESPONSE:", text);
         toastError("Update Failed", json?.message || `HTTP ${res.status}`);
         return;
       }
@@ -626,9 +604,10 @@ export default function EditManagerScreen() {
         <ActivityIndicator size="large" color={BRAND} />
         <Text
           style={{
-            marginTop: 12,
+            marginTop: 10,
             color: COLORS.secondaryText,
             fontWeight: "700",
+            fontSize: 13,
           }}
         >
           Loading authentication...
@@ -654,7 +633,7 @@ export default function EditManagerScreen() {
           },
           headerTitleStyle: {
             color: COLORS.primaryText,
-            fontSize: 20,
+            fontSize: 18,
             fontWeight: "800",
           },
           headerLeft: () => <HeaderBackButton onPress={() => router.back()} />,
@@ -674,33 +653,28 @@ export default function EditManagerScreen() {
         >
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={{
-              paddingHorizontal: 16,
-              paddingTop: 10,
-              paddingBottom: 36,
-            }}
             keyboardShouldPersistTaps="handled"
+            contentContainerStyle={{
+              paddingHorizontal: 14,
+              paddingTop: 8,
+              paddingBottom: 24,
+            }}
           >
             <View
               style={{
                 backgroundColor: COLORS.card,
-                borderRadius: 30,
+                borderRadius: 20,
                 borderWidth: 1,
                 borderColor: COLORS.border,
                 overflow: "hidden",
-                shadowColor: COLORS.heroDark,
-                shadowOffset: { width: 0, height: 10 },
-                shadowOpacity: 0.06,
-                shadowRadius: 18,
-                elevation: 4,
               }}
             >
               <View
                 style={{
                   backgroundColor: COLORS.successSoft,
-                  paddingHorizontal: 18,
-                  paddingTop: 22,
-                  paddingBottom: 18,
+                  paddingHorizontal: 14,
+                  paddingTop: 14,
+                  paddingBottom: 12,
                   borderBottomWidth: 1,
                   borderBottomColor: COLORS.successLight,
                 }}
@@ -713,9 +687,9 @@ export default function EditManagerScreen() {
                 >
                   <View
                     style={{
-                      width: 74,
-                      height: 74,
-                      borderRadius: 22,
+                      width: 56,
+                      height: 56,
+                      borderRadius: 16,
                       backgroundColor: COLORS.white,
                       overflow: "hidden",
                       alignItems: "center",
@@ -727,23 +701,23 @@ export default function EditManagerScreen() {
                     {showAvatar ? (
                       <Image
                         source={{ uri: avatarUrl }}
-                        style={{ width: 74, height: 74 }}
+                        style={{ width: 56, height: 56 }}
                         resizeMode="cover"
                       />
                     ) : (
                       <MaterialCommunityIcons
                         name="account"
-                        size={32}
+                        size={28}
                         color={COLORS.mutedText}
                       />
                     )}
                   </View>
 
-                  <View style={{ flex: 1, marginLeft: 14 }}>
+                  <View style={{ flex: 1, marginLeft: 12 }}>
                     <Text
                       style={{
                         color: COLORS.primaryText,
-                        fontSize: 19,
+                        fontSize: 16,
                         fontWeight: "900",
                       }}
                       numberOfLines={1}
@@ -753,9 +727,9 @@ export default function EditManagerScreen() {
 
                     <Text
                       style={{
-                        marginTop: 4,
+                        marginTop: 2,
                         color: COLORS.secondaryText,
-                        fontSize: 13,
+                        fontSize: 12,
                         fontWeight: "600",
                       }}
                       numberOfLines={1}
@@ -765,10 +739,10 @@ export default function EditManagerScreen() {
 
                     <View
                       style={{
-                        marginTop: 10,
+                        marginTop: 8,
                         alignSelf: "flex-start",
-                        paddingHorizontal: 12,
-                        paddingVertical: 7,
+                        paddingHorizontal: 10,
+                        paddingVertical: 5,
                         borderRadius: 999,
                         backgroundColor: COLORS.successSoft,
                         borderWidth: 1,
@@ -778,7 +752,7 @@ export default function EditManagerScreen() {
                       <Text
                         style={{
                           color: BRAND_DARK,
-                          fontSize: 11,
+                          fontSize: 10,
                           fontWeight: "900",
                           letterSpacing: 0.5,
                         }}
@@ -792,8 +766,8 @@ export default function EditManagerScreen() {
                 <View
                   style={{
                     flexDirection: "row",
-                    gap: 10,
-                    marginTop: 18,
+                    gap: 8,
+                    marginTop: 12,
                   }}
                 >
                   <Pressable
@@ -801,8 +775,8 @@ export default function EditManagerScreen() {
                     disabled={saving}
                     style={{
                       flex: 1,
-                      minHeight: 48,
-                      borderRadius: 16,
+                      height: 40,
+                      borderRadius: 12,
                       backgroundColor: saving ? COLORS.successLight : BRAND,
                       borderWidth: 1,
                       borderColor: COLORS.successLight,
@@ -811,7 +785,13 @@ export default function EditManagerScreen() {
                       opacity: saving ? 0.9 : 1,
                     }}
                   >
-                    <Text style={{ color: COLORS.white, fontWeight: "800" }}>
+                    <Text
+                      style={{
+                        color: COLORS.white,
+                        fontWeight: "800",
+                        fontSize: 12,
+                      }}
+                    >
                       {saving ? "Uploading..." : "Change Avatar"}
                     </Text>
                   </Pressable>
@@ -821,10 +801,10 @@ export default function EditManagerScreen() {
                     disabled={saving}
                     style={{
                       flex: 1,
-                      minHeight: 48,
-                      borderRadius: 16,
+                      height: 40,
+                      borderRadius: 12,
                       backgroundColor: COLORS.white,
-                      borderWidth: 1.2,
+                      borderWidth: 1,
                       borderColor: COLORS.border,
                       alignItems: "center",
                       justifyContent: "center",
@@ -835,6 +815,7 @@ export default function EditManagerScreen() {
                       style={{
                         color: COLORS.primaryText,
                         fontWeight: "800",
+                        fontSize: 12,
                       }}
                     >
                       {saving ? "Uploading..." : "Update ID Proof"}
@@ -843,23 +824,23 @@ export default function EditManagerScreen() {
                 </View>
               </View>
 
-              <View style={{ padding: 18 }}>
+              <View style={{ padding: 12 }}>
                 <View
                   style={{
                     backgroundColor: COLORS.soft,
-                    borderRadius: 22,
+                    borderRadius: 14,
                     borderWidth: 1,
                     borderColor: COLORS.border,
-                    padding: 14,
-                    marginBottom: 18,
+                    padding: 12,
+                    marginBottom: 12,
                   }}
                 >
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <View
                       style={{
-                        width: 56,
-                        height: 56,
-                        borderRadius: 18,
+                        width: 46,
+                        height: 46,
+                        borderRadius: 12,
                         backgroundColor: COLORS.white,
                         borderWidth: 1,
                         borderColor: COLORS.border,
@@ -871,24 +852,24 @@ export default function EditManagerScreen() {
                       {showIdProof ? (
                         <Image
                           source={{ uri: idProofUrl }}
-                          style={{ width: 56, height: 56 }}
+                          style={{ width: 46, height: 46 }}
                           resizeMode="cover"
                         />
                       ) : (
                         <MaterialCommunityIcons
                           name="card-account-details-outline"
-                          size={24}
+                          size={20}
                           color={COLORS.mutedText}
                         />
                       )}
                     </View>
 
-                    <View style={{ flex: 1, marginLeft: 12 }}>
+                    <View style={{ flex: 1, marginLeft: 10 }}>
                       <Text
                         style={{
                           color: COLORS.primaryText,
                           fontWeight: "800",
-                          fontSize: 14,
+                          fontSize: 13,
                         }}
                       >
                         ID Proof Status
@@ -896,11 +877,11 @@ export default function EditManagerScreen() {
 
                       <Text
                         style={{
-                          marginTop: 4,
+                          marginTop: 2,
                           color: showIdProof
                             ? BRAND_DARK
                             : COLORS.secondaryText,
-                          fontSize: 12,
+                          fontSize: 11,
                           fontWeight: "700",
                         }}
                       >
@@ -912,7 +893,7 @@ export default function EditManagerScreen() {
 
                     <MaterialCommunityIcons
                       name={showIdProof ? "check-decagram" : "clock-outline"}
-                      size={22}
+                      size={20}
                       color={showIdProof ? BRAND : COLORS.mutedText}
                     />
                   </View>
@@ -931,7 +912,7 @@ export default function EditManagerScreen() {
                   autoCapitalize="words"
                 />
 
-                <View style={{ height: 14 }} />
+                <View style={{ height: 8 }} />
 
                 <FieldLabel label="Username" />
                 <InputField
@@ -943,7 +924,7 @@ export default function EditManagerScreen() {
                   autoCapitalize="none"
                 />
 
-                <View style={{ height: 14 }} />
+                <View style={{ height: 8 }} />
 
                 <FieldLabel label="Email" />
                 <InputField
@@ -954,7 +935,7 @@ export default function EditManagerScreen() {
                   keyboardType="email-address"
                 />
 
-                <View style={{ height: 14 }} />
+                <View style={{ height: 8 }} />
 
                 <FieldLabel label="New PIN" />
                 <InputField
@@ -969,17 +950,17 @@ export default function EditManagerScreen() {
                       onPress={() => setShowPin((prev) => !prev)}
                       hitSlop={10}
                       style={{
-                        marginLeft: 10,
-                        width: 34,
-                        height: 34,
-                        borderRadius: 10,
+                        marginLeft: 8,
+                        width: 28,
+                        height: 28,
+                        borderRadius: 8,
                         alignItems: "center",
                         justifyContent: "center",
                       }}
                     >
                       <MaterialCommunityIcons
                         name={showPin ? "eye-off-outline" : "eye-outline"}
-                        size={20}
+                        size={18}
                         color={COLORS.secondaryText}
                       />
                     </Pressable>
@@ -988,10 +969,10 @@ export default function EditManagerScreen() {
 
                 <Text
                   style={{
-                    marginTop: 8,
+                    marginTop: 6,
                     color: COLORS.secondaryText,
-                    fontSize: 12,
-                    lineHeight: 18,
+                    fontSize: 11,
+                    lineHeight: 16,
                   }}
                 >
                   Leave this blank if you do not want to change the current PIN.
@@ -1001,17 +982,12 @@ export default function EditManagerScreen() {
                   onPress={updateManager}
                   disabled={saving}
                   style={{
-                    marginTop: 22,
-                    minHeight: 56,
-                    borderRadius: 18,
+                    marginTop: 16,
+                    height: 44,
+                    borderRadius: 12,
                     alignItems: "center",
                     justifyContent: "center",
                     backgroundColor: saving ? COLORS.successLight : BRAND,
-                    shadowColor: BRAND,
-                    shadowOffset: { width: 0, height: 8 },
-                    shadowOpacity: 0.18,
-                    shadowRadius: 16,
-                    elevation: 4,
                   }}
                 >
                   {saving ? (
@@ -1021,19 +997,19 @@ export default function EditManagerScreen() {
                       style={{
                         flexDirection: "row",
                         alignItems: "center",
-                        gap: 8,
+                        gap: 6,
                       }}
                     >
                       <MaterialCommunityIcons
                         name="content-save-outline"
-                        size={20}
+                        size={18}
                         color={COLORS.white}
                       />
                       <Text
                         style={{
                           color: COLORS.white,
                           fontWeight: "900",
-                          fontSize: 15,
+                          fontSize: 14,
                         }}
                       >
                         Save Changes

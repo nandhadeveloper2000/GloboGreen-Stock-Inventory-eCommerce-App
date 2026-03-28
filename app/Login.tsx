@@ -3,28 +3,28 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { useCallback, useMemo, useRef, useState } from "react";
 import {
-  ActivityIndicator,
-  Image,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  Pressable,
-  ScrollView,
-  StatusBar,
-  Text,
-  TextInput,
-  TouchableWithoutFeedback,
-  useWindowDimensions,
-  View,
+    ActivityIndicator,
+    Image,
+    Keyboard,
+    KeyboardAvoidingView,
+    Platform,
+    Pressable,
+    ScrollView,
+    StatusBar,
+    Text,
+    TextInput,
+    TouchableWithoutFeedback,
+    useWindowDimensions,
+    View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 
-import { COLORS } from "./constants/colors";
-import SummaryApi, { baseURL } from "./constants/SummaryApi";
-import { useAuth } from "./context/auth/AuthProvider";
+import { COLORS } from "../src/constants/colors";
+import SummaryApi, { baseURL } from "../src/constants/SummaryApi";
+import { useAuth } from "../src/context/auth/AuthProvider";
 
-interface ApiResponse {
+type ApiResponse = {
   success?: boolean;
   message?: string;
   accessToken?: string;
@@ -32,7 +32,7 @@ interface ApiResponse {
   token?: string;
   user?: any;
   data?: any;
-}
+};
 
 type PostResult<T> = {
   ok: boolean;
@@ -45,23 +45,22 @@ async function postJson<T>(
   url: string,
   payload: unknown,
   method: string = "POST",
-  timeoutMs: number = 5000,
+  timeoutMs: number = 10000,
   signal?: AbortSignal
 ): Promise<PostResult<T>> {
-  const fullUrl = `${baseURL}${url}`;
   const controller = new AbortController();
-
   const timeout = setTimeout(() => controller.abort(), timeoutMs);
-  const mergedSignal = signal || controller.signal;
+
+  const finalSignal = signal ?? controller.signal;
 
   try {
-    const res = await fetch(fullUrl, {
+    const res = await fetch(`${baseURL}${url}`, {
       method,
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(payload),
-      signal: mergedSignal,
+      signal: finalSignal,
     });
 
     const data = await res.json().catch(() => null);
@@ -79,7 +78,7 @@ async function postJson<T>(
       status: 0,
       data: null,
       error: isAbort
-        ? "Request timeout. Server took too long to respond."
+        ? "Request timed out. Please try again."
         : err?.message || "Network request failed",
     };
   } finally {
@@ -87,20 +86,25 @@ async function postJson<T>(
   }
 }
 
-function pickAuth(r: ApiResponse | null) {
-  const token = r?.accessToken || r?.token || r?.data?.accessToken || "";
-  const refreshToken = r?.refreshToken || r?.data?.refreshToken || "";
+function pickAuthData(response: ApiResponse | null) {
+  const accessToken =
+    response?.accessToken ||
+    response?.token ||
+    response?.data?.accessToken ||
+    "";
+
+  const refreshToken = response?.refreshToken || response?.data?.refreshToken || "";
 
   const user =
-    r?.user ||
-    r?.data?.user ||
-    (r?.data && !r?.data?.user ? r.data : null) ||
+    response?.user ||
+    response?.data?.user ||
+    (response?.data && !response?.data?.user ? response.data : null) ||
     null;
 
-  return { token, refreshToken, user };
+  return { accessToken, refreshToken, user };
 }
 
-function createSuccessPromise(
+function makeLoginPromise(
   request: Promise<PostResult<ApiResponse>>
 ): Promise<ApiResponse> {
   return new Promise(async (resolve, reject) => {
@@ -108,25 +112,24 @@ function createSuccessPromise(
 
     if (res.ok && res.data?.success) {
       resolve(res.data);
-    } else {
-      reject(res.error || res.data?.message || "Login failed");
+      return;
     }
+
+    reject(new Error(res.error || res.data?.message || "Login failed"));
   });
 }
 
-async function firstSuccessfulLogin(
-  promises: Promise<ApiResponse>[]
-): Promise<ApiResponse> {
-  return new Promise((resolve, reject) => {
+async function firstSuccessfulLogin(promises: Promise<ApiResponse>[]) {
+  return new Promise<ApiResponse>((resolve, reject) => {
     let rejectedCount = 0;
-    const total = promises.length;
 
     promises.forEach((promise) => {
       promise
         .then(resolve)
         .catch(() => {
           rejectedCount += 1;
-          if (rejectedCount === total) {
+
+          if (rejectedCount === promises.length) {
             reject(new Error("All login attempts failed"));
           }
         });
@@ -141,13 +144,11 @@ export default function Login() {
 
   const pinRef = useRef<TextInput | null>(null);
 
-  const [emailOrUsername, setEmailOrUsername] = useState("");
+  const [loginId, setLoginId] = useState("");
   const [pin, setPin] = useState("");
   const [showPin, setShowPin] = useState(false);
-  const [loginLoading, setLoginLoading] = useState(false);
-  const [focusedField, setFocusedField] = useState<"login" | "pin" | null>(
-    null
-  );
+  const [loading, setLoading] = useState(false);
+  const [focusedField, setFocusedField] = useState<"login" | "pin" | null>(null);
 
   const isSmallDevice = width < 360 || height < 700;
   const isLargeDevice = width > 430 || height > 900;
@@ -159,15 +160,13 @@ export default function Login() {
   const cardRadius = isSmallDevice ? 22 : 28;
   const inputMinHeight = isSmallDevice ? 52 : 58;
 
-  const disabled = loginLoading;
-
   const subtitle = useMemo(
     () => "Sign in to access your Globo Green Shop Stack workspace securely.",
     []
   );
 
   const goByRole = useCallback(
-    async (user: any) => {
+    (user: any) => {
       const role = String(
         user?.role ?? (Array.isArray(user?.roles) ? user.roles[0] : "") ?? ""
       )
@@ -202,10 +201,10 @@ export default function Login() {
   const doLogin = useCallback(async () => {
     Keyboard.dismiss();
 
-    const e = emailOrUsername.trim();
-    const p = pin.trim();
+    const enteredLoginId = loginId.trim();
+    const enteredPin = pin.trim();
 
-    if (!e || !p) {
+    if (!enteredLoginId || !enteredPin) {
       Toast.show({
         type: "error",
         text1: "Validation Error",
@@ -214,7 +213,7 @@ export default function Login() {
       return;
     }
 
-    if (!/^\d{4,6}$/.test(p)) {
+    if (!/^\d{4,6}$/.test(enteredPin)) {
       Toast.show({
         type: "error",
         text1: "Invalid PIN",
@@ -223,55 +222,55 @@ export default function Login() {
       return;
     }
 
+    const masterController = new AbortController();
+    const subadminController = new AbortController();
+    const supervisorController = new AbortController();
+    const staffController = new AbortController();
+
     try {
-      setLoginLoading(true);
+      setLoading(true);
 
-      const masterController = new AbortController();
-      const subadminController = new AbortController();
-      const supervisorController = new AbortController();
-      const staffController = new AbortController();
-
-      const masterPromise = createSuccessPromise(
+      const masterPromise = makeLoginPromise(
         postJson<ApiResponse>(
           SummaryApi.master_login.url,
-          { login: e, pin: p },
-          "POST",
-          5000,
+          { login: enteredLoginId, pin: enteredPin },
+          SummaryApi.master_login.method || "POST",
+          10000,
           masterController.signal
         )
       );
 
-      const subadminPromise = createSuccessPromise(
+      const subadminPromise = makeLoginPromise(
         postJson<ApiResponse>(
           SummaryApi.subadmin_login.url,
-          { username: e, pin: p },
-          "POST",
-          5000,
+          { username: enteredLoginId, pin: enteredPin },
+          SummaryApi.subadmin_login.method || "POST",
+          10000,
           subadminController.signal
         )
       );
 
-      const supervisorPromise = createSuccessPromise(
+      const supervisorPromise = makeLoginPromise(
         postJson<ApiResponse>(
           SummaryApi.supervisor_login.url,
-          { login: e, pin: p },
-          "POST",
-          5000,
+          { login: enteredLoginId, pin: enteredPin },
+          SummaryApi.supervisor_login.method || "POST",
+          10000,
           supervisorController.signal
         )
       );
 
-      const staffPromise = createSuccessPromise(
+      const staffPromise = makeLoginPromise(
         postJson<ApiResponse>(
           SummaryApi.staff_login.url,
-          { login: e, pin: p },
-          "POST",
-          5000,
+          { login: enteredLoginId, pin: enteredPin },
+          SummaryApi.staff_login.method || "POST",
+          10000,
           staffController.signal
         )
       );
 
-      const finalData = await firstSuccessfulLogin([
+      const finalResponse = await firstSuccessfulLogin([
         masterPromise,
         subadminPromise,
         supervisorPromise,
@@ -283,18 +282,18 @@ export default function Login() {
       supervisorController.abort();
       staffController.abort();
 
-      const { token, refreshToken, user } = pickAuth(finalData);
+      const { accessToken, refreshToken, user } = pickAuthData(finalResponse);
 
-      if (!token || !user) {
+      if (!accessToken || !user) {
         Toast.show({
           type: "error",
           text1: "Login Failed",
-          text2: "Authentication data is missing in the response",
+          text2: "Authentication response is incomplete",
         });
         return;
       }
 
-      await setAuth(user, token, refreshToken);
+      await setAuth(user, accessToken, refreshToken || null);
 
       Toast.show({
         type: "success",
@@ -302,17 +301,21 @@ export default function Login() {
         text2: "Welcome back",
       });
 
-      await goByRole(user);
+      goByRole(user);
     } catch {
       Toast.show({
         type: "error",
         text1: "Login Failed",
-        text2: "Invalid credentials or server is slow",
+        text2: "Invalid credentials or server is unavailable",
       });
     } finally {
-      setLoginLoading(false);
+      masterController.abort();
+      subadminController.abort();
+      supervisorController.abort();
+      staffController.abort();
+      setLoading(false);
     }
-  }, [emailOrUsername, pin, setAuth, goByRole]);
+  }, [goByRole, loginId, pin, setAuth]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
@@ -494,8 +497,8 @@ export default function Login() {
                 />
 
                 <TextInput
-                  value={emailOrUsername}
-                  onChangeText={setEmailOrUsername}
+                  value={loginId}
+                  onChangeText={setLoginId}
                   onFocus={() => setFocusedField("login")}
                   onBlur={() => setFocusedField(null)}
                   placeholder="Enter email, username, or login ID"
@@ -504,7 +507,7 @@ export default function Login() {
                   autoCorrect={false}
                   returnKeyType="next"
                   blurOnSubmit={false}
-                  editable={!loginLoading}
+                  editable={!loading}
                   onSubmitEditing={() => pinRef.current?.focus()}
                   style={{
                     flex: 1,
@@ -556,7 +559,7 @@ export default function Login() {
                 <TextInput
                   ref={pinRef}
                   value={pin}
-                  onChangeText={(t) => setPin(t.replace(/[^\d]/g, ""))}
+                  onChangeText={(text) => setPin(text.replace(/[^\d]/g, ""))}
                   onFocus={() => setFocusedField("pin")}
                   onBlur={() => setFocusedField(null)}
                   placeholder="Enter PIN"
@@ -565,7 +568,7 @@ export default function Login() {
                   keyboardType="number-pad"
                   returnKeyType="done"
                   onSubmitEditing={doLogin}
-                  editable={!loginLoading}
+                  editable={!loading}
                   maxLength={6}
                   style={{
                     flex: 1,
@@ -579,7 +582,7 @@ export default function Login() {
                 />
 
                 <Pressable
-                  onPress={() => setShowPin((s) => !s)}
+                  onPress={() => setShowPin((prev) => !prev)}
                   hitSlop={10}
                   style={{
                     width: 36,
@@ -617,14 +620,14 @@ export default function Login() {
                     flex: 1,
                   }}
                 >
-                  Secure access for master admin, subadmin, supervisor, and
-                  staff accounts
+                  Secure access for master admin, subadmin, supervisor, and staff
+                  accounts
                 </Text>
               </View>
 
               <Pressable
                 onPress={doLogin}
-                disabled={disabled}
+                disabled={loading}
                 style={{
                   marginTop: 22,
                   borderRadius: 18,
@@ -634,12 +637,12 @@ export default function Login() {
                   shadowRadius: 14,
                   shadowOffset: { width: 0, height: 8 },
                   elevation: 6,
-                  opacity: disabled ? 0.92 : 1,
+                  opacity: loading ? 0.92 : 1,
                 }}
               >
                 <LinearGradient
                   colors={
-                    disabled
+                    loading
                       ? [COLORS.primaryLight, COLORS.primary]
                       : [COLORS.primary, COLORS.primaryDark]
                   }
@@ -652,7 +655,7 @@ export default function Login() {
                     justifyContent: "center",
                   }}
                 >
-                  {loginLoading ? (
+                  {loading ? (
                     <>
                       <ActivityIndicator color={COLORS.white} />
                       <Text

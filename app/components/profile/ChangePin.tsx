@@ -144,29 +144,24 @@ function getChangePinApi(role?: string | null): ApiConfig | null {
   switch (normalized) {
     case ROLES.MASTER_ADMIN:
       return SummaryApi.master_change_pin;
-
     case ROLES.MANAGER:
       return SummaryApi.subadmin_change_pin;
-
     case ROLES.SUPERVISOR:
-      return SummaryApi.staffChangePin;
-
+      return SummaryApi.staff_change_pin;
     case ROLES.STAFF:
-      return SummaryApi.staffChangePin;
-
+      return SummaryApi.staff_change_pin;
     default:
       return null;
   }
 }
 
-function PasswordField({
+function PinInput({
   label,
   placeholder,
   value,
   onChangeText,
   secure,
   onToggleSecure,
-  icon,
 }: {
   label: string;
   placeholder: string;
@@ -174,21 +169,14 @@ function PasswordField({
   onChangeText: (v: string) => void;
   secure: boolean;
   onToggleSecure: () => void;
-  icon: keyof typeof MaterialCommunityIcons.glyphMap;
 }) {
   return (
     <View className="mb-4">
-      <Text className="mb-2 text-sm font-extrabold text-heading">{label}</Text>
+      <Text className="mb-2 text-[13px] font-semibold text-heading">
+        {label}
+      </Text>
 
-      <View className="min-h-14 flex-row items-center rounded-[20px] border border-border bg-soft px-4">
-        <View className="w-7 items-start justify-center">
-          <MaterialCommunityIcons
-            name={icon}
-            size={18}
-            color={COLORS.secondaryText}
-          />
-        </View>
-
+      <View className="h-[48px] flex-row items-center rounded-[14px] border border-border bg-soft px-3">
         <TextInput
           value={value}
           onChangeText={(t) => onChangeText(t.replace(/[^\d]/g, "").slice(0, 6))}
@@ -197,17 +185,17 @@ function PasswordField({
           secureTextEntry={secure}
           keyboardType="number-pad"
           maxLength={6}
-          className="flex-1 py-4 text-[15px] font-extrabold text-primaryText"
+          className="flex-1 text-[14px] font-semibold text-primaryText"
         />
 
         <Pressable
           onPress={onToggleSecure}
           hitSlop={10}
-          className="w-8 items-end justify-center"
+          className="ml-2 h-8 w-8 items-center justify-center"
         >
           <MaterialCommunityIcons
             name={secure ? "eye-off-outline" : "eye-outline"}
-            size={20}
+            size={18}
             color={COLORS.secondaryText}
           />
         </Pressable>
@@ -226,18 +214,19 @@ function PinRule({
   return (
     <View className="mb-2 flex-row items-center">
       <View
-        className={`mr-2 h-[18px] w-[18px] items-center justify-center rounded-full ${
+        className={`mr-2 h-4 w-4 items-center justify-center rounded-full ${
           active ? "bg-primary" : "bg-soft"
         }`}
       >
         <MaterialCommunityIcons
           name={active ? "check" : "minus"}
-          size={12}
+          size={10}
           color={active ? COLORS.white : COLORS.secondaryText}
         />
       </View>
+
       <Text
-        className={`text-[12px] font-semibold ${
+        className={`text-[12px] font-medium ${
           active ? "text-primaryText" : "text-secondaryText"
         }`}
       >
@@ -281,18 +270,19 @@ export default function ChangePinScreen() {
   const isValidPin = useCallback((pin: string) => /^\d{4,6}$/.test(pin.trim()), []);
 
   const pinHasLength = useMemo(() => /^\d{4,6}$/.test(newPin.trim()), [newPin]);
-  const pinDifferent = useMemo(
-    () => !!currentPin.trim() && !!newPin.trim() && currentPin.trim() !== newPin.trim(),
-    [currentPin, newPin]
-  );
-  const pinMatched = useMemo(
-    () =>
+
+  const pinDifferent = useMemo(() => {
+    return !!currentPin.trim() && !!newPin.trim() && currentPin.trim() !== newPin.trim();
+  }, [currentPin, newPin]);
+
+  const pinMatched = useMemo(() => {
+    return (
       !!confirmPin.trim() &&
       !!newPin.trim() &&
       confirmPin.trim() === newPin.trim() &&
-      /^\d{4,6}$/.test(confirmPin.trim()),
-    [confirmPin, newPin]
-  );
+      /^\d{4,6}$/.test(confirmPin.trim())
+    );
+  }, [confirmPin, newPin]);
 
   const canSubmit = useMemo(() => {
     return (
@@ -301,7 +291,7 @@ export default function ChangePinScreen() {
       confirmPin.trim().length >= 4 &&
       !loading
     );
-  }, [confirmPin, currentPin, loading, newPin]);
+  }, [currentPin, newPin, confirmPin, loading]);
 
   const logoutAndGoLogin = useCallback(async () => {
     try {
@@ -317,7 +307,7 @@ export default function ChangePinScreen() {
     } finally {
       router.replace("/Login" as any);
     }
-  }, [logout, router, setAuth]);
+  }, [logout, setAuth, router]);
 
   const handleChangePin = useCallback(async () => {
     try {
@@ -399,15 +389,15 @@ export default function ChangePinScreen() {
       setLoading(false);
     }
   }, [
-    accessToken,
-    apiConfig,
-    confirmPin,
-    currentPin,
-    isValidPin,
-    logoutAndGoLogin,
-    newPin,
     normalizedRole,
+    apiConfig,
     roleLabel,
+    accessToken,
+    isValidPin,
+    currentPin,
+    newPin,
+    confirmPin,
+    logoutAndGoLogin,
   ]);
 
   return (
@@ -419,125 +409,120 @@ export default function ChangePinScreen() {
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         <ScrollView
-          contentContainerStyle={{ paddingBottom: 34 }}
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{ paddingBottom: 28 }}
         >
           <LinearGradient
             colors={theme.gradient}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
-            className="min-h-[255px] overflow-hidden rounded-b-[34px] px-5 pb-7 pt-3"
+            className="min-h-[210px] overflow-hidden rounded-b-[26px] px-4 pb-6 pt-3"
           >
-            <View className="absolute right-[-20px] top-[-30px] h-[180px] w-[180px] rounded-full bg-white/10" />
-            <View className="absolute bottom-6 left-[-20px] h-[130px] w-[130px] rounded-full bg-white/10" />
-            <View className="absolute right-10 top-20 h-[80px] w-[80px] rounded-full bg-white/5" />
+            <View className="absolute right-[-20px] top-[-20px] h-[140px] w-[140px] rounded-full bg-white/10" />
+            <View className="absolute bottom-5 left-[-20px] h-[100px] w-[100px] rounded-full bg-white/10" />
 
             <Pressable
               onPress={() => router.back()}
-              className="mb-5 h-[44px] w-[44px] items-center justify-center rounded-2xl border border-white/15 bg-white/10"
+              className="mb-4 h-[40px] w-[40px] items-center justify-center rounded-[12px] border border-white/15 bg-white/10"
             >
               <MaterialCommunityIcons
                 name="chevron-left"
-                size={24}
+                size={22}
                 color={COLORS.white}
               />
             </Pressable>
 
             <View className="self-start rounded-full bg-white/15 px-3 py-1.5">
-              <Text className="text-[11px] font-extrabold tracking-wide text-white">
+              <Text className="text-[10px] font-extrabold tracking-wide text-white">
                 {theme.badge}
               </Text>
             </View>
 
-            <Text className="mt-4 text-[30px] font-black text-white">
+            <Text className="mt-3 text-[26px] font-black text-white">
               Change PIN
             </Text>
 
-            <Text className="mt-2 max-w-[92%] text-[14px] leading-[22px] text-white/85">
+            <Text className="mt-2 text-[13px] leading-5 text-white/85">
               {theme.subtitle}
             </Text>
 
-            <View className="mt-5 flex-row items-center self-start rounded-2xl bg-white/10 px-3 py-2">
+            <View className="mt-4 flex-row items-center self-start rounded-[12px] bg-white/10 px-3 py-2">
               <MaterialCommunityIcons
                 name="shield-lock-outline"
-                size={16}
+                size={15}
                 color={COLORS.white}
               />
-              <Text className="ml-2 text-[12px] font-bold text-white">
+              <Text className="ml-2 text-[12px] font-semibold text-white">
                 Role: {roleLabel}
               </Text>
             </View>
           </LinearGradient>
 
-          <View className="-mt-6 px-4">
+          <View className="-mt-5 px-4">
             <View
-              className="rounded-[28px] border border-border bg-card p-4"
+              className="rounded-[16px] border border-border bg-card p-4"
               style={{
                 shadowColor: "#000",
                 shadowOpacity: 0.06,
-                shadowRadius: 14,
-                shadowOffset: { width: 0, height: 6 },
+                shadowRadius: 12,
+                shadowOffset: { width: 0, height: 4 },
                 elevation: 4,
               }}
             >
               <View className="mb-5">
-                <Text className="mb-1 text-[18px] font-black text-heading">
+                <Text className="mb-1 text-[18px] font-bold text-heading">
                   PIN Details
                 </Text>
-                <Text className="text-[13px] font-medium leading-[20px] text-secondaryText">
+                <Text className="text-[13px] leading-5 text-secondaryText">
                   Enter your current PIN and set a new secure PIN for your{" "}
                   {roleLabel.toLowerCase()} account.
                 </Text>
               </View>
 
-              <PasswordField
+              <PinInput
                 label="Current PIN"
                 placeholder="Enter current PIN"
                 value={currentPin}
                 onChangeText={setCurrentPin}
                 secure={secureCurrent}
                 onToggleSecure={() => setSecureCurrent((prev) => !prev)}
-                icon="shield-key-outline"
               />
 
-              <PasswordField
+              <PinInput
                 label="New PIN"
                 placeholder="Enter new PIN"
                 value={newPin}
                 onChangeText={setNewPin}
                 secure={secureNew}
                 onToggleSecure={() => setSecureNew((prev) => !prev)}
-                icon="lock-outline"
               />
 
-              <PasswordField
+              <PinInput
                 label="Confirm New PIN"
                 placeholder="Re-enter new PIN"
                 value={confirmPin}
                 onChangeText={setConfirmPin}
                 secure={secureConfirm}
                 onToggleSecure={() => setSecureConfirm((prev) => !prev)}
-                icon="lock-check-outline"
               />
 
-              <View className="mb-4 rounded-[22px] border border-border bg-soft p-4">
+              <View className="mb-4 rounded-[14px] border border-border bg-soft p-3">
                 <View className="mb-3 flex-row items-start">
-                  <View className="mr-3 mt-0.5">
-                    <MaterialCommunityIcons
-                      name="information-outline"
-                      size={18}
-                      color={COLORS.primaryDark}
-                    />
-                  </View>
+                  <MaterialCommunityIcons
+                    name="information-outline"
+                    size={16}
+                    color={COLORS.primaryDark}
+                    style={{ marginTop: 1, marginRight: 8 }}
+                  />
 
                   <View className="flex-1">
-                    <Text className="mb-1 text-sm font-extrabold text-heading">
+                    <Text className="mb-1 text-[13px] font-semibold text-heading">
                       PIN Rules
                     </Text>
-                    <Text className="text-[12.5px] font-semibold leading-[18px] text-secondaryText">
-                      Use a 4 to 6 digit PIN that is easy for you to remember
-                      and difficult for others to guess.
+                    <Text className="text-[12px] leading-[18px] text-secondaryText">
+                      Use a 4 to 6 digit PIN that is easy for you to remember and
+                      difficult for others to guess.
                     </Text>
                   </View>
                 </View>
@@ -556,7 +541,7 @@ export default function ChangePinScreen() {
               <Pressable
                 onPress={handleChangePin}
                 disabled={!canSubmit}
-                className={`h-[56px] flex-row items-center justify-center rounded-[20px] ${
+                className={`h-[50px] flex-row items-center justify-center rounded-[14px] ${
                   canSubmit ? "bg-primary active:opacity-90" : "bg-primary/60"
                 }`}
               >
@@ -566,10 +551,10 @@ export default function ChangePinScreen() {
                   <>
                     <MaterialCommunityIcons
                       name="shield-lock-outline"
-                      size={18}
+                      size={17}
                       color={COLORS.white}
                     />
-                    <Text className="ml-2 text-[15px] font-extrabold text-white">
+                    <Text className="ml-2 text-[14px] font-semibold text-white">
                       Update PIN
                     </Text>
                   </>

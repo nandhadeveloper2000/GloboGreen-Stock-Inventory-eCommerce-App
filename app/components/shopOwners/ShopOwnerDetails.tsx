@@ -261,20 +261,20 @@ function CompactPill({
 }) {
   return (
     <View
-      className="mr-2 flex-row items-center rounded-full px-2.5 py-1"
+      className="mr-2 flex-row items-center rounded-full px-2 py-1"
       style={{ backgroundColor: bg }}
     >
       {icon ? (
         <MaterialCommunityIcons
           name={icon}
-          size={12}
+          size={11}
           color={color}
           style={{ marginRight: 4 }}
         />
       ) : null}
 
       <Text
-        className="text-[10px] font-extrabold tracking-[0.3px]"
+        className="text-[9px] font-extrabold tracking-[0.2px]"
         style={{ color }}
       >
         {text}
@@ -292,7 +292,7 @@ function SectionCard({
 }) {
   return (
     <View
-      className={`rounded-[18px] border bg-white p-3 ${className}`}
+      className={`rounded-[16px] border bg-white p-3 ${className}`}
       style={{
         borderColor: COLORS.border,
         shadowColor: "#000",
@@ -320,7 +320,7 @@ function SectionHeader({
     <View className="mb-3 flex-row items-start justify-between">
       <View className="flex-1 pr-2">
         <Text
-          className="text-[15px] font-extrabold"
+          className="text-[14px] font-extrabold"
           style={{ color: COLORS.heading }}
         >
           {title}
@@ -328,7 +328,7 @@ function SectionHeader({
 
         {subtitle ? (
           <Text
-            className="mt-0.5 text-[11px] leading-[16px]"
+            className="mt-0.5 text-[10px] leading-[15px]"
             style={{ color: COLORS.secondaryText }}
           >
             {subtitle}
@@ -362,20 +362,20 @@ function StatCard({
         width: cardWidth,
         borderWidth: 1,
         borderColor: COLORS.border,
-        borderRadius: 16,
+        borderRadius: 14,
         backgroundColor: COLORS.white,
-        padding: 12,
+        padding: 10,
       }}
     >
       <View
-        className="h-9 w-9 items-center justify-center rounded-[12px]"
+        className="h-8 w-8 items-center justify-center rounded-[10px]"
         style={{ backgroundColor: softBg }}
       >
-        <MaterialCommunityIcons name={icon} size={18} color={tint} />
+        <MaterialCommunityIcons name={icon} size={16} color={tint} />
       </View>
 
       <Text
-        className="mt-2 text-[10px] font-bold uppercase"
+        className="mt-2 text-[9px] font-bold uppercase"
         style={{ color: COLORS.secondaryText }}
         numberOfLines={1}
       >
@@ -383,7 +383,7 @@ function StatCard({
       </Text>
 
       <Text
-        className="mt-1 text-[12px] font-extrabold leading-[17px]"
+        className="mt-1 text-[11px] font-extrabold leading-[16px]"
         style={{ color: COLORS.heading }}
         numberOfLines={2}
       >
@@ -404,11 +404,11 @@ function InfoRow({
 }) {
   return (
     <View
-      className="mb-2.5 flex-row items-start rounded-[14px] border p-3"
+      className="mb-2 flex-row items-start rounded-[12px] border p-2.5"
       style={{ borderColor: COLORS.border, backgroundColor: COLORS.soft }}
     >
       <View
-        className="mr-3 h-9 w-9 items-center justify-center rounded-[12px]"
+        className="mr-3 h-8 w-8 items-center justify-center rounded-[10px]"
         style={{
           backgroundColor: COLORS.white,
           borderWidth: 1,
@@ -417,21 +417,21 @@ function InfoRow({
       >
         <MaterialCommunityIcons
           name={icon}
-          size={16}
+          size={15}
           color={COLORS.primaryText}
         />
       </View>
 
       <View className="flex-1">
         <Text
-          className="text-[10px] font-bold uppercase"
+          className="text-[9px] font-bold uppercase"
           style={{ color: COLORS.secondaryText }}
         >
           {label}
         </Text>
 
         <Text
-          className="mt-0.5 text-[13px] font-bold leading-[18px]"
+          className="mt-0.5 text-[12px] font-bold leading-[17px]"
           style={{ color: COLORS.heading }}
         >
           {value || "-"}
@@ -466,7 +466,7 @@ function ActionButton({
     <Pressable
       onPress={onPress}
       disabled={disabled || loading}
-      className="h-[44px] flex-row items-center justify-center rounded-[14px] px-3"
+      className="h-[40px] flex-row items-center justify-center rounded-[12px] px-3"
       style={{
         backgroundColor: bg,
         borderWidth: 1,
@@ -481,13 +481,13 @@ function ActionButton({
           {icon ? (
             <MaterialCommunityIcons
               name={icon}
-              size={16}
+              size={15}
               color={color}
               style={{ marginRight: 6 }}
             />
           ) : null}
 
-          <Text className="text-[13px] font-extrabold" style={{ color }}>
+          <Text className="text-[12px] font-extrabold" style={{ color }}>
             {title}
           </Text>
         </>
@@ -509,20 +509,20 @@ function DocumentRow({
 
   return (
     <View
-      className="mb-2.5 rounded-[14px] border p-3"
+      className="mb-2 rounded-[12px] border p-2.5"
       style={{ borderColor: COLORS.border, backgroundColor: COLORS.soft }}
     >
       <View className="flex-row items-center justify-between">
         <View className="flex-1 pr-2">
           <Text
-            className="text-[13px] font-extrabold"
+            className="text-[12px] font-extrabold"
             style={{ color: COLORS.heading }}
           >
             {label}
           </Text>
 
           <Text
-            className="mt-0.5 text-[11px]"
+            className="mt-0.5 text-[10px]"
             style={{ color: COLORS.secondaryText }}
             numberOfLines={1}
           >
@@ -531,7 +531,7 @@ function DocumentRow({
 
           {uploaded ? (
             <Text
-              className="mt-0.5 text-[10px]"
+              className="mt-0.5 text-[9px]"
               style={{ color: COLORS.mutedText }}
             >
               {formatBytes(doc?.bytes)}
@@ -541,7 +541,7 @@ function DocumentRow({
 
         <Pressable
           onPress={() => onView(doc?.url)}
-          className="flex-row items-center rounded-[12px] px-3 py-2"
+          className="flex-row items-center rounded-[10px] px-2.5 py-1.5"
           style={{
             backgroundColor: uploaded ? COLORS.primary : COLORS.white,
             borderWidth: 1,
@@ -550,11 +550,11 @@ function DocumentRow({
         >
           <MaterialCommunityIcons
             name="eye-outline"
-            size={14}
+            size={13}
             color={uploaded ? COLORS.white : COLORS.primaryText}
           />
           <Text
-            className="ml-1 text-[11px] font-extrabold"
+            className="ml-1 text-[10px] font-extrabold"
             style={{ color: uploaded ? COLORS.white : COLORS.primaryText }}
           >
             View
@@ -576,29 +576,29 @@ function EmptyState({
 }) {
   return (
     <View
-      className="items-center justify-center rounded-[18px] border p-5"
+      className="items-center justify-center rounded-[16px] border p-4"
       style={{ borderColor: COLORS.border, backgroundColor: COLORS.soft }}
     >
       <View
-        className="h-[62px] w-[62px] items-center justify-center rounded-[18px]"
+        className="h-[54px] w-[54px] items-center justify-center rounded-[16px]"
         style={{
           backgroundColor: COLORS.white,
           borderWidth: 1,
           borderColor: COLORS.border,
         }}
       >
-        <MaterialCommunityIcons name={icon} size={30} color={COLORS.mutedText} />
+        <MaterialCommunityIcons name={icon} size={26} color={COLORS.mutedText} />
       </View>
 
       <Text
-        className="mt-3 text-[15px] font-extrabold"
+        className="mt-3 text-[14px] font-extrabold"
         style={{ color: COLORS.heading }}
       >
         {title}
       </Text>
 
       <Text
-        className="mt-1.5 text-center text-[12px] leading-[18px]"
+        className="mt-1.5 text-center text-[11px] leading-[17px]"
         style={{ color: COLORS.secondaryText }}
       >
         {subtitle}
@@ -631,13 +631,13 @@ function ShopCard({
 
   return (
     <View
-      className="mb-2.5 rounded-[16px] border p-3"
+      className="mb-2 rounded-[14px] border p-3"
       style={{ borderColor: COLORS.border, backgroundColor: COLORS.soft }}
     >
       <View className="flex-row items-start justify-between">
         <View className="flex-1 pr-2">
           <Text
-            className="text-[14px] font-extrabold"
+            className="text-[13px] font-extrabold"
             style={{ color: COLORS.heading }}
             numberOfLines={1}
           >
@@ -645,7 +645,7 @@ function ShopCard({
           </Text>
 
           <Text
-            className="mt-1 text-[11px] leading-[16px]"
+            className="mt-1 text-[10px] leading-[15px]"
             style={{ color: COLORS.secondaryText }}
             numberOfLines={2}
           >
@@ -654,7 +654,7 @@ function ShopCard({
 
           {shop?.createdAt ? (
             <Text
-              className="mt-1 text-[10px]"
+              className="mt-1 text-[9px]"
               style={{ color: COLORS.mutedText }}
             >
               Created: {formatDateCompactIST(shop.createdAt)}
@@ -721,12 +721,12 @@ function HeaderBar({
   onRefresh: () => void;
 }) {
   return (
-    <View className="px-4 pb-3 pt-1">
+    <View className="px-4 pb-2 pt-1">
       <View className="flex-row items-center justify-between">
         <Pressable
           onPress={onBack}
           hitSlop={10}
-          className="h-10 w-10 items-center justify-center rounded-[14px]"
+          className="h-9 w-9 items-center justify-center rounded-[12px]"
           style={{
             backgroundColor: COLORS.white,
             borderWidth: 1,
@@ -735,14 +735,14 @@ function HeaderBar({
         >
           <MaterialCommunityIcons
             name="chevron-left"
-            size={24}
+            size={22}
             color={COLORS.heading}
           />
         </Pressable>
 
-        <View className="flex-1 px-3 items-center">
+        <View className="flex-1 items-center px-3">
           <Text
-            className="text-[17px] font-extrabold"
+            className="text-[16px] font-extrabold"
             style={{ color: COLORS.heading }}
             numberOfLines={1}
           >
@@ -760,7 +760,7 @@ function HeaderBar({
         <Pressable
           onPress={onRefresh}
           hitSlop={10}
-          className="h-10 w-10 items-center justify-center rounded-[14px]"
+          className="h-9 w-9 items-center justify-center rounded-[12px]"
           style={{
             backgroundColor: COLORS.white,
             borderWidth: 1,
@@ -769,7 +769,7 @@ function HeaderBar({
         >
           <MaterialCommunityIcons
             name="refresh"
-            size={18}
+            size={16}
             color={COLORS.heading}
           />
         </Pressable>
@@ -791,12 +791,14 @@ export default function ShopOwnerDetails() {
 
   const statCardWidth = useMemo(() => {
     const available = width - contentPadding * 2 - statGap;
-    return Math.max(140, available / 2);
+    return Math.max(136, available / 2);
   }, [width, contentPadding]);
 
   const rawUser =
     authCtx?.user ||
-    (authCtx?.auth && typeof authCtx.auth === "object" && "user" in authCtx.auth
+    (authCtx?.auth &&
+    typeof authCtx.auth === "object" &&
+    "user" in authCtx.auth
       ? (authCtx.auth as any)?.user
       : authCtx?.auth) ||
     null;
@@ -1008,10 +1010,13 @@ export default function ShopOwnerDetails() {
             try {
               setDeletingShopId(shopId);
 
-              const res = await fetch(apiUrl(SummaryApi.master_delete_shop.url(shopId)), {
-                method: SummaryApi.master_delete_shop.method,
-                headers: headersAuthOnly,
-              });
+              const res = await fetch(
+                apiUrl(SummaryApi.master_delete_shop.url(shopId)),
+                {
+                  method: SummaryApi.master_delete_shop.method,
+                  headers: headersAuthOnly,
+                }
+              );
 
               const { text, json } = await readResponse(res);
 
@@ -1081,28 +1086,28 @@ export default function ShopOwnerDetails() {
       <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
         <HeaderBar
           title="Shop Owner Details"
-          subtitle="Compact premium view"
+          subtitle="Normal compact view"
           onBack={() => router.back()}
           onRefresh={fetchDetails}
         />
 
         <View className="flex-1 items-center justify-center px-6">
           <View
-            className="h-[68px] w-[68px] items-center justify-center rounded-[22px]"
+            className="h-[60px] w-[60px] items-center justify-center rounded-[18px]"
             style={{ backgroundColor: COLORS.primarySoft }}
           >
             <ActivityIndicator size="large" color={COLORS.primary} />
           </View>
 
           <Text
-            className="mt-4 text-[15px] font-extrabold"
+            className="mt-3 text-[14px] font-extrabold"
             style={{ color: COLORS.heading }}
           >
             Loading details
           </Text>
 
           <Text
-            className="mt-1 text-[12px]"
+            className="mt-1 text-[11px]"
             style={{ color: COLORS.secondaryText }}
           >
             Fetching latest shop owner profile...
@@ -1117,32 +1122,32 @@ export default function ShopOwnerDetails() {
       <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
         <HeaderBar
           title="Shop Owner Details"
-          subtitle="Compact premium view"
+          subtitle="Normal compact view"
           onBack={() => router.back()}
           onRefresh={fetchDetails}
         />
 
         <View className="flex-1 items-center justify-center px-6">
           <View
-            className="h-[76px] w-[76px] items-center justify-center rounded-[24px]"
+            className="h-[68px] w-[68px] items-center justify-center rounded-[20px]"
             style={{ backgroundColor: COLORS.soft }}
           >
             <MaterialCommunityIcons
               name="database-off-outline"
-              size={36}
+              size={30}
               color={COLORS.mutedText}
             />
           </View>
 
           <Text
-            className="mt-4 text-[17px] font-extrabold"
+            className="mt-4 text-[16px] font-extrabold"
             style={{ color: COLORS.heading }}
           >
             No data found
           </Text>
 
           <Text
-            className="mt-2 text-center text-[12px] leading-[18px]"
+            className="mt-2 text-center text-[11px] leading-[17px]"
             style={{ color: COLORS.secondaryText }}
           >
             Unable to load this shop owner record right now.
@@ -1156,7 +1161,7 @@ export default function ShopOwnerDetails() {
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }}>
       <HeaderBar
         title="Shop Owner Details"
-        subtitle="Compact premium view"
+        subtitle="Normal compact view"
         onBack={() => router.back()}
         onRefresh={fetchDetails}
       />
@@ -1164,7 +1169,7 @@ export default function ShopOwnerDetails() {
       <ScrollView
         contentContainerStyle={{
           paddingHorizontal: contentPadding,
-          paddingBottom: 26,
+          paddingBottom: 24,
         }}
         showsVerticalScrollIndicator={false}
       >
@@ -1173,9 +1178,9 @@ export default function ShopOwnerDetails() {
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={{
-            borderRadius: 22,
-            padding: 14,
-            marginBottom: 12,
+            borderRadius: 18,
+            padding: 12,
+            marginBottom: 10,
             overflow: "hidden",
           }}
         >
@@ -1184,8 +1189,8 @@ export default function ShopOwnerDetails() {
               position: "absolute",
               top: -20,
               right: -18,
-              width: 92,
-              height: 92,
+              width: 82,
+              height: 82,
               borderRadius: 999,
               backgroundColor: "rgba(255,255,255,0.08)",
             }}
@@ -1196,8 +1201,8 @@ export default function ShopOwnerDetails() {
               position: "absolute",
               bottom: -24,
               left: -18,
-              width: 110,
-              height: 110,
+              width: 96,
+              height: 96,
               borderRadius: 999,
               backgroundColor: "rgba(255,255,255,0.06)",
             }}
@@ -1208,10 +1213,10 @@ export default function ShopOwnerDetails() {
               <Image
                 source={{ uri: data.avatarUrl }}
                 style={{
-                  width: 60,
-                  height: 60,
-                  borderRadius: 18,
-                  marginRight: 12,
+                  width: 52,
+                  height: 52,
+                  borderRadius: 16,
+                  marginRight: 10,
                   borderWidth: 1.5,
                   borderColor: "rgba(255,255,255,0.22)",
                 }}
@@ -1219,10 +1224,10 @@ export default function ShopOwnerDetails() {
             ) : (
               <View
                 style={{
-                  width: 60,
-                  height: 60,
-                  borderRadius: 18,
-                  marginRight: 12,
+                  width: 52,
+                  height: 52,
+                  borderRadius: 16,
+                  marginRight: 10,
                   backgroundColor: "rgba(255,255,255,0.16)",
                   alignItems: "center",
                   justifyContent: "center",
@@ -1231,7 +1236,7 @@ export default function ShopOwnerDetails() {
                 }}
               >
                 <Text
-                  className="text-[18px] font-extrabold"
+                  className="text-[16px] font-extrabold"
                   style={{ color: COLORS.white }}
                 >
                   {getInitials(data.name)}
@@ -1241,7 +1246,7 @@ export default function ShopOwnerDetails() {
 
             <View className="flex-1">
               <Text
-                className="text-[19px] font-extrabold"
+                className="text-[17px] font-extrabold"
                 style={{ color: COLORS.white }}
                 numberOfLines={1}
               >
@@ -1249,81 +1254,55 @@ export default function ShopOwnerDetails() {
               </Text>
 
               <Text
-                className="mt-0.5 text-[12px] font-semibold"
+                className="mt-0.5 text-[11px] font-semibold"
                 style={{ color: "rgba(255,255,255,0.82)" }}
                 numberOfLines={1}
               >
                 @{data.username || "username"}
               </Text>
 
-              <View className="mt-2 flex-row flex-wrap items-center">
-                <CompactPill
-                  text={isActive ? "ACTIVE" : "INACTIVE"}
-                  bg={heroTone.bg}
-                  color={heroTone.text}
-                  icon={isActive ? "check-decagram" : "alert-circle-outline"}
-                />
-
-                {data.verifyEmail ? (
-                  <CompactPill
-                    text="EMAIL VERIFIED"
-                    bg="rgba(59,130,246,0.16)"
-                    color="#DBEAFE"
-                    icon="email-check-outline"
-                  />
-                ) : null}
-              </View>
-            </View>
-          </View>
-
-          <View
-            className="mt-3 rounded-[16px] px-3 py-2.5"
-            style={{ backgroundColor: "rgba(255,255,255,0.10)" }}
-          >
-            <View className="flex-row items-center">
-              <MaterialCommunityIcons
-                name="email-outline"
-                size={15}
-                color="rgba(255,255,255,0.85)"
-              />
               <Text
-                className="ml-2 flex-1 text-[12px] font-semibold"
-                style={{ color: COLORS.white }}
+                className="mt-0.5 text-[11px] font-semibold"
+                style={{ color: "rgba(255,255,255,0.76)" }}
                 numberOfLines={1}
               >
                 {data.email || "-"}
               </Text>
-            </View>
 
-            <View className="mt-2 flex-row items-center">
-              <MaterialCommunityIcons
-                name="phone-outline"
-                size={15}
-                color="rgba(255,255,255,0.85)"
-              />
-              <Text
-                className="ml-2 flex-1 text-[12px] font-semibold"
-                style={{ color: COLORS.white }}
-                numberOfLines={1}
-              >
-                {data.mobile || "-"}
-              </Text>
+              <View className="mt-2 flex-row flex-wrap items-center">
+                <CompactPill
+                  text={isActive ? "ACTIVE" : "INACTIVE"}
+                  bg={heroTone.chipBg}
+                  color={heroTone.chipText}
+                  icon={
+                    isActive
+                      ? "check-decagram-outline"
+                      : "pause-circle-outline"
+                  }
+                />
+                <CompactPill
+                  text={data.verifyEmail ? "EMAIL VERIFIED" : "EMAIL NOT VERIFIED"}
+                  bg="rgba(255,255,255,0.14)"
+                  color={COLORS.white}
+                  icon="email-check-outline"
+                />
+              </View>
             </View>
           </View>
 
           <View className="mt-3 flex-row" style={{ gap: 8 }}>
             <View
-              className="flex-1 rounded-[16px] px-3 py-2.5"
+              className="flex-1 rounded-[14px] px-3 py-2"
               style={{ backgroundColor: "rgba(255,255,255,0.10)" }}
             >
               <Text
-                className="text-[10px] font-bold"
+                className="text-[9px] font-bold"
                 style={{ color: "rgba(255,255,255,0.72)" }}
               >
                 SHOP CONTROL
               </Text>
               <Text
-                className="mt-1 text-[12px] font-extrabold"
+                className="mt-1 text-[11px] font-extrabold"
                 style={{ color: COLORS.white }}
                 numberOfLines={1}
               >
@@ -1332,17 +1311,17 @@ export default function ShopOwnerDetails() {
             </View>
 
             <View
-              className="flex-1 rounded-[16px] px-3 py-2.5"
+              className="flex-1 rounded-[14px] px-3 py-2"
               style={{ backgroundColor: "rgba(255,255,255,0.10)" }}
             >
               <Text
-                className="text-[10px] font-bold"
+                className="text-[9px] font-bold"
                 style={{ color: "rgba(255,255,255,0.72)" }}
               >
                 SHOPS
               </Text>
               <Text
-                className="mt-1 text-[12px] font-extrabold"
+                className="mt-1 text-[11px] font-extrabold"
                 style={{ color: COLORS.white }}
               >
                 {String(shops.length)}
@@ -1445,7 +1424,7 @@ export default function ShopOwnerDetails() {
               </View>
 
               <Text
-                className="mt-2.5 text-[11px] leading-[16px]"
+                className="mt-2.5 text-[10px] leading-[15px]"
                 style={{ color: COLORS.mutedText }}
               >
                 This affects dashboard access and shop owner operations.
@@ -1502,6 +1481,16 @@ export default function ShopOwnerDetails() {
             doc={getDocField("idProof")}
             onView={openDocUrl}
           />
+          <DocumentRow
+            label="GST Certificate"
+            doc={getDocField("gstCertificate")}
+            onView={openDocUrl}
+          />
+          <DocumentRow
+            label="Udyam Certificate"
+            doc={getDocField("udyamCertificate")}
+            onView={openDocUrl}
+          />
         </SectionCard>
 
         <SectionCard>
@@ -1513,7 +1502,7 @@ export default function ShopOwnerDetails() {
                 {canEditShop ? (
                   <Pressable
                     onPress={goToCreateShop}
-                    className="mr-2 h-9 w-9 items-center justify-center rounded-[12px]"
+                    className="mr-2 h-8 w-8 items-center justify-center rounded-[10px]"
                     style={{
                       backgroundColor: COLORS.primary,
                       shadowColor: "#000",
@@ -1525,7 +1514,7 @@ export default function ShopOwnerDetails() {
                   >
                     <MaterialCommunityIcons
                       name="plus"
-                      size={18}
+                      size={16}
                       color={COLORS.white}
                     />
                   </Pressable>
@@ -1578,7 +1567,7 @@ export default function ShopOwnerDetails() {
           style={{ backgroundColor: "rgba(15,23,42,0.25)" }}
         >
           <View
-            className="w-full rounded-[22px] border p-4"
+            className="w-full rounded-[18px] border p-4"
             style={{
               backgroundColor: COLORS.card,
               borderColor: COLORS.border,
@@ -1590,7 +1579,7 @@ export default function ShopOwnerDetails() {
             }}
           >
             <View
-              className="mb-3 h-[52px] w-[52px] items-center justify-center rounded-[16px] border"
+              className="mb-3 h-[46px] w-[46px] items-center justify-center rounded-[14px] border"
               style={{
                 backgroundColor: COLORS.soft,
                 borderColor: COLORS.border,
@@ -1600,20 +1589,20 @@ export default function ShopOwnerDetails() {
                 name={
                   isActive ? "alert-circle-outline" : "check-decagram-outline"
                 }
-                size={24}
+                size={22}
                 color={isActive ? COLORS.danger : COLORS.success}
               />
             </View>
 
             <Text
-              className="text-[17px] font-extrabold"
+              className="text-[16px] font-extrabold"
               style={{ color: COLORS.heading }}
             >
               Confirm Action
             </Text>
 
             <Text
-              className="mt-1.5 text-[13px] leading-[19px]"
+              className="mt-1.5 text-[12px] leading-[18px]"
               style={{ color: COLORS.secondaryText }}
             >
               Are you sure you want to {isActive ? "deactivate" : "activate"} this

@@ -1,4 +1,5 @@
 // app/components/Manager/View.tsx
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
@@ -78,12 +79,12 @@ function SectionTitle({
   subtitle?: string;
 }) {
   return (
-    <View style={{ marginBottom: 16 }}>
+    <View style={{ marginBottom: 12 }}>
       <Text
         style={{
           color: COLORS.primaryText,
-          fontSize: 18,
-          fontWeight: "900",
+          fontSize: 16,
+          fontWeight: "800",
         }}
       >
         {title}
@@ -93,8 +94,8 @@ function SectionTitle({
         <Text
           style={{
             marginTop: 4,
-            fontSize: 13,
-            lineHeight: 20,
+            fontSize: 12,
+            lineHeight: 18,
             color: COLORS.secondaryText,
           }}
         >
@@ -116,16 +117,16 @@ function InfoCard({
     <View
       style={[
         {
-          borderRadius: 28,
+          borderRadius: 16,
           borderWidth: 1,
           borderColor: COLORS.border,
           backgroundColor: COLORS.card,
-          padding: 18,
+          padding: 16,
           shadowColor: COLORS.heroDark,
-          shadowOffset: { width: 0, height: 8 },
-          shadowOpacity: 0.05,
-          shadowRadius: 16,
-          elevation: 3,
+          shadowOffset: { width: 0, height: 4 },
+          shadowOpacity: 0.04,
+          shadowRadius: 10,
+          elevation: 2,
         },
         style,
       ]}
@@ -139,9 +140,9 @@ function FieldLabel({ label }: { label: string }) {
   return (
     <Text
       style={{
-        marginBottom: 8,
-        fontSize: 13,
-        fontWeight: "800",
+        marginBottom: 6,
+        fontSize: 12,
+        fontWeight: "700",
         color: COLORS.primaryText,
       }}
     >
@@ -154,7 +155,7 @@ function Divider() {
   return (
     <View
       style={{
-        marginVertical: 4,
+        marginVertical: 2,
         height: 1,
         backgroundColor: COLORS.divider,
       }}
@@ -191,15 +192,15 @@ function StatusPill({
         borderWidth: 1,
         borderColor,
         backgroundColor: bg,
-        paddingHorizontal: 12,
-        paddingVertical: 8,
+        paddingHorizontal: 10,
+        paddingVertical: 6,
       }}
     >
       <Text
         style={{
-          fontSize: 11,
-          fontWeight: "900",
-          letterSpacing: 0.4,
+          fontSize: 10,
+          fontWeight: "800",
+          letterSpacing: 0.3,
           color: textColor,
         }}
       >
@@ -225,7 +226,7 @@ function ActionIconButton({
       style={{
         width: 40,
         height: 40,
-        borderRadius: 16,
+        borderRadius: 12,
         alignItems: "center",
         justifyContent: "center",
         borderWidth: 1,
@@ -235,7 +236,7 @@ function ActionIconButton({
     >
       <MaterialCommunityIcons
         name={icon}
-        size={20}
+        size={18}
         color={danger ? COLORS.danger : COLORS.primaryText}
       />
     </Pressable>
@@ -258,15 +259,15 @@ function ReadonlyRow({
       style={{
         flexDirection: "row",
         alignItems: "flex-start",
-        paddingVertical: 12,
+        paddingVertical: 10,
       }}
     >
       <View
         style={{
-          marginRight: 12,
-          width: 40,
-          height: 40,
-          borderRadius: 16,
+          marginRight: 10,
+          width: 36,
+          height: 36,
+          borderRadius: 12,
           alignItems: "center",
           justifyContent: "center",
           borderWidth: 1,
@@ -276,7 +277,7 @@ function ReadonlyRow({
       >
         <MaterialCommunityIcons
           name={icon}
-          size={18}
+          size={17}
           color={COLORS.secondaryText}
         />
       </View>
@@ -285,7 +286,7 @@ function ReadonlyRow({
         <Text
           style={{
             marginBottom: 4,
-            fontSize: 12,
+            fontSize: 11,
             fontWeight: "700",
             color: COLORS.secondaryText,
           }}
@@ -294,9 +295,9 @@ function ReadonlyRow({
         </Text>
         <Text
           style={{
-            fontSize: 15,
-            fontWeight: "800",
-            lineHeight: 22,
+            fontSize: 14,
+            fontWeight: "700",
+            lineHeight: 20,
             color: valueColor || COLORS.primaryText,
           }}
         >
@@ -325,17 +326,125 @@ function EditableInput({
       placeholder={placeholder}
       placeholderTextColor={COLORS.labelText}
       style={{
-        borderRadius: 18,
+        height: 46,
+        borderRadius: 12,
         borderWidth: 1,
         borderColor: COLORS.border,
         backgroundColor: COLORS.soft,
         color: COLORS.primaryText,
-        paddingHorizontal: 16,
-        paddingVertical: 14,
+        paddingHorizontal: 14,
         fontSize: 14,
       }}
       {...inputProps}
     />
+  );
+}
+
+function PrimaryButton({
+  title,
+  onPress,
+  disabled,
+}: {
+  title: string;
+  onPress: () => void;
+  disabled?: boolean;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={{
+        minHeight: 46,
+        borderRadius: 12,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: disabled ? COLORS.successLight : BRAND,
+        paddingHorizontal: 14,
+      }}
+    >
+      <Text
+        style={{
+          color: COLORS.white,
+          fontSize: 14,
+          fontWeight: "800",
+        }}
+      >
+        {title}
+      </Text>
+    </Pressable>
+  );
+}
+
+function SecondaryButton({
+  title,
+  onPress,
+  disabled,
+}: {
+  title: string;
+  onPress: () => void;
+  disabled?: boolean;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      disabled={disabled}
+      style={{
+        minHeight: 46,
+        borderRadius: 12,
+        alignItems: "center",
+        justifyContent: "center",
+        backgroundColor: BRAND_DARK,
+        paddingHorizontal: 14,
+        opacity: disabled ? 0.8 : 1,
+      }}
+    >
+      <Text
+        style={{
+          color: COLORS.white,
+          fontSize: 14,
+          fontWeight: "800",
+        }}
+      >
+        {title}
+      </Text>
+    </Pressable>
+  );
+}
+
+function OutlineButton({
+  title,
+  onPress,
+  danger,
+}: {
+  title: string;
+  onPress: () => void;
+  danger?: boolean;
+}) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={{
+        flex: 1,
+        minHeight: 44,
+        borderRadius: 12,
+        borderWidth: 1,
+        borderColor: danger ? "#FECACA" : COLORS.border,
+        backgroundColor: danger ? COLORS.inactiveBg : COLORS.soft,
+        alignItems: "center",
+        justifyContent: "center",
+        paddingHorizontal: 14,
+      }}
+    >
+      <Text
+        style={{
+          fontSize: 14,
+          fontWeight: "800",
+          color: danger ? COLORS.danger : COLORS.primaryText,
+        }}
+      >
+        {title}
+      </Text>
+    </Pressable>
   );
 }
 
@@ -353,9 +462,9 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
     >
       <View
         style={{
-          width: 84,
-          height: 84,
-          borderRadius: 24,
+          width: 76,
+          height: 76,
+          borderRadius: 20,
           backgroundColor: COLORS.inactiveBg,
           alignItems: "center",
           justifyContent: "center",
@@ -363,17 +472,17 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
       >
         <MaterialCommunityIcons
           name="shield-lock-outline"
-          size={40}
+          size={34}
           color={COLORS.danger}
         />
       </View>
 
       <Text
         style={{
-          marginTop: 16,
+          marginTop: 14,
           color: COLORS.primaryText,
-          fontSize: 22,
-          fontWeight: "900",
+          fontSize: 20,
+          fontWeight: "800",
         }}
       >
         Access Denied
@@ -384,7 +493,8 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
           marginTop: 8,
           color: COLORS.secondaryText,
           textAlign: "center",
-          lineHeight: 22,
+          lineHeight: 20,
+          fontSize: 13,
         }}
       >
         Only Master Admin can access manager details.
@@ -395,16 +505,19 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
         style={{
           marginTop: 18,
           paddingHorizontal: 18,
-          paddingVertical: 12,
-          borderRadius: 16,
+          minHeight: 44,
+          borderRadius: 12,
           backgroundColor: COLORS.soft,
           borderWidth: 1,
           borderColor: COLORS.border,
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <Text
           style={{
             color: COLORS.primaryText,
+            fontSize: 14,
             fontWeight: "800",
           }}
         >
@@ -442,19 +555,19 @@ function EnterpriseViewSection({
       <InfoCard style={{ marginTop: 16 }}>
         <View
           style={{
-            borderRadius: 24,
+            borderRadius: 14,
             borderWidth: 1,
             borderColor: COLORS.successLight,
             backgroundColor: COLORS.successSoft,
-            padding: 16,
+            padding: 14,
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
               style={{
-                width: 84,
-                height: 84,
-                borderRadius: 24,
+                width: 64,
+                height: 64,
+                borderRadius: 16,
                 overflow: "hidden",
                 alignItems: "center",
                 justifyContent: "center",
@@ -466,23 +579,23 @@ function EnterpriseViewSection({
               {showAvatar ? (
                 <Image
                   source={{ uri: avatarUrl }}
-                  style={{ width: 84, height: 84 }}
+                  style={{ width: 64, height: 64 }}
                   resizeMode="cover"
                 />
               ) : (
                 <MaterialCommunityIcons
                   name="account"
-                  size={34}
+                  size={28}
                   color={COLORS.mutedText}
                 />
               )}
             </View>
 
-            <View style={{ flex: 1, marginLeft: 16 }}>
+            <View style={{ flex: 1, marginLeft: 12 }}>
               <Text
                 style={{
-                  fontSize: 20,
-                  fontWeight: "900",
+                  fontSize: 18,
+                  fontWeight: "800",
                   color: COLORS.primaryText,
                 }}
                 numberOfLines={1}
@@ -492,8 +605,8 @@ function EnterpriseViewSection({
 
               <Text
                 style={{
-                  marginTop: 4,
-                  fontSize: 13,
+                  marginTop: 3,
+                  fontSize: 12,
                   fontWeight: "700",
                   color: COLORS.secondaryText,
                 }}
@@ -504,8 +617,8 @@ function EnterpriseViewSection({
 
               <Text
                 style={{
-                  marginTop: 4,
-                  fontSize: 13,
+                  marginTop: 3,
+                  fontSize: 12,
                   color: COLORS.secondaryText,
                 }}
                 numberOfLines={1}
@@ -517,7 +630,7 @@ function EnterpriseViewSection({
 
           <View
             style={{
-              marginTop: 16,
+              marginTop: 12,
               flexDirection: "row",
               flexWrap: "wrap",
               gap: 8,
@@ -580,19 +693,19 @@ function EnterpriseViewSection({
 
         <View
           style={{
-            borderRadius: 22,
+            borderRadius: 14,
             borderWidth: 1,
             borderColor: COLORS.border,
             backgroundColor: COLORS.soft,
-            padding: 16,
+            padding: 14,
           }}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <View
               style={{
-                width: 64,
-                height: 64,
-                borderRadius: 18,
+                width: 60,
+                height: 60,
+                borderRadius: 14,
                 overflow: "hidden",
                 alignItems: "center",
                 justifyContent: "center",
@@ -604,13 +717,13 @@ function EnterpriseViewSection({
               {showIdProof ? (
                 <Image
                   source={{ uri: idProofUrl }}
-                  style={{ width: 64, height: 64 }}
+                  style={{ width: 60, height: 60 }}
                   resizeMode="cover"
                 />
               ) : (
                 <MaterialCommunityIcons
                   name="card-account-details-outline"
-                  size={28}
+                  size={24}
                   color={COLORS.mutedText}
                 />
               )}
@@ -619,7 +732,7 @@ function EnterpriseViewSection({
             <View style={{ flex: 1, marginLeft: 12 }}>
               <Text
                 style={{
-                  fontSize: 15,
+                  fontSize: 14,
                   fontWeight: "800",
                   color: COLORS.primaryText,
                 }}
@@ -630,8 +743,8 @@ function EnterpriseViewSection({
               <Text
                 style={{
                   marginTop: 4,
-                  fontSize: 13,
-                  lineHeight: 20,
+                  fontSize: 12,
+                  lineHeight: 18,
                   color: COLORS.secondaryText,
                 }}
               >
@@ -644,8 +757,8 @@ function EnterpriseViewSection({
 
           <View
             style={{
-              marginTop: 16,
-              paddingTop: 16,
+              marginTop: 14,
+              paddingTop: 14,
               borderTopWidth: 1,
               borderTopColor: COLORS.divider,
               flexDirection: "row",
@@ -655,7 +768,7 @@ function EnterpriseViewSection({
           >
             <Text
               style={{
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: "700",
                 color: COLORS.secondaryText,
               }}
@@ -776,7 +889,7 @@ export default function ViewManagerScreen() {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ["images"],
+      mediaTypes: ["images"] as any,
       allowsEditing: false,
       quality: 0.85,
     });
@@ -966,9 +1079,7 @@ export default function ViewManagerScreen() {
         isActive,
       };
 
-      if (finalPin) {
-        payload.pin = finalPin;
-      }
+      if (finalPin) payload.pin = finalPin;
 
       const res = await fetch(
         apiUrl(SummaryApi.master_update_subadmin.url(managerId)),
@@ -1133,6 +1244,7 @@ export default function ViewManagerScreen() {
               marginTop: 12,
               color: COLORS.secondaryText,
               fontWeight: "700",
+              fontSize: 13,
             }}
           >
             Loading authentication...
@@ -1159,7 +1271,7 @@ export default function ViewManagerScreen() {
           },
           headerTitleStyle: {
             color: COLORS.primaryText,
-            fontSize: 19,
+            fontSize: 18,
             fontWeight: "800",
           },
           headerLeft: () => (
@@ -1170,22 +1282,17 @@ export default function ViewManagerScreen() {
                 marginLeft: 8,
                 width: 40,
                 height: 40,
-                borderRadius: 16,
+                borderRadius: 12,
                 alignItems: "center",
                 justifyContent: "center",
                 borderWidth: 1,
                 borderColor: COLORS.border,
                 backgroundColor: COLORS.soft,
-                shadowColor: COLORS.heroDark,
-                shadowOffset: { width: 0, height: 6 },
-                shadowOpacity: 0.05,
-                shadowRadius: 10,
-                elevation: 2,
               }}
             >
               <MaterialCommunityIcons
                 name="arrow-left"
-                size={22}
+                size={20}
                 color={COLORS.primaryText}
               />
             </Pressable>
@@ -1229,11 +1336,11 @@ export default function ViewManagerScreen() {
 
                 <View
                   style={{
-                    borderRadius: 22,
+                    borderRadius: 14,
                     borderWidth: 1,
                     borderColor: COLORS.border,
                     backgroundColor: COLORS.soft,
-                    padding: 16,
+                    padding: 14,
                   }}
                 >
                   <View
@@ -1246,7 +1353,7 @@ export default function ViewManagerScreen() {
                     <View style={{ flex: 1, paddingRight: 16 }}>
                       <Text
                         style={{
-                          fontSize: 15,
+                          fontSize: 14,
                           fontWeight: "800",
                           color: COLORS.primaryText,
                         }}
@@ -1281,19 +1388,19 @@ export default function ViewManagerScreen() {
               <InfoCard style={{ marginTop: 16 }}>
                 <View
                   style={{
-                    borderRadius: 24,
+                    borderRadius: 14,
                     borderWidth: 1,
                     borderColor: COLORS.successLight,
                     backgroundColor: COLORS.successSoft,
-                    padding: 16,
+                    padding: 14,
                   }}
                 >
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <View
                       style={{
-                        width: 84,
-                        height: 84,
-                        borderRadius: 24,
+                        width: 64,
+                        height: 64,
+                        borderRadius: 16,
                         overflow: "hidden",
                         alignItems: "center",
                         justifyContent: "center",
@@ -1305,23 +1412,23 @@ export default function ViewManagerScreen() {
                       {avatarUrl?.trim() ? (
                         <Image
                           source={{ uri: avatarUrl }}
-                          style={{ width: 84, height: 84 }}
+                          style={{ width: 64, height: 64 }}
                           resizeMode="cover"
                         />
                       ) : (
                         <MaterialCommunityIcons
                           name="account"
-                          size={34}
+                          size={28}
                           color={COLORS.mutedText}
                         />
                       )}
                     </View>
 
-                    <View style={{ flex: 1, marginLeft: 16 }}>
+                    <View style={{ flex: 1, marginLeft: 12 }}>
                       <Text
                         style={{
-                          fontSize: 20,
-                          fontWeight: "900",
+                          fontSize: 18,
+                          fontWeight: "800",
                           color: COLORS.primaryText,
                         }}
                         numberOfLines={1}
@@ -1331,8 +1438,8 @@ export default function ViewManagerScreen() {
 
                       <Text
                         style={{
-                          marginTop: 4,
-                          fontSize: 13,
+                          marginTop: 3,
+                          fontSize: 12,
                           fontWeight: "700",
                           color: COLORS.secondaryText,
                         }}
@@ -1343,7 +1450,7 @@ export default function ViewManagerScreen() {
 
                       <View
                         style={{
-                          marginTop: 12,
+                          marginTop: 10,
                           flexDirection: "row",
                           flexWrap: "wrap",
                           gap: 8,
@@ -1361,195 +1468,150 @@ export default function ViewManagerScreen() {
 
                   <View
                     style={{
-                      marginTop: 16,
+                      marginTop: 14,
                       flexDirection: "row",
-                      gap: 12,
+                      gap: 10,
                     }}
                   >
-                    <Pressable
-                      onPress={changeAvatar}
-                      disabled={saving}
-                      style={{
-                        flex: 1,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        borderRadius: 16,
-                        borderWidth: 1,
-                        borderColor: COLORS.successLight,
-                        backgroundColor: saving ? COLORS.successLight : BRAND,
-                        paddingVertical: 12,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontWeight: "800",
-                          color: COLORS.white,
-                        }}
-                      >
-                        {saving ? "Uploading..." : "Change Avatar"}
-                      </Text>
-                    </Pressable>
+                    <View style={{ flex: 1 }}>
+                      <PrimaryButton
+                        title={saving ? "Uploading..." : "Change Avatar"}
+                        onPress={changeAvatar}
+                        disabled={saving}
+                      />
+                    </View>
 
-                    <Pressable
-                      onPress={changeIdProof}
-                      disabled={saving}
-                      style={{
-                        flex: 1,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        borderRadius: 16,
-                        backgroundColor: BRAND_DARK,
-                        paddingVertical: 12,
-                        opacity: saving ? 0.8 : 1,
-                      }}
-                    >
-                      <Text
-                        style={{
-                          fontWeight: "800",
-                          color: COLORS.white,
-                        }}
-                      >
-                        {saving ? "Uploading..." : "Update ID Proof"}
-                      </Text>
-                    </Pressable>
+                    <View style={{ flex: 1 }}>
+                      <SecondaryButton
+                        title={saving ? "Uploading..." : "Change ID Proof"}
+                        onPress={changeIdProof}
+                        disabled={saving}
+                      />
+                    </View>
                   </View>
                 </View>
               </InfoCard>
 
               <InfoCard style={{ marginTop: 16 }}>
                 <SectionTitle
-                  title="Basic Information"
-                  subtitle="Edit manager account information."
+                  title="Edit Manager"
+                  subtitle="Update manager profile details with normal-size clean inputs."
                 />
 
-                <FieldLabel label="Name" />
-                <EditableInput
-                  value={name}
-                  onChangeText={setName}
-                  placeholder="Name"
-                  inputProps={{ autoCapitalize: "words" }}
-                />
-
-                <View style={{ height: 16 }} />
-
-                <FieldLabel label="Username" />
-                <EditableInput
-                  value={username}
-                  onChangeText={(text) => setUsername(text.replace(/\s+/g, ""))}
-                  placeholder="Username"
-                  inputProps={{ autoCapitalize: "none" }}
-                />
-
-                <View style={{ height: 16 }} />
-
-                <FieldLabel label="Email" />
-                <EditableInput
-                  value={email}
-                  onChangeText={setEmail}
-                  placeholder="Email"
-                  inputProps={{
-                    autoCapitalize: "none",
-                    keyboardType: "email-address",
-                  }}
-                />
-
-                <View style={{ height: 16 }} />
-
-                <FieldLabel label="PIN" />
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    borderRadius: 18,
-                    borderWidth: 1,
-                    borderColor: COLORS.border,
-                    backgroundColor: COLORS.soft,
-                    paddingHorizontal: 16,
-                  }}
-                >
-                  <TextInput
-                    value={pin}
-                    onChangeText={(text) => setPin(text.replace(/[^\d]/g, ""))}
-                    secureTextEntry={!showPin}
-                    keyboardType="number-pad"
-                    maxLength={6}
-                    placeholder="Enter new PIN (optional)"
-                    placeholderTextColor={COLORS.labelText}
-                    style={{
-                      flex: 1,
-                      color: COLORS.primaryText,
-                      paddingVertical: 14,
-                      fontSize: 14,
-                    }}
-                  />
-
-                  <Pressable
-                    onPress={() => setShowPin((prev) => !prev)}
-                    hitSlop={10}
-                    style={{
-                      marginLeft: 8,
-                      width: 34,
-                      height: 34,
-                      borderRadius: 10,
-                      alignItems: "center",
-                      justifyContent: "center",
-                    }}
-                  >
-                    <MaterialCommunityIcons
-                      name={showPin ? "eye-off-outline" : "eye-outline"}
-                      size={20}
-                      color={COLORS.secondaryText}
+                <View style={{ gap: 12 }}>
+                  <View>
+                    <FieldLabel label="Full Name" />
+                    <EditableInput
+                      value={name}
+                      onChangeText={setName}
+                      placeholder="Enter full name"
                     />
-                  </Pressable>
-                </View>
+                  </View>
 
-                <Text
-                  style={{
-                    marginTop: 8,
-                    fontSize: 12,
-                    color: COLORS.secondaryText,
-                  }}
-                >
-                  Leave blank if you do not want to change the current PIN.
-                </Text>
+                  <View>
+                    <FieldLabel label="Username" />
+                    <EditableInput
+                      value={username}
+                      onChangeText={setUsername}
+                      placeholder="Enter username"
+                      inputProps={{ autoCapitalize: "none" }}
+                    />
+                  </View>
 
-                <View
-                  style={{
-                    marginTop: 16,
-                    borderRadius: 22,
-                    borderWidth: 1,
-                    borderColor: COLORS.border,
-                    backgroundColor: COLORS.soft,
-                    padding: 16,
-                  }}
-                >
+                  <View>
+                    <FieldLabel label="Email Address" />
+                    <EditableInput
+                      value={email}
+                      onChangeText={setEmail}
+                      placeholder="Enter email address"
+                      inputProps={{
+                        autoCapitalize: "none",
+                        keyboardType: "email-address",
+                      }}
+                    />
+                  </View>
+
+                  <View>
+                    <FieldLabel label="New PIN (Optional)" />
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        borderWidth: 1,
+                        borderColor: COLORS.border,
+                        backgroundColor: COLORS.soft,
+                        borderRadius: 12,
+                        minHeight: 46,
+                        paddingLeft: 14,
+                        paddingRight: 8,
+                      }}
+                    >
+                      <TextInput
+                        value={pin}
+                        onChangeText={setPin}
+                        placeholder="Enter 4 to 6 digit PIN"
+                        placeholderTextColor={COLORS.labelText}
+                        secureTextEntry={!showPin}
+                        keyboardType="number-pad"
+                        style={{
+                          flex: 1,
+                          color: COLORS.primaryText,
+                          fontSize: 14,
+                          paddingVertical: 0,
+                        }}
+                      />
+
+                      <Pressable
+                        onPress={() => setShowPin((prev) => !prev)}
+                        hitSlop={10}
+                        style={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: 10,
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <MaterialCommunityIcons
+                          name={showPin ? "eye-off-outline" : "eye-outline"}
+                          size={18}
+                          color={COLORS.secondaryText}
+                        />
+                      </Pressable>
+                    </View>
+                  </View>
+
                   <View
                     style={{
+                      borderRadius: 14,
+                      borderWidth: 1,
+                      borderColor: COLORS.border,
+                      backgroundColor: COLORS.soft,
+                      paddingHorizontal: 14,
+                      paddingVertical: 12,
                       flexDirection: "row",
                       alignItems: "center",
                       justifyContent: "space-between",
                     }}
                   >
-                    <View style={{ flex: 1, paddingRight: 16 }}>
+                    <View style={{ flex: 1, paddingRight: 12 }}>
                       <Text
                         style={{
-                          fontSize: 15,
+                          fontSize: 14,
                           fontWeight: "800",
                           color: COLORS.primaryText,
                         }}
                       >
-                        {isActive ? "Account Active" : "Account Deactivated"}
+                        {isActive ? "Account Active" : "Account Inactive"}
                       </Text>
-
                       <Text
                         style={{
-                          marginTop: 4,
-                          fontSize: 13,
-                          lineHeight: 20,
+                          marginTop: 2,
+                          fontSize: 12,
                           color: COLORS.secondaryText,
                         }}
                       >
-                        Enable or disable manager account access.
+                        Toggle current manager account status
                       </Text>
                     </View>
 
@@ -1561,160 +1623,124 @@ export default function ViewManagerScreen() {
                       disabled={saving}
                     />
                   </View>
-                </View>
 
-                <Pressable
-                  onPress={updateManager}
-                  disabled={saving}
-                  style={{
-                    marginTop: 20,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: 18,
-                    backgroundColor: saving ? COLORS.successLight : BRAND,
-                    paddingVertical: 15,
-                  }}
-                >
-                  {saving ? (
-                    <ActivityIndicator color={COLORS.white} />
-                  ) : (
-                    <Text
-                      style={{
-                        fontWeight: "900",
-                        color: COLORS.white,
-                      }}
-                    >
-                      Save Changes
-                    </Text>
-                  )}
-                </Pressable>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      gap: 10,
+                      marginTop: 4,
+                    }}
+                  >
+                    <View style={{ flex: 1 }}>
+                      <OutlineButton
+                        title="Cancel"
+                        onPress={() => router.back()}
+                      />
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <PrimaryButton
+                        title={saving ? "Saving..." : "Update Manager"}
+                        onPress={updateManager}
+                        disabled={saving}
+                      />
+                    </View>
+                  </View>
+                </View>
               </InfoCard>
             </>
           )}
         </ScrollView>
+      </SafeAreaView>
 
-        <Modal
-          visible={deleteOpen}
-          transparent
-          animationType="fade"
-          onRequestClose={() => setDeleteOpen(false)}
+      <Modal
+        visible={deleteOpen}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setDeleteOpen(false)}
+      >
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: MODAL_OVERLAY,
+            alignItems: "center",
+            justifyContent: "center",
+            paddingHorizontal: 20,
+          }}
         >
           <View
             style={{
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "center",
-              paddingHorizontal: 24,
-              backgroundColor: MODAL_OVERLAY,
+              width: "100%",
+              maxWidth: 360,
+              borderRadius: 16,
+              backgroundColor: COLORS.white,
+              padding: 18,
+              borderWidth: 1,
+              borderColor: COLORS.border,
             }}
           >
             <View
               style={{
-                width: "100%",
-                borderRadius: 28,
-                backgroundColor: COLORS.white,
-                padding: 20,
-                shadowColor: COLORS.heroDark,
-                shadowOpacity: 0.1,
-                shadowRadius: 16,
-                shadowOffset: { width: 0, height: 10 },
-                elevation: 4,
+                width: 52,
+                height: 52,
+                borderRadius: 14,
+                backgroundColor: COLORS.inactiveBg,
+                alignItems: "center",
+                justifyContent: "center",
+                alignSelf: "center",
+                marginBottom: 12,
               }}
             >
-              <View
-                style={{
-                  marginBottom: 16,
-                  width: 56,
-                  height: 56,
-                  borderRadius: 18,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderWidth: 1,
-                  borderColor: "#FECACA",
-                  backgroundColor: COLORS.inactiveBg,
-                }}
-              >
-                <MaterialCommunityIcons
-                  name="trash-can-outline"
-                  size={28}
-                  color={COLORS.danger}
-                />
-              </View>
+              <MaterialCommunityIcons
+                name="trash-can-outline"
+                size={24}
+                color={COLORS.danger}
+              />
+            </View>
 
-              <Text
-                style={{
-                  fontSize: 18,
-                  fontWeight: "900",
-                  color: COLORS.primaryText,
-                }}
-              >
-                Delete Manager?
-              </Text>
+            <Text
+              style={{
+                fontSize: 17,
+                fontWeight: "800",
+                color: COLORS.primaryText,
+                textAlign: "center",
+              }}
+            >
+              Delete Manager
+            </Text>
 
-              <Text
-                style={{
-                  marginTop: 8,
-                  lineHeight: 20,
-                  color: COLORS.secondaryText,
-                }}
-              >
-                Are you sure you want to delete this manager? This action cannot
-                be undone.
-              </Text>
+            <Text
+              style={{
+                marginTop: 8,
+                fontSize: 13,
+                lineHeight: 20,
+                color: COLORS.secondaryText,
+                textAlign: "center",
+              }}
+            >
+              Are you sure you want to delete this manager? This action cannot
+              be undone.
+            </Text>
 
-              <View
-                style={{
-                  marginTop: 20,
-                  flexDirection: "row",
-                  gap: 12,
-                }}
-              >
-                <Pressable
-                  onPress={() => setDeleteOpen(false)}
-                  disabled={saving}
-                  style={{
-                    flex: 1,
-                    alignItems: "center",
-                    borderRadius: 18,
-                    backgroundColor: "#E5E7EB",
-                    paddingVertical: 15,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontWeight: "800",
-                      color: COLORS.primaryText,
-                    }}
-                  >
-                    Cancel
-                  </Text>
-                </Pressable>
-
-                <Pressable
-                  onPress={confirmDelete}
-                  disabled={saving}
-                  style={{
-                    flex: 1,
-                    alignItems: "center",
-                    borderRadius: 18,
-                    backgroundColor: saving ? "#FCA5A5" : COLORS.danger,
-                    paddingVertical: 15,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontWeight: "800",
-                      color: COLORS.white,
-                    }}
-                  >
-                    {saving ? "Deleting..." : "Delete"}
-                  </Text>
-                </Pressable>
-              </View>
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 10,
+                marginTop: 18,
+              }}
+            >
+              <OutlineButton
+                title="Cancel"
+                onPress={() => setDeleteOpen(false)}
+              />
+              <OutlineButton
+                title={saving ? "Deleting..." : "Delete"}
+                onPress={confirmDelete}
+                danger
+              />
             </View>
           </View>
-        </Modal>
-      </SafeAreaView>
+        </View>
+      </Modal>
     </>
   );
 }

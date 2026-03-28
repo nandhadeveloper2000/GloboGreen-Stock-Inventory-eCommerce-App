@@ -1,5 +1,9 @@
 // app/master/managers/shops/create.tsx
-import  React,{ useMemo, useRef, useState } from "react";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as DocumentPicker from "expo-document-picker";
+import * as ImagePicker from "expo-image-picker";
+import { useNavigation, useRouter } from "expo-router";
+import React, { useMemo, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -10,18 +14,13 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
-import * as DocumentPicker from "expo-document-picker";
-import { useNavigation, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 
+import { COLORS } from "../../constants/colors";
 import SummaryApi, { baseURL } from "../../constants/SummaryApi";
 import { useAuth } from "../../context/auth/AuthProvider";
-import { COLORS } from "../../constants/colors";
 
 const apiUrl = (path: string) => `${baseURL}${path}`;
-
 const DOC_TYPES = ["application/pdf", "image/*"];
 
 const toastSuccess = (msg: string) =>
@@ -56,52 +55,56 @@ function SectionCard({
   return (
     <View
       style={{
-        marginTop: 16,
+        marginTop: 10,
         backgroundColor: COLORS.card,
-        borderRadius: 28,
-        padding: 18,
+        borderRadius: 14,
+        padding: 12,
         borderWidth: 1,
         borderColor: COLORS.border,
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.05,
-        shadowRadius: 18,
-        elevation: 3,
       }}
     >
       <View
-        style={{ flexDirection: "row", alignItems: "center", marginBottom: 12 }}
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginBottom: 8,
+        }}
       >
         <View
           style={{
-            width: 44,
-            height: 44,
-            borderRadius: 16,
+            width: 32,
+            height: 32,
+            borderRadius: 10,
             backgroundColor: COLORS.primarySoft,
             alignItems: "center",
             justifyContent: "center",
-            marginRight: 12,
+            marginRight: 8,
           }}
         >
-          <MaterialCommunityIcons name={icon} size={20} color={COLORS.primary} />
+          <MaterialCommunityIcons
+            name={icon}
+            size={17}
+            color={COLORS.primary}
+          />
         </View>
 
         <View style={{ flex: 1 }}>
           <Text
             style={{
               color: COLORS.heading,
-              fontSize: 18,
-              fontWeight: "900",
+              fontSize: 15,
+              fontWeight: "800",
             }}
           >
             {title}
           </Text>
+
           {!!subtitle && (
             <Text
               style={{
                 color: COLORS.secondaryText,
-                fontSize: 12,
+                fontSize: 11,
                 marginTop: 2,
-                fontWeight: "500",
               }}
             >
               {subtitle}
@@ -133,15 +136,13 @@ function AppInput({
   autoCapitalize?: "none" | "sentences" | "words" | "characters";
 }) {
   return (
-    <View style={{ marginTop: 14 }}>
+    <View style={{ marginTop: 10 }}>
       <Text
         style={{
           color: COLORS.secondaryText,
-          fontWeight: "800",
-          fontSize: 12,
-          marginBottom: 8,
-          textTransform: "uppercase",
-          letterSpacing: 0.6,
+          fontWeight: "700",
+          fontSize: 11,
+          marginBottom: 5,
         }}
       >
         {label}
@@ -151,28 +152,19 @@ function AppInput({
         style={{
           flexDirection: "row",
           alignItems: "center",
-          minHeight: 56,
-          borderRadius: 18,
+          height: 40,
+          borderRadius: 10,
           backgroundColor: COLORS.soft,
           borderWidth: 1,
           borderColor: COLORS.border,
-          paddingHorizontal: 14,
+          paddingHorizontal: 10,
         }}
       >
-        <View
-          style={{
-            width: 36,
-            height: 36,
-            borderRadius: 12,
-            backgroundColor: COLORS.white,
-            borderWidth: 1,
-            borderColor: COLORS.border,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <MaterialCommunityIcons name={icon} size={18} color={COLORS.primary} />
-        </View>
+        <MaterialCommunityIcons
+          name={icon}
+          size={16}
+          color={COLORS.primary}
+        />
 
         <TextInput
           value={value}
@@ -183,11 +175,11 @@ function AppInput({
           autoCapitalize={autoCapitalize}
           style={{
             flex: 1,
-            marginLeft: 12,
+            marginLeft: 8,
             color: COLORS.primaryText,
-            fontSize: 15,
-            fontWeight: "600",
-            paddingVertical: 14,
+            fontSize: 13,
+            fontWeight: "500",
+            paddingVertical: 0,
           }}
         />
       </View>
@@ -211,20 +203,20 @@ function DocCard({
   return (
     <View
       style={{
-        marginTop: 14,
-        borderRadius: 22,
+        marginTop: 10,
+        borderRadius: 12,
         backgroundColor: COLORS.soft,
         borderWidth: 1,
         borderColor: COLORS.border,
-        padding: 14,
+        padding: 10,
       }}
     >
       <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
         <View
           style={{
-            width: 52,
-            height: 52,
-            borderRadius: 16,
+            width: 38,
+            height: 38,
+            borderRadius: 10,
             backgroundColor: COLORS.white,
             borderWidth: 1,
             borderColor: COLORS.border,
@@ -234,17 +226,17 @@ function DocCard({
         >
           <MaterialCommunityIcons
             name={picked ? "file-check-outline" : "file-outline"}
-            size={24}
+            size={18}
             color={picked ? COLORS.success : COLORS.primary}
           />
         </View>
 
-        <View style={{ flex: 1, marginLeft: 12 }}>
+        <View style={{ flex: 1, marginLeft: 8 }}>
           <Text
             style={{
               color: COLORS.heading,
-              fontSize: 15,
-              fontWeight: "800",
+              fontSize: 13,
+              fontWeight: "700",
             }}
           >
             {title}
@@ -254,10 +246,10 @@ function DocCard({
             <Text
               style={{
                 color: COLORS.primaryText,
-                fontSize: 13,
-                marginTop: 4,
-                fontWeight: "600",
+                fontSize: 11,
+                marginTop: 2,
               }}
+              numberOfLines={2}
             >
               Selected: {picked.name}
             </Text>
@@ -265,9 +257,8 @@ function DocCard({
             <Text
               style={{
                 color: COLORS.secondaryText,
-                fontSize: 13,
-                marginTop: 4,
-                fontWeight: "500",
+                fontSize: 11,
+                marginTop: 2,
               }}
             >
               No document selected
@@ -279,8 +270,8 @@ function DocCard({
       <View
         style={{
           flexDirection: "row",
-          gap: 10,
-          marginTop: 14,
+          gap: 6,
+          marginTop: 10,
           flexWrap: "wrap",
         }}
       >
@@ -288,14 +279,17 @@ function DocCard({
           onPress={onPick}
           disabled={disabled}
           style={{
-            paddingHorizontal: 14,
-            paddingVertical: 11,
-            borderRadius: 14,
+            minWidth: 90,
+            height: 38,
+            paddingHorizontal: 12,
+            borderRadius: 10,
             backgroundColor: COLORS.primary,
+            alignItems: "center",
+            justifyContent: "center",
             opacity: disabled ? 0.65 : 1,
           }}
         >
-          <Text style={{ color: COLORS.white, fontWeight: "900", fontSize: 12 }}>
+          <Text style={{ color: COLORS.white, fontWeight: "800", fontSize: 12 }}>
             {picked ? "Replace" : "Choose"}
           </Text>
         </Pressable>
@@ -305,19 +299,22 @@ function DocCard({
             onPress={onClearPick}
             disabled={disabled}
             style={{
-              paddingHorizontal: 14,
-              paddingVertical: 11,
-              borderRadius: 14,
+              minWidth: 80,
+              height: 38,
+              paddingHorizontal: 12,
+              borderRadius: 10,
               backgroundColor: COLORS.white,
               borderWidth: 1,
               borderColor: COLORS.border,
+              alignItems: "center",
+              justifyContent: "center",
               opacity: disabled ? 0.65 : 1,
             }}
           >
             <Text
               style={{
                 color: COLORS.primaryText,
-                fontWeight: "900",
+                fontWeight: "700",
                 fontSize: 12,
               }}
             >
@@ -357,7 +354,9 @@ export default function ShopCreateScreen() {
     useState<ImagePicker.ImagePickerAsset | null>(null);
 
   const [gstCertificate, setGstCertificate] = useState<PickedDoc | null>(null);
-  const [udyamCertificate, setUdyamCertificate] = useState<PickedDoc | null>(null);
+  const [udyamCertificate, setUdyamCertificate] = useState<PickedDoc | null>(
+    null
+  );
 
   React.useLayoutEffect(() => {
     navigation.setOptions?.({
@@ -370,17 +369,17 @@ export default function ShopCreateScreen() {
       },
       headerTitleStyle: {
         color: COLORS.heading,
-        fontSize: 18,
-        fontWeight: "900",
+        fontSize: 16,
+        fontWeight: "800",
       },
       headerLeft: () => (
         <Pressable
           onPress={() => router.back()}
           hitSlop={10}
           style={{
-            width: 40,
-            height: 40,
-            borderRadius: 14,
+            width: 34,
+            height: 34,
+            borderRadius: 10,
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: COLORS.card,
@@ -391,7 +390,7 @@ export default function ShopCreateScreen() {
         >
           <MaterialCommunityIcons
             name="chevron-left"
-            size={24}
+            size={20}
             color={COLORS.heading}
           />
         </Pressable>
@@ -399,10 +398,10 @@ export default function ShopCreateScreen() {
       headerRight: () => (
         <View
           style={{
-            width: 40,
-            height: 40,
+            width: 34,
+            height: 34,
             marginRight: 10,
-            borderRadius: 14,
+            borderRadius: 10,
             backgroundColor: COLORS.primarySoft,
             alignItems: "center",
             justifyContent: "center",
@@ -410,7 +409,7 @@ export default function ShopCreateScreen() {
         >
           <MaterialCommunityIcons
             name="store-plus-outline"
-            size={21}
+            size={17}
             color={COLORS.primary}
           />
         </View>
@@ -441,7 +440,10 @@ export default function ShopCreateScreen() {
 
   const pickFrontImage = async () => {
     const perm = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!perm.granted) return toastInfo("Allow gallery permission");
+    if (!perm.granted) {
+      toastInfo("Allow gallery permission");
+      return;
+    }
 
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -451,8 +453,8 @@ export default function ShopCreateScreen() {
     });
 
     if (!result.canceled) {
-      const a = result.assets?.[0];
-      if (a?.uri) setNewFrontImage(a);
+      const asset = result.assets?.[0];
+      if (asset?.uri) setNewFrontImage(asset);
     }
   };
 
@@ -465,18 +467,26 @@ export default function ShopCreateScreen() {
 
     if (result.canceled) return;
 
-    const a = result.assets?.[0];
-    if (!a?.uri) return toastError("File not selected");
+    const asset = result.assets?.[0];
+    if (!asset?.uri) {
+      toastError("File not selected");
+      return;
+    }
 
     const doc: PickedDoc = {
-      uri: a.uri,
-      name: a.name || `${key}_${Date.now()}`,
-      mimeType: a.mimeType || "application/octet-stream",
-      size: a.size,
+      uri: asset.uri,
+      name: asset.name || `${key}_${Date.now()}`,
+      mimeType: asset.mimeType || "application/octet-stream",
+      size: asset.size,
     };
 
     if (key === "gstCertificate") setGstCertificate(doc);
     if (key === "udyamCertificate") setUdyamCertificate(doc);
+  };
+
+  const clearPickedDocs = () => {
+    setGstCertificate(null);
+    setUdyamCertificate(null);
   };
 
   const clearAll = () => {
@@ -489,14 +499,8 @@ export default function ShopCreateScreen() {
     setStreet("");
     setPincode("");
     setNewFrontImage(null);
-    setGstCertificate(null);
-    setUdyamCertificate(null);
+    clearPickedDocs();
     setCreatedShopId("");
-  };
-
-  const clearPickedDocs = () => {
-    setGstCertificate(null);
-    setUdyamCertificate(null);
   };
 
   const getCreatedIdFromJson = (json: any) => {
@@ -511,64 +515,8 @@ export default function ShopCreateScreen() {
     );
   };
 
-  const createShop = async () => {
-    const shopName = name.trim();
-    if (!shopName) return toastInfo("Enter shop name");
-
-    try {
-      setSaving(true);
-
-      const res = await fetch(apiUrl(SummaryApi.master_create_shop.url), {
-        method: SummaryApi.master_create_shop.method,
-        headers: headersJson,
-        body: JSON.stringify({
-          name: shopName,
-          businessType: businessType.trim(),
-          state: stateName.trim(),
-          district: district.trim(),
-          taluk: taluk.trim(),
-          area: area.trim(),
-          street: street.trim(),
-          pincode: pincode.trim(),
-        }),
-      });
-
-      const rr = await readResponse(res);
-      const json = rr.json;
-
-      if (!res.ok || !json?.success) {
-        if (!json) console.log("RAW:", rr.text);
-        return toastError(json?.message || `HTTP ${res.status}`);
-      }
-
-      const newId = getCreatedIdFromJson(json);
-      if (!newId) {
-        toastSuccess("Shop created successfully");
-        return;
-      }
-
-      setCreatedShopId(String(newId));
-      toastSuccess("Shop created successfully");
-
-      if (newFrontImage?.uri) {
-        await uploadFrontImageInternal(String(newId), true);
-      }
-
-      if (gstCertificate || udyamCertificate) {
-        await uploadDocsInternal(String(newId), true);
-      }
-
-      // router.replace(`/master/managers/shops/view?id=${String(newId)}`);
-    } catch {
-      toastError("Network error");
-    } finally {
-      setSaving(false);
-    }
-  };
-
   const uploadFrontImageInternal = async (shopId: string, silent = false) => {
-    if (!shopId) return;
-    if (!newFrontImage?.uri) return;
+    if (!shopId || !newFrontImage?.uri) return;
 
     try {
       setFrontUploading(true);
@@ -580,7 +528,11 @@ export default function ShopCreateScreen() {
       const filename = `shop_front_${Date.now()}.${isPng ? "png" : "jpg"}`;
 
       const form = new FormData();
-      form.append("front", { uri, name: filename, type: mime } as any);
+      form.append("front", {
+        uri,
+        name: filename,
+        type: mime,
+      } as any);
 
       const res = await fetch(
         apiUrl(SummaryApi.shop_front_upload_admin.url(String(shopId))),
@@ -610,8 +562,7 @@ export default function ShopCreateScreen() {
   };
 
   const uploadDocsInternal = async (shopId: string, silent = false) => {
-    if (!shopId) return;
-    if (!gstCertificate && !udyamCertificate) return;
+    if (!shopId || (!gstCertificate && !udyamCertificate)) return;
 
     try {
       setDocsUploading(true);
@@ -619,25 +570,19 @@ export default function ShopCreateScreen() {
       const form = new FormData();
 
       if (gstCertificate) {
-        form.append(
-          "gstCertificate",
-          {
-            uri: gstCertificate.uri,
-            name: gstCertificate.name,
-            type: gstCertificate.mimeType,
-          } as any
-        );
+        form.append("gstCertificate", {
+          uri: gstCertificate.uri,
+          name: gstCertificate.name,
+          type: gstCertificate.mimeType,
+        } as any);
       }
 
       if (udyamCertificate) {
-        form.append(
-          "udyamCertificate",
-          {
-            uri: udyamCertificate.uri,
-            name: udyamCertificate.name,
-            type: udyamCertificate.mimeType,
-          } as any
-        );
+        form.append("udyamCertificate", {
+          uri: udyamCertificate.uri,
+          name: udyamCertificate.name,
+          type: udyamCertificate.mimeType,
+        } as any);
       }
 
       const res = await fetch(
@@ -667,22 +612,76 @@ export default function ShopCreateScreen() {
     }
   };
 
+  const createShop = async () => {
+    const shopName = name.trim();
+
+    if (!shopName) {
+      toastInfo("Enter shop name");
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      const res = await fetch(apiUrl(SummaryApi.master_create_shop.url), {
+        method: SummaryApi.master_create_shop.method,
+        headers: headersJson,
+        body: JSON.stringify({
+          name: shopName,
+          businessType: businessType.trim(),
+          state: stateName.trim(),
+          district: district.trim(),
+          taluk: taluk.trim(),
+          area: area.trim(),
+          street: street.trim(),
+          pincode: pincode.trim(),
+        }),
+      });
+
+      const rr = await readResponse(res);
+      const json = rr.json;
+
+      if (!res.ok || !json?.success) {
+        if (!json) console.log("RAW:", rr.text);
+        toastError(json?.message || `HTTP ${res.status}`);
+        return;
+      }
+
+      const newId = String(getCreatedIdFromJson(json) || "");
+      setCreatedShopId(newId);
+      toastSuccess("Shop created successfully");
+
+      if (newId && newFrontImage?.uri) {
+        await uploadFrontImageInternal(newId, true);
+      }
+
+      if (newId && (gstCertificate || udyamCertificate)) {
+        await uploadDocsInternal(newId, true);
+      }
+    } catch {
+      toastError("Network error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const uploadFrontImageManual = async () => {
     if (!createdShopId) {
-      return toastInfo("Create the shop first, then upload front image");
+      toastInfo("Create the shop first, then upload front image");
+      return;
     }
     await uploadFrontImageInternal(createdShopId);
   };
 
   const uploadDocsManual = async () => {
     if (!createdShopId) {
-      return toastInfo("Create the shop first, then upload documents");
+      toastInfo("Create the shop first, then upload documents");
+      return;
     }
     await uploadDocsInternal(createdShopId);
   };
 
   const heroFrontImage = newFrontImage?.uri || "";
-
   const busy = saving || frontUploading || docsUploading;
 
   return (
@@ -693,31 +692,29 @@ export default function ShopCreateScreen() {
       <ScrollView
         ref={scrollRef}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingHorizontal: 16,
-          paddingTop: 12,
-          paddingBottom: 34,
-        }}
         keyboardShouldPersistTaps="handled"
+        contentContainerStyle={{
+          paddingHorizontal: 12,
+          paddingTop: 8,
+          paddingBottom: 20,
+        }}
       >
-
-
         <SectionCard
           title="Front Image"
           subtitle="Select the shop front image for preview and listing cards"
           icon="image-outline"
         >
-          <View style={{ alignItems: "center", marginTop: 6 }}>
+          <View style={{ alignItems: "center", marginTop: 2 }}>
             <View
               style={{
                 width: "100%",
-                height: 180,
-                borderRadius: 24,
+                height: 150,
+                borderRadius: 14,
                 overflow: "hidden",
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: COLORS.soft,
-                borderWidth: 2,
+                borderWidth: 1,
                 borderColor: COLORS.border,
               }}
             >
@@ -730,7 +727,7 @@ export default function ShopCreateScreen() {
               ) : (
                 <MaterialCommunityIcons
                   name="camera-plus-outline"
-                  size={52}
+                  size={34}
                   color={COLORS.mutedText}
                 />
               )}
@@ -739,8 +736,8 @@ export default function ShopCreateScreen() {
             <View
               style={{
                 flexDirection: "row",
-                gap: 10,
-                marginTop: 18,
+                gap: 6,
+                marginTop: 12,
                 flexWrap: "wrap",
                 justifyContent: "center",
               }}
@@ -749,14 +746,22 @@ export default function ShopCreateScreen() {
                 onPress={pickFrontImage}
                 disabled={busy}
                 style={{
-                  paddingHorizontal: 16,
-                  paddingVertical: 12,
-                  borderRadius: 16,
+                  paddingHorizontal: 12,
+                  height: 40,
+                  borderRadius: 10,
                   backgroundColor: COLORS.primary,
+                  alignItems: "center",
+                  justifyContent: "center",
                   opacity: busy ? 0.65 : 1,
                 }}
               >
-                <Text style={{ color: COLORS.white, fontWeight: "900" }}>
+                <Text
+                  style={{
+                    color: COLORS.white,
+                    fontWeight: "800",
+                    fontSize: 12,
+                  }}
+                >
                   Choose Front Image
                 </Text>
               </Pressable>
@@ -765,10 +770,12 @@ export default function ShopCreateScreen() {
                 onPress={uploadFrontImageManual}
                 disabled={busy || !newFrontImage?.uri}
                 style={{
-                  paddingHorizontal: 16,
-                  paddingVertical: 12,
-                  borderRadius: 16,
+                  paddingHorizontal: 12,
+                  height: 40,
+                  borderRadius: 10,
                   backgroundColor: COLORS.heading,
+                  alignItems: "center",
+                  justifyContent: "center",
                   opacity: busy || !newFrontImage?.uri ? 0.45 : 1,
                 }}
               >
@@ -779,14 +786,21 @@ export default function ShopCreateScreen() {
                       style={{
                         marginLeft: 8,
                         color: COLORS.white,
-                        fontWeight: "900",
+                        fontWeight: "800",
+                        fontSize: 12,
                       }}
                     >
                       Uploading
                     </Text>
                   </View>
                 ) : (
-                  <Text style={{ color: COLORS.white, fontWeight: "900" }}>
+                  <Text
+                    style={{
+                      color: COLORS.white,
+                      fontWeight: "800",
+                      fontSize: 12,
+                    }}
+                  >
                     Upload Front Image
                   </Text>
                 )}
@@ -797,14 +811,22 @@ export default function ShopCreateScreen() {
                   onPress={() => setNewFrontImage(null)}
                   disabled={busy}
                   style={{
-                    paddingHorizontal: 16,
-                    paddingVertical: 12,
-                    borderRadius: 16,
+                    paddingHorizontal: 12,
+                    height: 40,
+                    borderRadius: 10,
                     backgroundColor: COLORS.danger,
+                    alignItems: "center",
+                    justifyContent: "center",
                     opacity: busy ? 0.65 : 1,
                   }}
                 >
-                  <Text style={{ color: COLORS.white, fontWeight: "900" }}>
+                  <Text
+                    style={{
+                      color: COLORS.white,
+                      fontWeight: "800",
+                      fontSize: 12,
+                    }}
+                  >
                     Clear
                   </Text>
                 </Pressable>
@@ -813,13 +835,15 @@ export default function ShopCreateScreen() {
 
             <Text
               style={{
-                marginTop: 12,
+                marginTop: 8,
                 color: COLORS.secondaryText,
-                fontSize: 12,
+                fontSize: 11,
                 textAlign: "center",
+                lineHeight: 15,
               }}
             >
-              You can create the shop first and upload the front image after shop ID is generated.
+              You can create the shop first and upload the front image after shop
+              ID is generated.
             </Text>
           </View>
         </SectionCard>
@@ -855,7 +879,7 @@ export default function ShopCreateScreen() {
             label="State"
             value={stateName}
             onChangeText={setStateName}
-            placeholder="state"
+            placeholder="State"
             icon="map-outline"
           />
 
@@ -863,7 +887,7 @@ export default function ShopCreateScreen() {
             label="District"
             value={district}
             onChangeText={setDistrict}
-            placeholder="district"
+            placeholder="District"
             icon="office-building-marker-outline"
           />
 
@@ -871,7 +895,7 @@ export default function ShopCreateScreen() {
             label="Taluk"
             value={taluk}
             onChangeText={setTaluk}
-            placeholder="taluk"
+            placeholder="Taluk"
             icon="city-variant-outline"
           />
 
@@ -879,7 +903,7 @@ export default function ShopCreateScreen() {
             label="Area"
             value={area}
             onChangeText={setArea}
-            placeholder="area"
+            placeholder="Area"
             icon="map-marker-radius-outline"
           />
 
@@ -887,7 +911,7 @@ export default function ShopCreateScreen() {
             label="Door No / Street"
             value={street}
             onChangeText={setStreet}
-            placeholder="door no, street"
+            placeholder="Door no, street"
             icon="road-variant"
           />
 
@@ -895,7 +919,7 @@ export default function ShopCreateScreen() {
             label="Pincode"
             value={pincode}
             onChangeText={setPincode}
-            placeholder="pincode"
+            placeholder="Pincode"
             icon="mailbox-outline"
             keyboardType="number-pad"
           />
@@ -926,9 +950,9 @@ export default function ShopCreateScreen() {
             onPress={uploadDocsManual}
             disabled={busy || (!gstCertificate && !udyamCertificate)}
             style={{
-              marginTop: 20,
-              minHeight: 54,
-              borderRadius: 18,
+              marginTop: 14,
+              height: 40,
+              borderRadius: 10,
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: COLORS.heading,
@@ -941,9 +965,10 @@ export default function ShopCreateScreen() {
                 <ActivityIndicator color={COLORS.white} />
                 <Text
                   style={{
-                    marginLeft: 10,
+                    marginLeft: 8,
                     color: COLORS.white,
-                    fontWeight: "900",
+                    fontWeight: "800",
+                    fontSize: 12,
                   }}
                 >
                   Uploading...
@@ -953,14 +978,15 @@ export default function ShopCreateScreen() {
               <>
                 <MaterialCommunityIcons
                   name="cloud-upload-outline"
-                  size={20}
+                  size={17}
                   color={COLORS.white}
                 />
                 <Text
                   style={{
                     marginLeft: 8,
                     color: COLORS.white,
-                    fontWeight: "900",
+                    fontWeight: "800",
+                    fontSize: 12,
                   }}
                 >
                   Upload Selected Docs
@@ -973,9 +999,9 @@ export default function ShopCreateScreen() {
             onPress={clearPickedDocs}
             disabled={busy}
             style={{
-              marginTop: 12,
-              minHeight: 50,
-              borderRadius: 16,
+              marginTop: 8,
+              height: 40,
+              borderRadius: 10,
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: COLORS.soft,
@@ -987,7 +1013,8 @@ export default function ShopCreateScreen() {
             <Text
               style={{
                 color: COLORS.primaryText,
-                fontWeight: "900",
+                fontWeight: "700",
+                fontSize: 12,
               }}
             >
               Clear Selected
@@ -995,14 +1022,14 @@ export default function ShopCreateScreen() {
           </Pressable>
         </SectionCard>
 
-        <View style={{ flexDirection: "row", gap: 12, marginTop: 18 }}>
+        <View style={{ flexDirection: "row", gap: 8, marginTop: 14 }}>
           <Pressable
             onPress={clearAll}
             disabled={busy}
             style={{
               flex: 1,
-              minHeight: 56,
-              borderRadius: 18,
+              height: 40,
+              borderRadius: 10,
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: COLORS.soft,
@@ -1014,8 +1041,8 @@ export default function ShopCreateScreen() {
             <Text
               style={{
                 color: COLORS.primaryText,
-                fontWeight: "900",
-                fontSize: 15,
+                fontWeight: "700",
+                fontSize: 13,
               }}
             >
               Clear Form
@@ -1026,9 +1053,9 @@ export default function ShopCreateScreen() {
             onPress={createShop}
             disabled={busy}
             style={{
-              flex: 1.4,
-              minHeight: 56,
-              borderRadius: 18,
+              flex: 1.3,
+              height: 40,
+              borderRadius: 10,
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: COLORS.success,
@@ -1041,10 +1068,10 @@ export default function ShopCreateScreen() {
                 <ActivityIndicator color={COLORS.white} />
                 <Text
                   style={{
-                    marginLeft: 10,
+                    marginLeft: 8,
                     color: COLORS.white,
-                    fontWeight: "900",
-                    fontSize: 15,
+                    fontWeight: "800",
+                    fontSize: 13,
                   }}
                 >
                   Creating...
@@ -1054,15 +1081,15 @@ export default function ShopCreateScreen() {
               <>
                 <MaterialCommunityIcons
                   name="content-save-outline"
-                  size={20}
+                  size={17}
                   color={COLORS.white}
                 />
                 <Text
                   style={{
                     marginLeft: 8,
                     color: COLORS.white,
-                    fontWeight: "900",
-                    fontSize: 15,
+                    fontWeight: "800",
+                    fontSize: 13,
                   }}
                 >
                   Create Shop

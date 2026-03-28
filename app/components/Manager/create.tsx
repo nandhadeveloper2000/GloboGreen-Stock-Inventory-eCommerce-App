@@ -44,6 +44,43 @@ type CreateManagerResponse = {
 
 type PickerAsset = ImagePicker.ImagePickerAsset | null;
 
+const UI = {
+  screenPaddingX: 14,
+  screenPaddingTop: 10,
+  screenPaddingBottom: 20,
+
+  cardRadius: 18,
+  cardPadding: 14,
+
+  sectionGap: 12,
+  inputGap: 10,
+
+  inputHeight: 44,
+  inputRadius: 12,
+  inputPaddingX: 12,
+
+  inputFontSize: 14,
+  inputLabelSize: 13,
+
+  avatarSize: 76,
+  avatarCameraBtn: 32,
+
+  docPreviewSize: 50,
+  docPreviewRadius: 12,
+
+  smallBtnRadius: 10,
+  smallBtnPaddingY: 10,
+  smallBtnPaddingX: 14,
+  smallBtnFontSize: 13,
+
+  submitRadius: 12,
+  submitPaddingY: 13,
+
+  titleSize: 18,
+  bodySize: 12,
+  metaSize: 11,
+};
+
 function showToast(type: "success" | "error", text1: string, text2?: string) {
   Toast.show({
     type,
@@ -77,9 +114,9 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
     >
       <View
         style={{
-          width: 84,
-          height: 84,
-          borderRadius: 24,
+          width: 72,
+          height: 72,
+          borderRadius: 18,
           backgroundColor: COLORS.inactiveBg,
           alignItems: "center",
           justifyContent: "center",
@@ -87,16 +124,16 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
       >
         <MaterialCommunityIcons
           name="shield-lock-outline"
-          size={40}
+          size={34}
           color={COLORS.danger}
         />
       </View>
 
       <Text
         style={{
-          marginTop: 16,
+          marginTop: 14,
           color: COLORS.primaryText,
-          fontSize: 22,
+          fontSize: 20,
           fontWeight: "900",
         }}
       >
@@ -108,7 +145,8 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
           marginTop: 8,
           color: COLORS.secondaryText,
           textAlign: "center",
-          lineHeight: 22,
+          lineHeight: 20,
+          fontSize: 14,
         }}
       >
         Only Master Admin can create managers.
@@ -117,10 +155,10 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
       <Pressable
         onPress={onBack}
         style={{
-          marginTop: 18,
-          paddingHorizontal: 18,
-          paddingVertical: 12,
-          borderRadius: 16,
+          marginTop: 16,
+          paddingHorizontal: 16,
+          paddingVertical: 10,
+          borderRadius: 10,
           backgroundColor: COLORS.soft,
           borderWidth: 1,
           borderColor: COLORS.border,
@@ -130,6 +168,7 @@ function AccessDenied({ onBack }: { onBack: () => void }) {
           style={{
             color: COLORS.primaryText,
             fontWeight: "800",
+            fontSize: 14,
           }}
         >
           Go Back
@@ -151,15 +190,15 @@ function SectionCard({
       style={[
         {
           backgroundColor: COLORS.card,
-          borderRadius: 30,
-          padding: 18,
+          borderRadius: UI.cardRadius,
+          padding: UI.cardPadding,
           borderWidth: 1,
           borderColor: COLORS.border,
           shadowColor: COLORS.heroDark,
-          shadowOffset: { width: 0, height: 12 },
-          shadowOpacity: 0.08,
-          shadowRadius: 20,
-          elevation: 5,
+          shadowOffset: { width: 0, height: 6 },
+          shadowOpacity: 0.06,
+          shadowRadius: 12,
+          elevation: 3,
         },
         style,
       ]}
@@ -171,24 +210,23 @@ function SectionCard({
 
 function InputRow({
   label,
-  icon,
   value,
   onChangeText,
   inputProps,
 }: {
   label: string;
-  icon: keyof typeof MaterialCommunityIcons.glyphMap;
   value: string;
   onChangeText: (text: string) => void;
   inputProps?: TextInputProps;
 }) {
   return (
-    <View style={{ marginTop: 16 }}>
+    <View style={{ marginTop: UI.inputGap }}>
       <Text
         style={{
           color: COLORS.primaryText,
           fontWeight: "700",
-          marginBottom: 8,
+          marginBottom: 6,
+          fontSize: UI.inputLabelSize,
         }}
       >
         {label}
@@ -196,44 +234,23 @@ function InputRow({
 
       <View
         style={{
-          flexDirection: "row",
-          alignItems: "center",
+          justifyContent: "center",
           backgroundColor: COLORS.soft,
           borderWidth: 1,
           borderColor: COLORS.border,
-          borderRadius: 18,
-          paddingHorizontal: 14,
-          height: 54,
+          borderRadius: UI.inputRadius,
+          paddingHorizontal: UI.inputPaddingX,
+          height: UI.inputHeight,
         }}
       >
-        <View
-          style={{
-            width: 34,
-            height: 34,
-            borderRadius: 12,
-            backgroundColor: COLORS.white,
-            borderWidth: 1,
-            borderColor: COLORS.border,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <MaterialCommunityIcons
-            name={icon}
-            size={18}
-            color={COLORS.secondaryText}
-          />
-        </View>
-
         <TextInput
           value={value}
           onChangeText={onChangeText}
           style={{
-            flex: 1,
-            marginLeft: 12,
             color: COLORS.primaryText,
-            fontSize: 15,
+            fontSize: UI.inputFontSize,
             fontWeight: "600",
+            paddingVertical: 0,
           }}
           placeholderTextColor={COLORS.labelText}
           autoCorrect={false}
@@ -260,9 +277,9 @@ function ActionButton({
       onPress={onPress}
       disabled={disabled}
       style={{
-        paddingHorizontal: 18,
-        paddingVertical: 12,
-        borderRadius: 16,
+        paddingHorizontal: UI.smallBtnPaddingX,
+        paddingVertical: UI.smallBtnPaddingY,
+        borderRadius: UI.smallBtnRadius,
         backgroundColor: filled ? BRAND : COLORS.soft,
         borderWidth: 1,
         borderColor: filled ? COLORS.successLight : COLORS.border,
@@ -272,7 +289,8 @@ function ActionButton({
       <Text
         style={{
           color: filled ? COLORS.white : COLORS.primaryText,
-          fontWeight: "900",
+          fontWeight: "800",
+          fontSize: UI.smallBtnFontSize,
         }}
       >
         {label}
@@ -314,7 +332,7 @@ export default function CreateManager() {
       headerTintColor: COLORS.primaryText,
       headerTitleStyle: {
         color: COLORS.primaryText,
-        fontSize: 20,
+        fontSize: 18,
         fontWeight: "800",
       },
     });
@@ -530,7 +548,6 @@ export default function CreateManager() {
       }
 
       resetCreate();
-
       showToast("success", "Success", "Manager created successfully");
       router.back();
     } catch (error) {
@@ -572,6 +589,7 @@ export default function CreateManager() {
             marginTop: 12,
             color: COLORS.secondaryText,
             fontWeight: "700",
+            fontSize: 14,
           }}
         >
           Loading authentication...
@@ -594,9 +612,9 @@ export default function CreateManager() {
         <ScrollView
           style={{ flex: 1, backgroundColor: COLORS.background }}
           contentContainerStyle={{
-            paddingHorizontal: 16,
-            paddingTop: 14,
-            paddingBottom: 28,
+            paddingHorizontal: UI.screenPaddingX,
+            paddingTop: UI.screenPaddingTop,
+            paddingBottom: UI.screenPaddingBottom,
           }}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
@@ -605,7 +623,7 @@ export default function CreateManager() {
             <Text
               style={{
                 color: COLORS.primaryText,
-                fontSize: 22,
+                fontSize: UI.titleSize,
                 fontWeight: "900",
               }}
             >
@@ -616,19 +634,19 @@ export default function CreateManager() {
               style={{
                 marginTop: 4,
                 color: COLORS.secondaryText,
-                fontSize: 13,
-                lineHeight: 20,
+                fontSize: UI.bodySize,
+                lineHeight: 18,
               }}
             >
               Fill in the account details below. Avatar and ID proof are optional.
             </Text>
 
-            <View style={{ alignItems: "center", marginTop: 22 }}>
+            <View style={{ alignItems: "center", marginTop: 14 }}>
               <View style={{ position: "relative" }}>
                 <View
                   style={{
-                    width: 112,
-                    height: 112,
+                    width: UI.avatarSize,
+                    height: UI.avatarSize,
                     borderRadius: 999,
                     overflow: "hidden",
                     alignItems: "center",
@@ -658,7 +676,7 @@ export default function CreateManager() {
                     >
                       <MaterialCommunityIcons
                         name="account"
-                        size={68}
+                        size={42}
                         color={BRAND_DARK}
                       />
                     </LinearGradient>
@@ -670,14 +688,14 @@ export default function CreateManager() {
                   disabled={saving}
                   style={{
                     position: "absolute",
-                    bottom: 2,
-                    right: 2,
-                    width: 40,
-                    height: 40,
+                    bottom: 0,
+                    right: 0,
+                    width: UI.avatarCameraBtn,
+                    height: UI.avatarCameraBtn,
                     borderRadius: 999,
                     alignItems: "center",
                     justifyContent: "center",
-                    borderWidth: 4,
+                    borderWidth: 3,
                     borderColor: COLORS.white,
                     backgroundColor: BRAND,
                     opacity: saving ? 0.7 : 1,
@@ -685,20 +703,19 @@ export default function CreateManager() {
                 >
                   <MaterialCommunityIcons
                     name="camera"
-                    size={18}
+                    size={15}
                     color={COLORS.white}
                   />
                 </Pressable>
               </View>
 
-              <View style={{ flexDirection: "row", gap: 10, marginTop: 16 }}>
+              <View style={{ flexDirection: "row", gap: 8, marginTop: 10 }}>
                 <ActionButton
                   label="Choose Avatar"
                   onPress={pickAvatar}
                   disabled={saving}
                   filled
                 />
-
                 <ActionButton
                   label="Clear"
                   onPress={() => setCAvatar(null)}
@@ -708,9 +725,9 @@ export default function CreateManager() {
 
               <Text
                 style={{
-                  marginTop: 10,
+                  marginTop: 6,
                   color: COLORS.secondaryText,
-                  fontSize: 12,
+                  fontSize: UI.metaSize,
                   textAlign: "center",
                 }}
               >
@@ -720,19 +737,19 @@ export default function CreateManager() {
 
             <View
               style={{
-                marginTop: 20,
+                marginTop: UI.sectionGap,
                 backgroundColor: COLORS.soft,
                 borderWidth: 1,
                 borderColor: COLORS.border,
-                borderRadius: 22,
-                padding: 14,
+                borderRadius: 14,
+                padding: 12,
               }}
             >
               <Text
                 style={{
                   color: COLORS.primaryText,
                   fontWeight: "900",
-                  fontSize: 15,
+                  fontSize: 14,
                 }}
               >
                 ID Proof
@@ -742,7 +759,7 @@ export default function CreateManager() {
                 style={{
                   marginTop: 4,
                   color: COLORS.secondaryText,
-                  fontSize: 12,
+                  fontSize: UI.metaSize,
                 }}
               >
                 Optional supporting document for identity verification
@@ -752,14 +769,14 @@ export default function CreateManager() {
                 style={{
                   flexDirection: "row",
                   alignItems: "center",
-                  marginTop: 14,
+                  marginTop: 10,
                 }}
               >
                 <View
                   style={{
-                    width: 62,
-                    height: 62,
-                    borderRadius: 18,
+                    width: UI.docPreviewSize,
+                    height: UI.docPreviewSize,
+                    borderRadius: UI.docPreviewRadius,
                     backgroundColor: COLORS.white,
                     borderWidth: 1,
                     borderColor: COLORS.border,
@@ -771,23 +788,27 @@ export default function CreateManager() {
                   {cIdProof?.uri ? (
                     <Image
                       source={{ uri: cIdProof.uri }}
-                      style={{ width: 62, height: 62 }}
+                      style={{
+                        width: UI.docPreviewSize,
+                        height: UI.docPreviewSize,
+                      }}
                       resizeMode="cover"
                     />
                   ) : (
                     <MaterialCommunityIcons
                       name="card-account-details"
-                      size={28}
+                      size={22}
                       color={COLORS.mutedText}
                     />
                   )}
                 </View>
 
-                <View style={{ flex: 1, marginLeft: 12 }}>
+                <View style={{ flex: 1, marginLeft: 10 }}>
                   <Text
                     style={{
                       color: COLORS.primaryText,
                       fontWeight: "700",
+                      fontSize: 13,
                     }}
                   >
                     {cIdProof?.uri ? "Selected successfully" : "Not selected"}
@@ -795,7 +816,7 @@ export default function CreateManager() {
                   <Text
                     style={{
                       color: COLORS.secondaryText,
-                      fontSize: 12,
+                      fontSize: UI.metaSize,
                       marginTop: 2,
                     }}
                   >
@@ -804,14 +825,14 @@ export default function CreateManager() {
                 </View>
               </View>
 
-              <View style={{ flexDirection: "row", gap: 10, marginTop: 14 }}>
+              <View style={{ flexDirection: "row", gap: 8, marginTop: 10 }}>
                 <Pressable
                   onPress={pickIdProof}
                   disabled={saving}
                   style={{
-                    paddingHorizontal: 18,
-                    paddingVertical: 12,
-                    borderRadius: 16,
+                    paddingHorizontal: UI.smallBtnPaddingX,
+                    paddingVertical: UI.smallBtnPaddingY,
+                    borderRadius: UI.smallBtnRadius,
                     backgroundColor: COLORS.heroDark,
                     opacity: saving ? 0.6 : 1,
                   }}
@@ -819,7 +840,8 @@ export default function CreateManager() {
                   <Text
                     style={{
                       color: COLORS.white,
-                      fontWeight: "900",
+                      fontWeight: "800",
+                      fontSize: UI.smallBtnFontSize,
                     }}
                   >
                     Choose ID Proof
@@ -836,13 +858,13 @@ export default function CreateManager() {
 
             <View
               style={{
-                marginTop: 20,
+                marginTop: UI.sectionGap,
                 backgroundColor: COLORS.soft,
                 borderWidth: 1,
                 borderColor: COLORS.border,
-                borderRadius: 22,
-                paddingHorizontal: 14,
-                paddingVertical: 10,
+                borderRadius: 14,
+                paddingHorizontal: 12,
+                paddingVertical: 8,
               }}
             >
               <View
@@ -850,13 +872,13 @@ export default function CreateManager() {
                   flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  paddingVertical: 6,
+                  paddingVertical: 4,
                 }}
               >
                 <Text
                   style={{
                     color: COLORS.secondaryText,
-                    fontSize: 12,
+                    fontSize: UI.metaSize,
                     fontWeight: "800",
                   }}
                 >
@@ -866,6 +888,7 @@ export default function CreateManager() {
                   style={{
                     color: BRAND_DARK,
                     fontWeight: "900",
+                    fontSize: 13,
                   }}
                 >
                   MANAGER
@@ -879,13 +902,13 @@ export default function CreateManager() {
                   flexDirection: "row",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  paddingVertical: 10,
+                  paddingVertical: 7,
                 }}
               >
                 <Text
                   style={{
                     color: COLORS.secondaryText,
-                    fontSize: 12,
+                    fontSize: UI.metaSize,
                     fontWeight: "800",
                   }}
                 >
@@ -895,6 +918,7 @@ export default function CreateManager() {
                   style={{
                     color: COLORS.primaryText,
                     fontWeight: "800",
+                    fontSize: 13,
                   }}
                 >
                   Minimum 4 digits
@@ -904,7 +928,6 @@ export default function CreateManager() {
 
             <InputRow
               label="Name"
-              icon="account-outline"
               value={cName}
               onChangeText={setCName}
               inputProps={{
@@ -915,7 +938,6 @@ export default function CreateManager() {
 
             <InputRow
               label="Username"
-              icon="at"
               value={cUsername}
               onChangeText={(text) => setCUsername(text.replace(/\s+/g, ""))}
               inputProps={{
@@ -927,7 +949,6 @@ export default function CreateManager() {
 
             <InputRow
               label="Email"
-              icon="email-outline"
               value={cEmail}
               onChangeText={setCEmail}
               inputProps={{
@@ -940,7 +961,6 @@ export default function CreateManager() {
 
             <InputRow
               label="PIN"
-              icon="shield-key-outline"
               value={cPin}
               onChangeText={(text) => setCPin(text.replace(/[^\d]/g, ""))}
               inputProps={{
@@ -956,9 +976,9 @@ export default function CreateManager() {
               onPress={createManager}
               disabled={saving}
               style={{
-                marginTop: 24,
-                borderRadius: 20,
-                paddingVertical: 16,
+                marginTop: 16,
+                borderRadius: UI.submitRadius,
+                paddingVertical: UI.submitPaddingY,
                 alignItems: "center",
                 backgroundColor: saving ? COLORS.successLight : BRAND,
                 opacity: saving ? 0.95 : 1,
@@ -969,9 +989,10 @@ export default function CreateManager() {
                   <ActivityIndicator color={COLORS.white} />
                   <Text
                     style={{
-                      marginLeft: 10,
+                      marginLeft: 8,
                       color: COLORS.white,
                       fontWeight: "900",
+                      fontSize: 14,
                     }}
                   >
                     Saving...
@@ -981,7 +1002,7 @@ export default function CreateManager() {
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
                   <MaterialCommunityIcons
                     name="account-plus-outline"
-                    size={20}
+                    size={18}
                     color={COLORS.white}
                   />
                   <Text
@@ -989,6 +1010,7 @@ export default function CreateManager() {
                       marginLeft: 8,
                       color: COLORS.white,
                       fontWeight: "900",
+                      fontSize: 14,
                     }}
                   >
                     Create Manager

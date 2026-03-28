@@ -1,4 +1,8 @@
 // app/components/staff/edit.tsx
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import * as ImagePicker from "expo-image-picker";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import React, {
   useCallback,
   useEffect,
@@ -20,19 +24,37 @@ import {
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
-import { useNavigation } from "@react-navigation/native";
-import { useLocalSearchParams, useRouter } from "expo-router";
 import Toast from "react-native-toast-message";
 
-import SummaryApi, { baseURL } from "../../constants/SummaryApi";
-import { useAuth } from "../../context/auth/AuthProvider";
 import { COLORS } from "../../constants/colors";
 import { ROLES } from "../../constants/roles";
+import SummaryApi, { baseURL } from "../../constants/SummaryApi";
+import { useAuth } from "../../context/auth/AuthProvider";
 import { normalizeRole } from "../../utils/permissions";
 
 const apiUrl = (path: string) => `${baseURL}${path}`;
+
+const NORMAL = {
+  inputHeight: 48,
+  buttonHeight: 48,
+  headerIconBox: 42,
+  sectionIconBox: 40,
+  uploadRowMinHeight: 78,
+  uploadPreview: 44,
+  pageHorizontal: 16,
+  pageBottom: 16,
+  cardRadius: 18,
+  inputRadius: 12,
+  buttonRadius: 14,
+  uploadRadius: 14,
+  pillRadius: 999,
+  cardPadding: 14,
+  gap: 10,
+  titleFont: 16,
+  subtitleFont: 11,
+  labelFont: 12,
+  inputFont: 15,
+};
 
 const toastSuccess = (msg: string) =>
   Toast.show({ type: "success", text1: "Success", text2: msg });
@@ -183,53 +205,76 @@ function SectionCard({
       style={{
         backgroundColor: COLORS.card,
         borderColor: COLORS.border,
-        shadowOpacity: 0.08,
-        shadowRadius: 18,
-        shadowOffset: { width: 0, height: 10 },
-        elevation: 3,
+        borderWidth: 1,
+        borderRadius: NORMAL.cardRadius,
+        padding: NORMAL.cardPadding,
+        marginBottom: 12,
+        shadowColor: "#000",
+        shadowOpacity: 0.05,
+        shadowRadius: 6,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: 2,
       }}
-      className="mb-4 overflow-hidden rounded-[28px] border"
     >
-      <View className="px-4 pb-4 pt-4">
-        <View className="mb-4 flex-row items-start justify-between">
-          <View className="mr-3 flex-1 flex-row">
-            {icon ? (
-              <View
-                style={{ backgroundColor: COLORS.primarySoft }}
-                className="mr-3 h-12 w-12 items-center justify-center rounded-2xl"
-              >
-                <MaterialCommunityIcons
-                  name={icon}
-                  size={22}
-                  color={COLORS.primary}
-                />
-              </View>
-            ) : null}
-
-            <View className="flex-1">
-              <Text
-                style={{ color: COLORS.heading }}
-                className="text-[17px] font-extrabold"
-              >
-                {title}
-              </Text>
-
-              {subtitle ? (
-                <Text
-                  style={{ color: COLORS.secondaryText }}
-                  className="mt-1 text-[12px] leading-5"
-                >
-                  {subtitle}
-                </Text>
-              ) : null}
+      <View
+        style={{
+          marginBottom: 10,
+          flexDirection: "row",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+        }}
+      >
+        <View style={{ marginRight: 10, flex: 1, flexDirection: "row" }}>
+          {icon ? (
+            <View
+              style={{
+                width: NORMAL.sectionIconBox,
+                height: NORMAL.sectionIconBox,
+                borderRadius: 12,
+                backgroundColor: COLORS.primarySoft,
+                alignItems: "center",
+                justifyContent: "center",
+                marginRight: 10,
+              }}
+            >
+              <MaterialCommunityIcons
+                name={icon}
+                size={20}
+                color={COLORS.primary}
+              />
             </View>
-          </View>
+          ) : null}
 
-          {rightNode}
+          <View style={{ flex: 1 }}>
+            <Text
+              style={{
+                color: COLORS.heading,
+                fontSize: NORMAL.titleFont,
+                fontWeight: "800",
+              }}
+            >
+              {title}
+            </Text>
+
+            {subtitle ? (
+              <Text
+                style={{
+                  color: COLORS.secondaryText,
+                  fontSize: NORMAL.subtitleFont,
+                  marginTop: 2,
+                  lineHeight: 16,
+                }}
+              >
+                {subtitle}
+              </Text>
+            ) : null}
+          </View>
         </View>
 
-        {children}
+        {rightNode}
       </View>
+
+      {children}
     </View>
   );
 }
@@ -266,18 +311,28 @@ function InputField({
   const isActive = value.trim().length > 0;
 
   return (
-    <View className="mb-4">
-      <View className="mb-2 flex-row items-center">
+    <View style={{ marginBottom: 12 }}>
+      <View
+        style={{ marginBottom: 4, flexDirection: "row", alignItems: "center" }}
+      >
         <Text
-          style={{ color: COLORS.primaryText }}
-          className="text-[13px] font-bold"
+          style={{
+            color: COLORS.primaryText,
+            fontSize: NORMAL.labelFont,
+            fontWeight: "700",
+          }}
         >
           {label}
         </Text>
+
         {required ? (
           <Text
-            style={{ color: COLORS.danger }}
-            className="ml-1 text-[13px] font-bold"
+            style={{
+              color: COLORS.danger,
+              marginLeft: 4,
+              fontSize: NORMAL.labelFont,
+              fontWeight: "700",
+            }}
           >
             *
           </Text>
@@ -292,50 +347,62 @@ function InputField({
             : isActive
               ? COLORS.primaryLight
               : COLORS.border,
+          borderWidth: 1,
+          borderRadius: NORMAL.inputRadius,
+          height: NORMAL.inputHeight,
+          paddingHorizontal: 12,
+          flexDirection: "row",
+          alignItems: "center",
         }}
-        className="rounded-2xl border px-4"
       >
-        <View className="flex-row items-center">
-          {icon ? (
-            <MaterialCommunityIcons
-              name={icon}
-              size={20}
-              color={error ? COLORS.danger : COLORS.secondaryText}
-              style={{ marginRight: 10 }}
-            />
-          ) : null}
-
-          <TextInput
-            value={value}
-            onChangeText={onChangeText}
-            placeholder={placeholder || label}
-            placeholderTextColor={COLORS.labelText}
-            keyboardType={keyboardType}
-            autoCapitalize={autoCapitalize}
-            secureTextEntry={secureTextEntry}
-            maxLength={maxLength}
-            style={{
-              flex: 1,
-              color: COLORS.primaryText,
-              paddingVertical: 14,
-              fontSize: 15,
-              fontWeight: "500",
-            }}
+        {icon ? (
+          <MaterialCommunityIcons
+            name={icon}
+            size={18}
+            color={error ? COLORS.danger : COLORS.secondaryText}
+            style={{ marginRight: 8 }}
           />
-        </View>
+        ) : null}
+
+        <TextInput
+          value={value}
+          onChangeText={onChangeText}
+          placeholder={placeholder || label}
+          placeholderTextColor={COLORS.labelText}
+          keyboardType={keyboardType}
+          autoCapitalize={autoCapitalize}
+          secureTextEntry={secureTextEntry}
+          maxLength={maxLength}
+          style={{
+            flex: 1,
+            height: "100%",
+            color: COLORS.primaryText,
+            fontSize: NORMAL.inputFont,
+            fontWeight: "500",
+            paddingVertical: 0,
+          }}
+        />
       </View>
 
       {error ? (
         <Text
-          style={{ color: COLORS.danger }}
-          className="mt-2 text-[12px] font-medium"
+          style={{
+            color: COLORS.danger,
+            marginTop: 4,
+            fontSize: 11,
+            fontWeight: "500",
+          }}
         >
           {error}
         </Text>
       ) : hint ? (
         <Text
-          style={{ color: COLORS.secondaryText }}
-          className="mt-2 text-[12px] leading-5"
+          style={{
+            color: COLORS.secondaryText,
+            marginTop: 4,
+            fontSize: 11,
+            lineHeight: 16,
+          }}
         >
           {hint}
         </Text>
@@ -385,6 +452,8 @@ function ActionButton({
       onPress={onPress}
       disabled={disabled || loading}
       style={{
+        height: NORMAL.buttonHeight,
+        borderRadius: NORMAL.buttonRadius,
         backgroundColor:
           disabled && variant !== "secondary"
             ? COLORS.mutedText
@@ -394,25 +463,31 @@ function ActionButton({
         borderColor,
         borderWidth: 1,
         opacity: disabled ? 0.7 : 1,
-        shadowOpacity: variant === "secondary" ? 0 : 0.18,
-        shadowRadius: variant === "secondary" ? 0 : 14,
-        shadowOffset: { width: 0, height: 8 },
-        elevation: variant === "secondary" ? 0 : 4,
+        alignItems: "center",
+        justifyContent: "center",
+        shadowColor: bg,
+        shadowOpacity: variant === "secondary" ? 0 : 0.08,
+        shadowRadius: variant === "secondary" ? 0 : 8,
+        shadowOffset: { width: 0, height: 4 },
+        elevation: variant === "secondary" ? 0 : 2,
       }}
-      className="items-center justify-center rounded-2xl py-4"
     >
       {loading ? (
-        <View className="flex-row items-center">
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           <ActivityIndicator color={COLORS.white} />
           <Text
-            style={{ color: COLORS.white }}
-            className="ml-2 text-[15px] font-extrabold"
+            style={{
+              color: COLORS.white,
+              marginLeft: 8,
+              fontSize: 14,
+              fontWeight: "800",
+            }}
           >
             Saving...
           </Text>
         </View>
       ) : (
-        <View className="flex-row items-center">
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
           {icon ? (
             <MaterialCommunityIcons
               name={icon}
@@ -422,8 +497,11 @@ function ActionButton({
             />
           ) : null}
           <Text
-            style={{ color: textColor }}
-            className="text-[15px] font-extrabold"
+            style={{
+              color: textColor,
+              fontSize: 14,
+              fontWeight: "800",
+            }}
           >
             {title}
           </Text>
@@ -458,28 +536,51 @@ function UploadCard({
       style={{
         backgroundColor: active ? COLORS.primarySoft : COLORS.soft,
         borderColor: active ? COLORS.primaryLight : COLORS.border,
+        borderWidth: 1,
+        borderRadius: NORMAL.uploadRadius,
+        marginBottom: 10,
+        overflow: "hidden",
       }}
-      className="mb-3 overflow-hidden rounded-2xl border"
     >
-      <View className="flex-row items-center p-4">
-        <View className="h-12 w-12 items-center justify-center rounded-2xl">
-          <MaterialCommunityIcons
-            name={icon}
-            size={22}
-            color={active ? COLORS.primary : COLORS.primary}
-          />
+      <View
+        style={{
+          minHeight: NORMAL.uploadRowMinHeight,
+          flexDirection: "row",
+          alignItems: "center",
+          paddingHorizontal: 12,
+          paddingVertical: 10,
+        }}
+      >
+        <View
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 12,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: active ? COLORS.primarySoft : COLORS.card,
+          }}
+        >
+          <MaterialCommunityIcons name={icon} size={20} color={COLORS.primary} />
         </View>
 
-        <View className="ml-3 flex-1">
+        <View style={{ marginLeft: 10, flex: 1 }}>
           <Text
-            style={{ color: COLORS.heading }}
-            className="text-[15px] font-extrabold"
+            style={{
+              color: COLORS.heading,
+              fontSize: 14,
+              fontWeight: "800",
+            }}
           >
             {title}
           </Text>
           <Text
-            style={{ color: COLORS.secondaryText }}
-            className="mt-1 text-[12px] leading-5"
+            style={{
+              color: COLORS.secondaryText,
+              marginTop: 2,
+              fontSize: 11,
+              lineHeight: 15,
+            }}
           >
             {active ? selectedText || subtitle : subtitle}
           </Text>
@@ -489,9 +590,9 @@ function UploadCard({
           <Image
             source={{ uri: previewUri }}
             style={{
-              width: 46,
-              height: 46,
-              borderRadius: 14,
+              width: NORMAL.uploadPreview,
+              height: NORMAL.uploadPreview,
+              borderRadius: 12,
               borderWidth: 1,
               borderColor: COLORS.border,
             }}
@@ -499,7 +600,7 @@ function UploadCard({
         ) : (
           <MaterialCommunityIcons
             name="chevron-right"
-            size={22}
+            size={20}
             color={COLORS.mutedText}
           />
         )}
@@ -535,14 +636,87 @@ function StatPill({
 
   return (
     <View
-      style={{ backgroundColor: bg, borderColor: COLORS.border }}
-      className="mr-2 flex-row items-center rounded-full border px-3 py-2"
+      style={{
+        backgroundColor: bg,
+        borderColor: COLORS.border,
+        borderWidth: 1,
+        borderRadius: NORMAL.pillRadius,
+        flexDirection: "row",
+        alignItems: "center",
+        paddingHorizontal: 10,
+        paddingVertical: 7,
+        marginRight: 8,
+        marginBottom: 8,
+      }}
     >
-      <MaterialCommunityIcons name={icon} size={16} color={color} />
-      <Text style={{ color }} className="ml-2 text-[12px] font-extrabold">
+      <MaterialCommunityIcons name={icon} size={15} color={color} />
+      <Text
+        style={{
+          color,
+          marginLeft: 6,
+          fontSize: 11,
+          fontWeight: "800",
+        }}
+      >
         {label}: {value}
       </Text>
     </View>
+  );
+}
+
+type RoleChipProps = {
+  active: boolean;
+  label: string;
+  icon: keyof typeof MaterialCommunityIcons.glyphMap;
+  onPress: () => void;
+};
+
+function RoleChip({ active, label, icon, onPress }: RoleChipProps) {
+  return (
+    <Pressable
+      onPress={onPress}
+      style={{
+        flex: 1,
+        borderRadius: 14,
+        borderWidth: 1,
+        borderColor: active ? COLORS.primary : COLORS.border,
+        backgroundColor: active ? COLORS.primary : COLORS.soft,
+        paddingVertical: 12,
+        paddingHorizontal: 10,
+      }}
+    >
+      <View style={{ alignItems: "center", justifyContent: "center" }}>
+        <View
+          style={{
+            width: 38,
+            height: 38,
+            borderRadius: 12,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: active
+              ? "rgba(255,255,255,0.16)"
+              : COLORS.primarySoft,
+          }}
+        >
+          <MaterialCommunityIcons
+            name={icon}
+            size={18}
+            color={active ? COLORS.white : COLORS.primary}
+          />
+        </View>
+
+        <Text
+          style={{
+            marginTop: 8,
+            fontSize: 13,
+            fontWeight: "800",
+            color: active ? COLORS.white : COLORS.heading,
+          }}
+        >
+          {label}
+        </Text>
+      </View>
+    </Pressable>
   );
 }
 
@@ -1077,11 +1251,22 @@ export default function StaffEditScreen() {
         style={{ flex: 1, backgroundColor: COLORS.background }}
         edges={["top"]}
       >
-        <View className="flex-1 items-center justify-center px-6">
+        <View
+          style={{
+            flex: 1,
+            paddingHorizontal: 24,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <ActivityIndicator size="large" color={COLORS.primary} />
           <Text
-            style={{ color: COLORS.secondaryText }}
-            className="mt-3 text-[14px] font-semibold"
+            style={{
+              color: COLORS.secondaryText,
+              marginTop: 12,
+              fontSize: 14,
+              fontWeight: "600",
+            }}
           >
             Loading authentication...
           </Text>
@@ -1096,45 +1281,73 @@ export default function StaffEditScreen() {
         style={{ flex: 1, backgroundColor: COLORS.background }}
         edges={["top"]}
       >
-        <View className="flex-1 items-center justify-center px-6">
+        <View
+          style={{
+            flex: 1,
+            paddingHorizontal: 20,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <View
             style={{
+              width: "100%",
               backgroundColor: COLORS.card,
               borderColor: COLORS.border,
-              shadowOpacity: 0.08,
-              shadowRadius: 18,
-              shadowOffset: { width: 0, height: 10 },
-              elevation: 3,
+              borderWidth: 1,
+              borderRadius: NORMAL.cardRadius,
+              padding: 20,
+              shadowColor: "#000",
+              shadowOpacity: 0.05,
+              shadowRadius: 6,
+              shadowOffset: { width: 0, height: 4 },
+              elevation: 2,
             }}
-            className="w-full rounded-[28px] border p-6"
           >
             <View
-              style={{ backgroundColor: COLORS.primarySoft }}
-              className="mb-4 h-16 w-16 items-center justify-center rounded-full self-center"
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: 32,
+                backgroundColor: COLORS.primarySoft,
+                alignItems: "center",
+                justifyContent: "center",
+                alignSelf: "center",
+                marginBottom: 16,
+              }}
             >
               <MaterialCommunityIcons
                 name="shield-alert-outline"
-                size={30}
+                size={28}
                 color={COLORS.primary}
               />
             </View>
 
             <Text
-              style={{ color: COLORS.heading }}
-              className="text-center text-[19px] font-extrabold"
+              style={{
+                color: COLORS.heading,
+                textAlign: "center",
+                fontSize: 18,
+                fontWeight: "900",
+              }}
             >
               Access Denied
             </Text>
 
             <Text
-              style={{ color: COLORS.secondaryText }}
-              className="mt-2 text-center text-[13px] leading-6"
+              style={{
+                color: COLORS.secondaryText,
+                textAlign: "center",
+                marginTop: 8,
+                fontSize: 13,
+                lineHeight: 20,
+              }}
             >
               Only Master Admin, Manager, and Supervisor can edit staff
               records.
             </Text>
 
-            <View className="mt-5">
+            <View style={{ marginTop: 16 }}>
               <ActionButton
                 title="Go Back"
                 onPress={() => router.back()}
@@ -1154,36 +1367,62 @@ export default function StaffEditScreen() {
         style={{ flex: 1, backgroundColor: COLORS.background }}
         edges={["top"]}
       >
-        <View className="flex-1 items-center justify-center px-6">
+        <View
+          style={{
+            flex: 1,
+            paddingHorizontal: 20,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <View
             style={{
+              width: "100%",
               backgroundColor: COLORS.card,
               borderColor: COLORS.border,
-              shadowOpacity: 0.08,
-              shadowRadius: 16,
-              shadowOffset: { width: 0, height: 10 },
-              elevation: 3,
+              borderWidth: 1,
+              borderRadius: NORMAL.cardRadius,
+              padding: 24,
+              shadowColor: "#000",
+              shadowOpacity: 0.05,
+              shadowRadius: 6,
+              shadowOffset: { width: 0, height: 4 },
+              elevation: 2,
             }}
-            className="w-full rounded-[28px] border p-8"
           >
-            <View className="items-center">
+            <View style={{ alignItems: "center" }}>
               <View
-                style={{ backgroundColor: COLORS.primarySoft }}
-                className="h-16 w-16 items-center justify-center rounded-full"
+                style={{
+                  width: 64,
+                  height: 64,
+                  borderRadius: 32,
+                  backgroundColor: COLORS.primarySoft,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
               >
                 <ActivityIndicator size="large" color={COLORS.primary} />
               </View>
 
               <Text
-                style={{ color: COLORS.heading }}
-                className="mt-5 text-[18px] font-extrabold"
+                style={{
+                  color: COLORS.heading,
+                  marginTop: 16,
+                  fontSize: 17,
+                  fontWeight: "900",
+                }}
               >
                 Loading staff details
               </Text>
 
               <Text
-                style={{ color: COLORS.secondaryText }}
-                className="mt-2 text-center text-[13px] leading-6"
+                style={{
+                  color: COLORS.secondaryText,
+                  marginTop: 8,
+                  textAlign: "center",
+                  fontSize: 13,
+                  lineHeight: 20,
+                }}
               >
                 Please wait while we fetch the latest profile information.
               </Text>
@@ -1200,45 +1439,73 @@ export default function StaffEditScreen() {
         style={{ flex: 1, backgroundColor: COLORS.background }}
         edges={["top"]}
       >
-        <View className="flex-1 items-center justify-center px-6">
+        <View
+          style={{
+            flex: 1,
+            paddingHorizontal: 20,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <View
             style={{
+              width: "100%",
               backgroundColor: COLORS.card,
               borderColor: COLORS.border,
-              shadowOpacity: 0.08,
-              shadowRadius: 18,
-              shadowOffset: { width: 0, height: 10 },
-              elevation: 3,
+              borderWidth: 1,
+              borderRadius: NORMAL.cardRadius,
+              padding: 20,
+              shadowColor: "#000",
+              shadowOpacity: 0.05,
+              shadowRadius: 6,
+              shadowOffset: { width: 0, height: 4 },
+              elevation: 2,
             }}
-            className="w-full rounded-[28px] border p-6"
           >
             <View
-              style={{ backgroundColor: "#FEF2F2" }}
-              className="mb-4 h-16 w-16 items-center justify-center rounded-full self-center"
+              style={{
+                width: 64,
+                height: 64,
+                borderRadius: 32,
+                backgroundColor: "#FEF2F2",
+                alignItems: "center",
+                justifyContent: "center",
+                alignSelf: "center",
+                marginBottom: 16,
+              }}
             >
               <MaterialCommunityIcons
                 name="account-alert-outline"
-                size={30}
+                size={28}
                 color={COLORS.danger}
               />
             </View>
 
             <Text
-              style={{ color: COLORS.heading }}
-              className="text-center text-[19px] font-extrabold"
+              style={{
+                color: COLORS.heading,
+                textAlign: "center",
+                fontSize: 18,
+                fontWeight: "900",
+              }}
             >
               Staff not found
             </Text>
 
             <Text
-              style={{ color: COLORS.secondaryText }}
-              className="mt-2 text-center text-[13px] leading-6"
+              style={{
+                color: COLORS.secondaryText,
+                textAlign: "center",
+                marginTop: 8,
+                fontSize: 13,
+                lineHeight: 20,
+              }}
             >
               The requested staff record could not be loaded. It may have been
               removed or is temporarily unavailable.
             </Text>
 
-            <View className="mt-5">
+            <View style={{ marginTop: 16 }}>
               <ActionButton
                 title="Back to Staff List"
                 onPress={() => router.replace("/master/(tabs)/staffs")}
@@ -1265,48 +1532,77 @@ export default function StaffEditScreen() {
           style={{
             backgroundColor: COLORS.background,
             borderBottomColor: COLORS.border,
+            borderBottomWidth: 1,
+            paddingHorizontal: NORMAL.pageHorizontal,
+            paddingTop: 8,
+            paddingBottom: 10,
           }}
-          className="border-b px-4 pb-3 pt-2"
         >
-          <View className="flex-row items-center justify-between">
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
             <Pressable
               onPress={onBackPress}
               hitSlop={10}
               style={{
+                width: NORMAL.headerIconBox,
+                height: NORMAL.headerIconBox,
+                borderRadius: 14,
                 backgroundColor: COLORS.card,
+                borderWidth: 1,
                 borderColor: COLORS.border,
+                alignItems: "center",
+                justifyContent: "center",
               }}
-              className="h-11 w-11 items-center justify-center rounded-2xl border"
             >
               <MaterialCommunityIcons
                 name="chevron-left"
-                size={24}
+                size={22}
                 color={COLORS.heading}
               />
             </Pressable>
 
-            <View className="flex-1 px-3">
+            <View style={{ flex: 1, paddingHorizontal: 8 }}>
               <Text
-                style={{ color: COLORS.heading }}
-                className="text-center text-[18px] font-extrabold"
+                style={{
+                  color: COLORS.heading,
+                  textAlign: "center",
+                  fontSize: 16,
+                  fontWeight: "900",
+                }}
               >
                 Edit Staff
               </Text>
               <Text
-                style={{ color: COLORS.secondaryText }}
-                className="mt-0.5 text-center text-[11px] font-medium"
+                style={{
+                  color: COLORS.secondaryText,
+                  marginTop: 2,
+                  textAlign: "center",
+                  fontSize: 11,
+                  fontWeight: "500",
+                }}
               >
                 Production profile management
               </Text>
             </View>
 
             <View
-              style={{ backgroundColor: COLORS.primarySoft }}
-              className="h-11 w-11 items-center justify-center rounded-2xl"
+              style={{
+                width: NORMAL.headerIconBox,
+                height: NORMAL.headerIconBox,
+                borderRadius: 14,
+                backgroundColor: COLORS.primarySoft,
+                alignItems: "center",
+                justifyContent: "center",
+              }}
             >
               <MaterialCommunityIcons
                 name="account-edit-outline"
-                size={21}
+                size={20}
                 color={COLORS.primary}
               />
             </View>
@@ -1317,117 +1613,111 @@ export default function StaffEditScreen() {
           ref={scrollRef}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
-            paddingHorizontal: 16,
-            paddingTop: 14,
+            paddingHorizontal: NORMAL.pageHorizontal,
+            paddingTop: 10,
             paddingBottom: 110,
           }}
         >
           <View
             style={{
               backgroundColor: COLORS.primary,
+              borderRadius: NORMAL.cardRadius,
+              padding: 14,
+              marginBottom: 12,
               shadowColor: COLORS.primary,
-              shadowOpacity: 0.18,
-              shadowRadius: 18,
-              shadowOffset: { width: 0, height: 10 },
-              elevation: 4,
+              shadowOpacity: 0.12,
+              shadowRadius: 8,
+              shadowOffset: { width: 0, height: 4 },
+              elevation: 2,
             }}
-            className="mb-4 overflow-hidden rounded-[30px] px-5 py-5"
           >
             <View
               style={{
-                position: "absolute",
-                right: -30,
-                top: -20,
-                width: 130,
-                height: 130,
-                borderRadius: 65,
-                backgroundColor: "rgba(255,255,255,0.08)",
+                flexDirection: "row",
+                alignItems: "flex-start",
+                justifyContent: "space-between",
               }}
-            />
-            <View
-              style={{
-                position: "absolute",
-                left: -18,
-                bottom: -28,
-                width: 90,
-                height: 90,
-                borderRadius: 45,
-                backgroundColor: "rgba(255,255,255,0.06)",
-              }}
-            />
-
-            <View className="flex-row items-start">
-              <View className="flex-1 pr-4">
-                <Text className="text-[24px] font-black text-white">
-                  Edit Staff Profile
+            >
+              <View style={{ flex: 1, paddingRight: 8 }}>
+                <Text
+                  style={{
+                    color: COLORS.white,
+                    fontSize: 16,
+                    fontWeight: "900",
+                  }}
+                >
+                  {doc?.name || "Staff Profile"}
                 </Text>
-                <View className="mt-4 flex-row flex-wrap">
-                  <StatPill
-                    icon="shield-account-outline"
-                    label="Role"
-                    value={roleLabel}
-                  />
-                  <StatPill
-                    icon={doc.isActive ? "check-decagram" : "pause-circle"}
-                    label="Status"
-                    value={doc.isActive ? "Active" : "Inactive"}
-                    tone={doc.isActive ? "success" : "warning"}
-                  />
-                </View>
+                <Text
+                  style={{
+                    color: "rgba(255,255,255,0.82)",
+                    marginTop: 4,
+                    fontSize: 12,
+                    lineHeight: 18,
+                  }}
+                >
+                  Update identity, role access, contact information, and
+                  profile documents.
+                </Text>
               </View>
 
               <View
                 style={{
-                  backgroundColor: "rgba(255,255,255,0.16)",
-                  borderColor: "rgba(255,255,255,0.14)",
+                  width: 44,
+                  height: 44,
+                  borderRadius: 14,
+                  backgroundColor: "rgba(255,255,255,0.14)",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
-                className="items-center rounded-[24px] border px-3 py-3"
               >
-                {avatarPreview ? (
-                  <Image
-                    source={{ uri: avatarPreview }}
-                    style={{
-                      width: 68,
-                      height: 68,
-                      borderRadius: 22,
-                      borderWidth: 2,
-                      borderColor: "rgba(255,255,255,0.25)",
-                    }}
-                  />
-                ) : (
-                  <View
-                    style={{ backgroundColor: "rgba(255,255,255,0.12)" }}
-                    className="h-[68px] w-[68px] items-center justify-center rounded-[22px]"
-                  >
-                    <MaterialCommunityIcons
-                      name="account-outline"
-                      size={34}
-                      color={COLORS.white}
-                    />
-                  </View>
-                )}
-
-                <Text className="mt-3 text-[12px] font-bold text-white">
-                  {completion}% complete
-                </Text>
+                <MaterialCommunityIcons
+                  name="account-edit-outline"
+                  size={22}
+                  color={COLORS.white}
+                />
               </View>
+            </View>
+
+            <View
+              style={{
+                flexDirection: "row",
+                flexWrap: "wrap",
+                marginTop: 12,
+              }}
+            >
+              <StatPill
+                icon="progress-check"
+                label="Completion"
+                value={`${completion}%`}
+                tone={completion === 100 ? "success" : "primary"}
+              />
+              <StatPill
+                icon="shield-account-outline"
+                label="Role"
+                value={roleLabel}
+                tone="primary"
+              />
+              <StatPill
+                icon={isDirty ? "clock-outline" : "check-circle-outline"}
+                label="Status"
+                value={isDirty ? "Unsaved" : "Saved"}
+                tone={isDirty ? "warning" : "success"}
+              />
             </View>
           </View>
 
           <SectionCard
             title="Basic Information"
-            subtitle="Primary identity and account details"
+            subtitle="Primary login and identity details"
             icon="account-outline"
           >
             <InputField
               label="Full Name"
               value={fName}
-              onChangeText={(v) => {
-                setFName(v);
-                if (errors.name) setErrors((prev) => ({ ...prev, name: "" }));
-              }}
+              onChangeText={setFName}
               placeholder="Enter full name"
-              icon="account"
+              icon="account-outline"
               required
               error={errors.name}
             />
@@ -1435,117 +1725,98 @@ export default function StaffEditScreen() {
             <InputField
               label="Username"
               value={fUsername}
-              onChangeText={(v) => {
-                setFUsername(v.replace(/\s/g, ""));
-                if (errors.username) {
-                  setErrors((prev) => ({ ...prev, username: "" }));
-                }
-              }}
+              onChangeText={setFUsername}
               placeholder="Enter username"
-              autoCapitalize="none"
               icon="at"
+              autoCapitalize="none"
               required
-              hint="Used for login and internal identification"
               error={errors.username}
             />
 
             <InputField
-              label="Email Address"
+              label="Email"
               value={fEmail}
-              onChangeText={(v) => {
-                setFEmail(v);
-                if (errors.email) setErrors((prev) => ({ ...prev, email: "" }));
-              }}
+              onChangeText={setFEmail}
               placeholder="Enter email address"
+              icon="email-outline"
               keyboardType="email-address"
               autoCapitalize="none"
-              icon="email-outline"
               required
               error={errors.email}
             />
 
             <InputField
-              label="PIN"
+              label="New PIN"
               value={fPin}
-              onChangeText={(v) => {
-                setFPin(digitsOnly(v));
-                if (errors.pin) setErrors((prev) => ({ ...prev, pin: "" }));
-              }}
-              placeholder="Enter new PIN"
-              keyboardType="number-pad"
-              secureTextEntry
+              onChangeText={(text) => setFPin(digitsOnly(text))}
+              placeholder="Enter new PIN (optional)"
               icon="lock-outline"
-              hint="Leave blank if you do not want to change the PIN"
+              keyboardType="number-pad"
+              autoCapitalize="none"
+              secureTextEntry
               maxLength={6}
+              hint="Leave blank to keep the current PIN."
               error={errors.pin}
             />
           </SectionCard>
 
           <SectionCard
-            title="Roles & Contact"
-            subtitle={`Assign access levels and communication numbers — logged in as ${currentRole ?? "UNKNOWN"}`}
-            icon="shield-account-outline"
+            title="Role Access"
+            subtitle={`Logged in as ${currentRole ?? "UNKNOWN"}`}
+            icon="badge-account-outline"
           >
-            <Text
-              style={{ color: COLORS.primaryText }}
-              className="mb-2 text-[13px] font-bold"
+            <View
+              style={{
+                flexDirection: "row",
+                gap: NORMAL.gap,
+                marginTop: 2,
+              }}
             >
-              Roles
-            </Text>
+              {allowedAssignableRoles.includes("STAFF") && (
+                <RoleChip
+                  active={fRoles.includes("STAFF")}
+                  label="STAFF"
+                  icon="account-outline"
+                  onPress={() => toggleRole("STAFF")}
+                />
+              )}
 
-            <View className="mb-1 flex-row" style={{ gap: 10 }}>
-              {allowedAssignableRoles.map((role) => {
-                const selected = fRoles.includes(role);
-
-                return (
-                  <Pressable
-                    key={role}
-                    onPress={() => toggleRole(role)}
-                    style={{
-                      backgroundColor: selected ? COLORS.primary : COLORS.soft,
-                      borderColor: selected ? COLORS.primary : COLORS.border,
-                    }}
-                    className="flex-1 rounded-2xl border px-4 py-4"
-                  >
-                    <View className="flex-row items-center justify-center">
-                      <MaterialCommunityIcons
-                        name={selected ? "check-circle" : "circle-outline"}
-                        size={18}
-                        color={selected ? COLORS.white : COLORS.secondaryText}
-                      />
-                      <Text
-                        style={{
-                          color: selected ? COLORS.white : COLORS.primaryText,
-                        }}
-                        className="ml-2 font-extrabold"
-                      >
-                        {role}
-                      </Text>
-                    </View>
-                  </Pressable>
-                );
-              })}
+              {allowedAssignableRoles.includes("SUPERVISOR") && (
+                <RoleChip
+                  active={fRoles.includes("SUPERVISOR")}
+                  label="SUPERVISOR"
+                  icon="account-supervisor-outline"
+                  onPress={() => toggleRole("SUPERVISOR")}
+                />
+              )}
             </View>
 
             {errors.roles ? (
               <Text
-                style={{ color: COLORS.danger }}
-                className="mb-4 text-[12px] font-medium"
+                style={{
+                  color: COLORS.danger,
+                  marginTop: 8,
+                  fontSize: 11,
+                  fontWeight: "500",
+                }}
               >
                 {errors.roles}
               </Text>
             ) : null}
+          </SectionCard>
 
+          <SectionCard
+            title="Contact Details"
+            subtitle="Phone numbers and reachability"
+            icon="phone-outline"
+          >
             <InputField
-              label="Mobile Number"
+              label="Mobile"
               value={fMobile}
-              onChangeText={(v) => {
-                setFMobile(digitsOnly(v));
-                if (errors.mobile) setErrors((prev) => ({ ...prev, mobile: "" }));
-              }}
-              placeholder="Enter mobile number"
-              keyboardType="phone-pad"
+              onChangeText={(text) => setFMobile(digitsOnly(text))}
+              placeholder="Primary mobile number"
               icon="phone-outline"
+              keyboardType="phone-pad"
               maxLength={10}
               error={errors.mobile}
             />
@@ -1553,23 +1824,18 @@ export default function StaffEditScreen() {
             <InputField
               label="Additional Number"
               value={fAdditional}
-              onChangeText={(v) => {
-                setFAdditional(digitsOnly(v));
-                if (errors.additionalNumber) {
-                  setErrors((prev) => ({ ...prev, additionalNumber: "" }));
-                }
-              }}
-              placeholder="Enter additional number"
-              keyboardType="phone-pad"
+              onChangeText={(text) => setFAdditional(digitsOnly(text))}
+              placeholder="Optional mobile number"
               icon="phone-plus-outline"
+              keyboardType="phone-pad"
               maxLength={10}
               error={errors.additionalNumber}
             />
           </SectionCard>
 
           <SectionCard
-            title="Address"
-            subtitle="Geographic and postal details"
+            title="Address Information"
+            subtitle="Location and postal details"
             icon="map-marker-outline"
           >
             <InputField
@@ -1585,7 +1851,7 @@ export default function StaffEditScreen() {
               value={fDistrict}
               onChangeText={setFDistrict}
               placeholder="Enter district"
-              icon="office-building-outline"
+              icon="map-marker-radius-outline"
             />
 
             <InputField
@@ -1593,7 +1859,7 @@ export default function StaffEditScreen() {
               value={fTaluk}
               onChangeText={setFTaluk}
               placeholder="Enter taluk"
-              icon="map-search-outline"
+              icon="home-city-outline"
             />
 
             <InputField
@@ -1601,167 +1867,131 @@ export default function StaffEditScreen() {
               value={fArea}
               onChangeText={setFArea}
               placeholder="Enter area"
-              icon="home-city-outline"
+              icon="map-marker-path"
             />
 
             <InputField
               label="Street"
               value={fStreet}
               onChangeText={setFStreet}
-              placeholder="Enter street"
+              placeholder="Street / Landmark"
               icon="road-variant"
             />
 
             <InputField
               label="Pincode"
               value={fPincode}
-              onChangeText={(v) => {
-                setFPincode(digitsOnly(v));
-                if (errors.pincode) {
-                  setErrors((prev) => ({ ...prev, pincode: "" }));
-                }
-              }}
+              onChangeText={(text) => setFPincode(digitsOnly(text))}
               placeholder="Enter pincode"
+              icon="mailbox-outline"
               keyboardType="number-pad"
-              icon="numeric"
+              autoCapitalize="none"
               maxLength={6}
               error={errors.pincode}
             />
           </SectionCard>
 
           <SectionCard
-            title="Document Uploads"
-            subtitle="Upload staff avatar and proof documents"
-            icon="file-document-outline"
+            title="Profile & Verification"
+            subtitle="Upload visual identity and ID proof"
+            icon="image-outline"
           >
             <UploadCard
-              title="Avatar"
-              subtitle="Choose a professional profile image"
-              selectedText="New avatar selected"
-              icon="image-outline"
+              title="Upload Avatar"
+              subtitle="Profile photo"
+              selectedText="Tap to change avatar"
+              icon="image-plus-outline"
               onPress={() => pickImage("avatar")}
-              active={!!avatar}
-              previewUri={avatarPreview}
+              active={!!avatarPreview}
+              previewUri={avatarPreview || undefined}
             />
 
             <UploadCard
-              title="ID Proof"
-              subtitle="Choose identity proof image"
-              selectedText="New ID proof selected"
-              icon="card-account-details-outline"
+              title="Upload ID Proof"
+              subtitle="Identity document"
+              selectedText="Tap to change document image"
+              icon="file-document-outline"
               onPress={() => pickImage("idproof")}
-              active={!!idproof}
-              previewUri={idProofPreview}
+              active={!!idProofPreview}
+              previewUri={idProofPreview || undefined}
             />
-          </SectionCard>
-
-          <SectionCard
-            title="Record Status"
-            subtitle="Current operational visibility and edit state"
-            icon="chart-box-outline"
-          >
-            <View className="flex-row" style={{ gap: 10 }}>
-              <View
-                style={{
-                  backgroundColor: COLORS.soft,
-                  borderColor: COLORS.border,
-                  flex: 1,
-                }}
-                className="rounded-2xl border p-4"
-              >
-                <Text
-                  style={{ color: COLORS.secondaryText }}
-                  className="text-[12px] font-semibold"
-                >
-                  Account Status
-                </Text>
-                <Text
-                  style={{ color: doc.isActive ? COLORS.success : COLORS.warning }}
-                  className="mt-2 text-[16px] font-extrabold"
-                >
-                  {doc.isActive ? "Active" : "Inactive"}
-                </Text>
-              </View>
-
-              <View
-                style={{
-                  backgroundColor: COLORS.soft,
-                  borderColor: COLORS.border,
-                  flex: 1,
-                }}
-                className="rounded-2xl border p-4"
-              >
-                <Text
-                  style={{ color: COLORS.secondaryText }}
-                  className="text-[12px] font-semibold"
-                >
-                  Form Changes
-                </Text>
-                <Text
-                  style={{ color: isDirty ? COLORS.warning : COLORS.success }}
-                  className="mt-2 text-[16px] font-extrabold"
-                >
-                  {isDirty ? "Pending" : "Saved"}
-                </Text>
-              </View>
-            </View>
           </SectionCard>
         </ScrollView>
 
         <View
           style={{
-            backgroundColor: "rgba(246,248,252,0.96)",
-            borderTopColor: COLORS.border,
+            position: "absolute",
+            left: NORMAL.pageHorizontal,
+            right: NORMAL.pageHorizontal,
+            bottom: NORMAL.pageBottom,
+            backgroundColor: COLORS.card,
+            borderColor: COLORS.border,
+            borderWidth: 1,
+            borderRadius: NORMAL.cardRadius,
+            padding: 10,
+            shadowColor: "#000",
             shadowOpacity: 0.08,
-            shadowRadius: 18,
-            shadowOffset: { width: 0, height: -8 },
-            elevation: 14,
+            shadowRadius: 8,
+            shadowOffset: { width: 0, height: 4 },
+            elevation: 4,
           }}
-          className="border-t px-4 pb-4 pt-3"
         >
           <View
             style={{
               backgroundColor: COLORS.card,
-              borderColor: COLORS.border,
+              borderRadius: NORMAL.cardRadius,
             }}
-            className="rounded-[28px] border px-4 py-4"
           >
-            <View className="mb-3 flex-row items-center justify-between">
-              <View className="flex-row items-center">
-                <View
-                  style={{
-                    backgroundColor: isDirty ? "#FFF7ED" : COLORS.successSoft,
-                  }}
-                  className="h-10 w-10 items-center justify-center rounded-2xl"
-                >
-                  <MaterialCommunityIcons
-                    name={isDirty ? "clock-outline" : "check-circle-outline"}
-                    size={20}
-                    color={isDirty ? COLORS.warning : COLORS.success}
-                  />
-                </View>
+            <View
+              style={{
+                marginBottom: 10,
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <View
+                style={{
+                  width: 36,
+                  height: 36,
+                  borderRadius: 12,
+                  backgroundColor: isDirty ? "#FFF7ED" : COLORS.successSoft,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <MaterialCommunityIcons
+                  name={isDirty ? "clock-outline" : "check-circle-outline"}
+                  size={18}
+                  color={isDirty ? COLORS.warning : COLORS.success}
+                />
+              </View>
 
-                <View className="ml-3">
-                  <Text
-                    style={{ color: COLORS.heading }}
-                    className="text-[14px] font-extrabold"
-                  >
-                    {isDirty ? "Changes ready to save" : "Everything is up to date"}
-                  </Text>
-                  <Text
-                    style={{ color: COLORS.secondaryText }}
-                    className="mt-1 text-[12px]"
-                  >
-                    {isDirty
-                      ? "Review your updates and save them."
-                      : "No pending edits in this form."}
-                  </Text>
-                </View>
+              <View style={{ marginLeft: 10, flex: 1 }}>
+                <Text
+                  style={{
+                    color: COLORS.heading,
+                    fontSize: 13,
+                    fontWeight: "800",
+                  }}
+                >
+                  {isDirty ? "Changes ready to save" : "Everything is up to date"}
+                </Text>
+                <Text
+                  style={{
+                    color: COLORS.secondaryText,
+                    marginTop: 2,
+                    fontSize: 11,
+                  }}
+                >
+                  {isDirty
+                    ? "Review your updates and save them."
+                    : "No pending edits in this form."}
+                </Text>
               </View>
             </View>
 
-            <View className="flex-row" style={{ gap: 12 }}>
-              <View className="flex-1">
+            <View style={{ flexDirection: "row", gap: NORMAL.gap }}>
+              <View style={{ flex: 1 }}>
                 <ActionButton
                   title="Cancel"
                   onPress={onBackPress}
@@ -1770,7 +2000,7 @@ export default function StaffEditScreen() {
                 />
               </View>
 
-              <View className="flex-[1.3]">
+              <View style={{ flex: 1.2 }}>
                 <ActionButton
                   title="Update Staff"
                   onPress={onUpdate}

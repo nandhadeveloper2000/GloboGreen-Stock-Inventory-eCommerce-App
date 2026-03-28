@@ -631,13 +631,15 @@ export default function MyDashboard() {
       onPress: () => router.push(routes.shopOwnersList as any),
     },
 
-    {
-      key: "staff-list",
-      label: "Staff List",
-      icon: "account-group-outline",
-      gradient: safeGradient("#EC4899", "#8B5CF6"),
-      onPress: () => router.push(routes.staffList as any),
-    },
+    currentRole !== ROLES.STAFF
+      ? {
+          key: "staff-list",
+          label: "Staff List",
+          icon: "account-group-outline",
+          gradient: safeGradient("#EC4899", "#8B5CF6"),
+          onPress: () => router.push(routes.staffList as any),
+        }
+      : null,
 
     permissions.canSeeManagersModule && routes.managersList
       ? {
@@ -833,35 +835,48 @@ export default function MyDashboard() {
 
         <AnimatedEntrance delay={220}>
           <View style={[styles.sectionWrap, { paddingHorizontal: horizontalPadding }]}>
-            <View style={[styles.rowGap12, styles.mb12]}>
-              <PremiumGradientStat
-                label="Manager Created"
-                value={managerCreatedCount}
-                icon="account-tie-outline"
-                gradient={["#7C3AED", "#5B21B6"]}
-              />
-              <PremiumGradientStat
-                label="Supervisor Created"
-                value={supervisorCreatedCount}
-                icon="account-supervisor-outline"
-                gradient={["#F59E0B", "#EA580C"]}
-              />
-            </View>
+            {currentRole === ROLES.STAFF ? (
+              <View style={styles.rowGap12}>
+                <PremiumGradientStat
+                  label="Inactive Owners"
+                  value={inactiveCount}
+                  icon="close-circle-outline"
+                  gradient={["#EF4444", "#B91C1C"]}
+                />
+              </View>
+            ) : (
+              <>
+                <View style={[styles.rowGap12, styles.mb12]}>
+                  <PremiumGradientStat
+                    label="Manager Created"
+                    value={managerCreatedCount}
+                    icon="account-tie-outline"
+                    gradient={["#7C3AED", "#5B21B6"]}
+                  />
+                  <PremiumGradientStat
+                    label="Supervisor Created"
+                    value={supervisorCreatedCount}
+                    icon="account-supervisor-outline"
+                    gradient={["#F59E0B", "#EA580C"]}
+                  />
+                </View>
 
-            <View style={styles.rowGap12}>
-              <PremiumGradientStat
-                label="Staff Created"
-                value={staffCreatedCount}
-                icon="account-outline"
-                gradient={["#EC4899", "#BE185D"]}
-              />
-              <PremiumGradientStat
-                label="Inactive Owners"
-                value={inactiveCount}
-                icon="close-circle-outline"
-                gradient={["#EF4444", "#B91C1C"]}
-              />
-            </View>
+                <View style={styles.rowGap12}>
+                  <PremiumGradientStat
+                    label="Staff Created"
+                    value={staffCreatedCount}
+                    icon="account-outline"
+                    gradient={["#EC4899", "#BE185D"]}
+                  />
+                  <PremiumGradientStat
+                    label="Inactive Owners"
+                    value={inactiveCount}
+                    icon="close-circle-outline"
+                    gradient={["#EF4444", "#B91C1C"]}
+                  />
+                </View>
+              </>
+            )}
           </View>
         </AnimatedEntrance>
 

@@ -1,15 +1,15 @@
 import { Stack } from "expo-router";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Toast, {
-  BaseToast,
-  ErrorToast,
-  ToastConfig,
+    BaseToast,
+    ErrorToast,
+    ToastConfig,
 } from "react-native-toast-message";
 
-import { COLORS } from "./constants/colors";
-import { AuthProvider } from "./context/auth/AuthProvider";
-import { ShopProvider } from "./context/shop/ShopProvider";
 import "../global.css";
+import { COLORS } from "../src/constants/colors";
+import { AuthProvider } from "../src/context/auth/AuthProvider";
+import { ShopProvider } from "../src/context/shop/ShopProvider";
 
 const toastConfig: ToastConfig = {
   success: (props) => (

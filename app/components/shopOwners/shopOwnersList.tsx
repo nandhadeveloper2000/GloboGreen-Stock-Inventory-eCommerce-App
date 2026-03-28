@@ -424,7 +424,7 @@ export default function ShopOwnersList() {
     if (!q) return items;
 
     return items.filter((x) => {
-      const s = [
+      const blob = [
         x.name,
         x.username,
         x.email,
@@ -436,7 +436,7 @@ export default function ShopOwnersList() {
         .map((v) => String(v || "").toLowerCase())
         .join(" ");
 
-      return s.includes(q);
+      return blob.includes(q);
     });
   }, [items, query]);
 
@@ -469,7 +469,7 @@ export default function ShopOwnersList() {
         alignItems: "center",
         justifyContent: "center",
         paddingHorizontal: 24,
-        paddingVertical: 64,
+        paddingVertical: 56,
       }}
     >
       <LinearGradient
@@ -477,8 +477,8 @@ export default function ShopOwnersList() {
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{
-          width: 96,
-          height: 96,
+          width: 84,
+          height: 84,
           alignItems: "center",
           justifyContent: "center",
           borderRadius: 999,
@@ -486,15 +486,15 @@ export default function ShopOwnersList() {
       >
         <MaterialCommunityIcons
           name="account-group-outline"
-          size={42}
+          size={36}
           color={COLORS.mutedText}
         />
       </LinearGradient>
 
       <Text
         style={{
-          marginTop: 20,
-          fontSize: 18,
+          marginTop: 16,
+          fontSize: 17,
           fontWeight: "800",
           color: COLORS.primaryText,
         }}
@@ -506,8 +506,8 @@ export default function ShopOwnersList() {
         style={{
           marginTop: 8,
           textAlign: "center",
-          fontSize: 14,
-          lineHeight: 22,
+          fontSize: 13,
+          lineHeight: 20,
           color: COLORS.secondaryText,
         }}
       >
@@ -522,7 +522,7 @@ export default function ShopOwnersList() {
     const initials = getInitials(item.name, item.username);
 
     return (
-      <View style={{ paddingHorizontal: isTablet ? 20 : 12 }}>
+      <View style={{ paddingHorizontal: isTablet ? 18 : 12 }}>
         <View
           style={{
             backgroundColor: COLORS.card,
@@ -538,22 +538,22 @@ export default function ShopOwnersList() {
             style={{
               flexDirection: "row",
               alignItems: "center",
-              minHeight: isSmall ? 88 : 96,
-              paddingVertical: 10,
+              minHeight: isSmall ? 72 : 80,
+              paddingVertical: 8,
             }}
           >
             <View
               style={{
-                width: isSmall ? 42 : 52,
+                width: isSmall ? 40 : 48,
                 alignItems: "center",
                 justifyContent: "center",
               }}
             >
               <View
                 style={{
-                  minWidth: 32,
-                  height: 32,
-                  paddingHorizontal: 8,
+                  minWidth: 28,
+                  height: 28,
+                  paddingHorizontal: 6,
                   borderRadius: 999,
                   alignItems: "center",
                   justifyContent: "center",
@@ -564,7 +564,7 @@ export default function ShopOwnersList() {
                   style={{
                     color: COLORS.primaryText,
                     fontWeight: "900",
-                    fontSize: 11,
+                    fontSize: 10,
                   }}
                 >
                   {index + 1}
@@ -579,9 +579,9 @@ export default function ShopOwnersList() {
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
                   style={{
-                    width: isSmall ? 38 : 42,
-                    height: isSmall ? 38 : 42,
-                    borderRadius: 14,
+                    width: isSmall ? 34 : 38,
+                    height: isSmall ? 34 : 38,
+                    borderRadius: 12,
                     alignItems: "center",
                     justifyContent: "center",
                     marginRight: 8,
@@ -590,7 +590,7 @@ export default function ShopOwnersList() {
                   <Text
                     style={{
                       color: COLORS.white,
-                      fontSize: 12,
+                      fontSize: 11,
                       fontWeight: "900",
                     }}
                   >
@@ -613,7 +613,7 @@ export default function ShopOwnersList() {
                   <Text
                     numberOfLines={1}
                     style={{
-                      marginTop: 4,
+                      marginTop: 3,
                       color: COLORS.secondaryText,
                       fontWeight: "600",
                       fontSize: isSmall ? 11 : 12,
@@ -628,7 +628,7 @@ export default function ShopOwnersList() {
                 style={{
                   flexDirection: "row",
                   flexWrap: "wrap",
-                  marginTop: 8,
+                  marginTop: 6,
                   gap: 6,
                 }}
               >
@@ -657,9 +657,9 @@ export default function ShopOwnersList() {
               <View
                 style={{
                   alignSelf: "flex-start",
-                  marginTop: 7,
-                  paddingHorizontal: 10,
-                  paddingVertical: 5,
+                  marginTop: 6,
+                  paddingHorizontal: 8,
+                  paddingVertical: 4,
                   borderRadius: 999,
                   backgroundColor: status.bg,
                   borderWidth: 1,
@@ -671,18 +671,18 @@ export default function ShopOwnersList() {
               >
                 <View
                   style={{
-                    width: 7,
-                    height: 7,
+                    width: 6,
+                    height: 6,
                     borderRadius: 99,
                     backgroundColor: status.dot,
-                    marginRight: 6,
+                    marginRight: 5,
                   }}
                 />
                 <Text
                   numberOfLines={1}
                   style={{
                     color: status.text,
-                    fontSize: 11,
+                    fontSize: 10.5,
                     fontWeight: "800",
                   }}
                 >
@@ -693,9 +693,9 @@ export default function ShopOwnersList() {
               <Text
                 numberOfLines={1}
                 style={{
-                  marginTop: 7,
+                  marginTop: 6,
                   color: COLORS.secondaryText,
-                  fontSize: 10.5,
+                  fontSize: 10,
                   fontWeight: "700",
                 }}
               >
@@ -705,7 +705,7 @@ export default function ShopOwnersList() {
 
             <View
               style={{
-                width: isSmall ? 58 : 70,
+                width: isSmall ? 52 : 60,
                 alignItems: "center",
                 justifyContent: "center",
               }}
@@ -718,9 +718,9 @@ export default function ShopOwnersList() {
                   } as any)
                 }
                 style={({ pressed }) => ({
-                  width: isSmall ? 40 : 44,
-                  height: isSmall ? 40 : 44,
-                  borderRadius: 14,
+                  width: isSmall ? 36 : 40,
+                  height: isSmall ? 36 : 40,
+                  borderRadius: 12,
                   alignItems: "center",
                   justifyContent: "center",
                   backgroundColor: pressed
@@ -733,7 +733,7 @@ export default function ShopOwnersList() {
               >
                 <MaterialCommunityIcons
                   name="eye-outline"
-                  size={isSmall ? 18 : 20}
+                  size={isSmall ? 17 : 18}
                   color={COLORS.primaryText}
                 />
               </Pressable>
@@ -751,13 +751,13 @@ export default function ShopOwnersList() {
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={{
-          minHeight: isSmall ? 220 : 238,
-          borderBottomLeftRadius: 34,
-          borderBottomRightRadius: 34,
+          minHeight: isSmall ? 180 : 200,
+          borderBottomLeftRadius: 28,
+          borderBottomRightRadius: 28,
           overflow: "hidden",
-          paddingHorizontal: isTablet ? 28 : 20,
-          paddingTop: 12,
-          paddingBottom: 26,
+          paddingHorizontal: isTablet ? 24 : 18,
+          paddingTop: 35,
+          paddingBottom: 18,
         }}
       >
         <View
@@ -765,8 +765,8 @@ export default function ShopOwnersList() {
             position: "absolute",
             right: -26,
             top: -32,
-            width: 190,
-            height: 190,
+            width: 170,
+            height: 170,
             borderRadius: 999,
             backgroundColor: "rgba(255,255,255,0.10)",
           }}
@@ -776,8 +776,8 @@ export default function ShopOwnersList() {
             position: "absolute",
             left: -24,
             bottom: 10,
-            width: 136,
-            height: 136,
+            width: 120,
+            height: 120,
             borderRadius: 999,
             backgroundColor: "rgba(255,255,255,0.10)",
           }}
@@ -793,9 +793,9 @@ export default function ShopOwnersList() {
           <Pressable
             onPress={() => router.back()}
             style={({ pressed }) => ({
-              width: isSmall ? 42 : 46,
-              height: isSmall ? 42 : 46,
-              borderRadius: 16,
+              width: isSmall ? 38 : 40,
+              height: isSmall ? 38 : 40,
+              borderRadius: 14,
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: "rgba(255,255,255,0.10)",
@@ -806,19 +806,19 @@ export default function ShopOwnersList() {
           >
             <MaterialCommunityIcons
               name="chevron-left"
-              size={24}
+              size={22}
               color={COLORS.white}
             />
           </Pressable>
 
-          <View style={{ flexDirection: "row", gap: 10 }}>
+          <View style={{ flexDirection: "row", gap: 8 }}>
             <Pressable
               onPress={() => loadOwners(true)}
               disabled={loading}
               style={({ pressed }) => ({
-                width: isSmall ? 42 : 46,
-                height: isSmall ? 42 : 46,
-                borderRadius: 16,
+                width: isSmall ? 38 : 40,
+                height: isSmall ? 38 : 40,
+                borderRadius: 14,
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: "rgba(255,255,255,0.10)",
@@ -829,7 +829,7 @@ export default function ShopOwnersList() {
             >
               <MaterialCommunityIcons
                 name="refresh"
-                size={22}
+                size={20}
                 color={COLORS.white}
               />
             </Pressable>
@@ -837,9 +837,9 @@ export default function ShopOwnersList() {
             <Pressable
               onPress={() => router.push("/components/shopOwners/create" as any)}
               style={({ pressed }) => ({
-                width: isSmall ? 42 : 46,
-                height: isSmall ? 42 : 46,
-                borderRadius: 16,
+                width: isSmall ? 38 : 40,
+                height: isSmall ? 38 : 40,
+                borderRadius: 14,
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: "rgba(255,255,255,0.15)",
@@ -850,7 +850,7 @@ export default function ShopOwnersList() {
             >
               <MaterialCommunityIcons
                 name="plus"
-                size={22}
+                size={20}
                 color={COLORS.white}
               />
             </Pressable>
@@ -859,7 +859,7 @@ export default function ShopOwnersList() {
 
         <View
           style={{
-            marginTop: 22,
+            marginTop: 18,
             alignItems: "center",
             justifyContent: "center",
           }}
@@ -868,16 +868,16 @@ export default function ShopOwnersList() {
             style={{
               borderRadius: 999,
               backgroundColor: "rgba(255,255,255,0.15)",
-              paddingHorizontal: 12,
-              paddingVertical: 6,
+              paddingHorizontal: 10,
+              paddingVertical: 5,
             }}
           >
             <Text
               style={{
-                fontSize: 11,
+                fontSize: 10,
                 fontWeight: "800",
                 color: COLORS.white,
-                letterSpacing: 0.7,
+                letterSpacing: 0.6,
                 textAlign: "center",
               }}
             >
@@ -887,8 +887,8 @@ export default function ShopOwnersList() {
 
           <Text
             style={{
-              marginTop: 14,
-              fontSize: isSmall ? 26 : 30,
+              marginTop: 12,
+              fontSize: isSmall ? 22 : 24,
               fontWeight: "900",
               color: COLORS.white,
               textAlign: "center",
@@ -899,10 +899,10 @@ export default function ShopOwnersList() {
 
           <Text
             style={{
-              marginTop: 8,
+              marginTop: 6,
               maxWidth: "92%",
-              fontSize: isSmall ? 13 : 14,
-              lineHeight: 22,
+              fontSize: isSmall ? 12.5 : 13.5,
+              lineHeight: 20,
               color: "rgba(255,255,255,0.88)",
               textAlign: "center",
             }}
@@ -912,17 +912,17 @@ export default function ShopOwnersList() {
 
           <View
             style={{
-              marginTop: 16,
-              borderRadius: 16,
+              marginTop: 14,
+              borderRadius: 14,
               backgroundColor: "rgba(255,255,255,0.10)",
-              paddingHorizontal: 12,
-              paddingVertical: 8,
+              paddingHorizontal: 10,
+              paddingVertical: 7,
             }}
           >
             <Text
               style={{
                 color: COLORS.white,
-                fontSize: 12,
+                fontSize: 11,
                 fontWeight: "700",
                 textAlign: "center",
               }}
@@ -933,18 +933,18 @@ export default function ShopOwnersList() {
         </View>
       </LinearGradient>
 
-      <View style={{ marginTop: -18, paddingHorizontal: isTablet ? 20 : 16 }}>
+      <View style={{ marginTop: -14, paddingHorizontal: isTablet ? 18 : 14 }}>
         <View
           style={{
-            borderRadius: 28,
+            borderRadius: 22,
             backgroundColor: COLORS.card,
             borderWidth: 1,
             borderColor: COLORS.border,
-            padding: isSmall ? 14 : 16,
+            padding: isSmall ? 12 : 14,
             shadowColor: "#000",
             shadowOpacity: 0.06,
-            shadowRadius: 14,
-            shadowOffset: { width: 0, height: 6 },
+            shadowRadius: 12,
+            shadowOffset: { width: 0, height: 5 },
             elevation: 4,
           }}
         >
@@ -952,9 +952,9 @@ export default function ShopOwnersList() {
             style={{
               flexDirection: "row",
               alignItems: "center",
-              borderRadius: 22,
-              paddingHorizontal: 14,
-              paddingVertical: 10,
+              borderRadius: 18,
+              paddingHorizontal: 12,
+              paddingVertical: 8,
               backgroundColor: COLORS.white,
               borderWidth: 1,
               borderColor: COLORS.border,
@@ -962,8 +962,8 @@ export default function ShopOwnersList() {
           >
             <View
               style={{
-                width: 40,
-                height: 40,
+                width: 34,
+                height: 34,
                 alignItems: "center",
                 justifyContent: "center",
                 borderRadius: 999,
@@ -972,7 +972,7 @@ export default function ShopOwnersList() {
             >
               <MaterialCommunityIcons
                 name="magnify"
-                size={22}
+                size={18}
                 color={COLORS.secondaryText}
               />
             </View>
@@ -983,10 +983,10 @@ export default function ShopOwnersList() {
               placeholder="Search by name, username, email, mobile..."
               placeholderTextColor={COLORS.labelText}
               style={{
-                marginLeft: 12,
+                marginLeft: 10,
                 flex: 1,
-                paddingVertical: Platform.OS === "ios" ? 10 : 8,
-                fontSize: isSmall ? 14 : 15,
+                paddingVertical: Platform.OS === "ios" ? 8 : 6,
+                fontSize: isSmall ? 13 : 14,
                 fontWeight: "600",
                 color: COLORS.primaryText,
               }}
@@ -996,8 +996,8 @@ export default function ShopOwnersList() {
               <Pressable
                 onPress={() => setQuery("")}
                 style={{
-                  width: 32,
-                  height: 32,
+                  width: 28,
+                  height: 28,
                   alignItems: "center",
                   justifyContent: "center",
                   borderRadius: 999,
@@ -1006,7 +1006,7 @@ export default function ShopOwnersList() {
               >
                 <MaterialCommunityIcons
                   name="close"
-                  size={18}
+                  size={16}
                   color={COLORS.secondaryText}
                 />
               </Pressable>
@@ -1015,10 +1015,10 @@ export default function ShopOwnersList() {
 
           <View
             style={{
-              marginTop: 16,
+              marginTop: 12,
               flexDirection: "row",
               flexWrap: "wrap",
-              gap: 10,
+              gap: 8,
             }}
           >
             <FilterChip
@@ -1052,8 +1052,8 @@ export default function ShopOwnersList() {
               style={{
                 alignItems: "center",
                 justifyContent: "center",
-                paddingTop: 22,
-                paddingBottom: 8,
+                paddingTop: 18,
+                paddingBottom: 4,
               }}
             >
               <LinearGradient
@@ -1061,8 +1061,8 @@ export default function ShopOwnersList() {
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={{
-                  width: 82,
-                  height: 82,
+                  width: 68,
+                  height: 68,
                   alignItems: "center",
                   justifyContent: "center",
                   borderRadius: 999,
@@ -1073,8 +1073,8 @@ export default function ShopOwnersList() {
 
               <Text
                 style={{
-                  marginTop: 16,
-                  fontSize: 16,
+                  marginTop: 12,
+                  fontSize: 15,
                   fontWeight: "800",
                   color: COLORS.primaryText,
                 }}
@@ -1086,6 +1086,7 @@ export default function ShopOwnersList() {
                 style={{
                   marginTop: 4,
                   textAlign: "center",
+                  fontSize: 12.5,
                   color: COLORS.secondaryText,
                 }}
               >
@@ -1097,23 +1098,23 @@ export default function ShopOwnersList() {
       </View>
 
       {!loading && filtered.length > 0 ? (
-        <View style={{ paddingHorizontal: isTablet ? 20 : 12, marginTop: 18 }}>
+        <View style={{ paddingHorizontal: isTablet ? 18 : 12, marginTop: 16 }}>
           <View
             style={{
               backgroundColor: "#EEF2F7",
               borderWidth: 1,
               borderColor: COLORS.border,
-              borderTopLeftRadius: 20,
-              borderTopRightRadius: 20,
+              borderTopLeftRadius: 18,
+              borderTopRightRadius: 18,
               paddingHorizontal: isSmall ? 8 : 10,
-              paddingVertical: 14,
+              paddingVertical: 10,
             }}
           >
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <TableHead width={isSmall ? 42 : 52} label="S.No" center />
+              <TableHead width={isSmall ? 40 : 48} label="S.No" center />
               <TableHead flex={1.6} label="Owner Details" />
               <TableHead flex={1.2} label="Username / Status" />
-              <TableHead width={isSmall ? 58 : 70} label="View" center />
+              <TableHead width={isSmall ? 52 : 60} label="View" center />
             </View>
           </View>
         </View>
@@ -1134,7 +1135,7 @@ export default function ShopOwnersList() {
         ListEmptyComponent={!loading ? renderEmpty : null}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          paddingBottom: 28,
+          paddingBottom: 24,
           flexGrow: !loading && filtered.length === 0 ? 1 : undefined,
         }}
         refreshControl={
@@ -1175,7 +1176,7 @@ function TableHead({
         numberOfLines={1}
         style={{
           color: COLORS.secondaryText,
-          fontSize: 12,
+          fontSize: 11.5,
           fontWeight: "800",
         }}
       >
@@ -1202,9 +1203,9 @@ function FilterChip({
       style={{
         borderRadius: 999,
         shadowColor: active ? COLORS.primary : COLORS.heroDark,
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: active ? 0.12 : 0.03,
-        shadowRadius: 6,
+        shadowOffset: { width: 0, height: 3 },
+        shadowOpacity: active ? 0.1 : 0.03,
+        shadowRadius: 5,
         elevation: 1,
       }}
     >
@@ -1213,8 +1214,8 @@ function FilterChip({
           flexDirection: "row",
           alignItems: "center",
           borderRadius: 999,
-          paddingHorizontal: 12,
-          paddingVertical: 8,
+          paddingHorizontal: 10,
+          paddingVertical: 7,
           backgroundColor: active ? COLORS.primary : COLORS.white,
           borderWidth: 1,
           borderColor: active ? COLORS.primary : COLORS.border,
@@ -1222,13 +1223,13 @@ function FilterChip({
       >
         <MaterialCommunityIcons
           name={icon}
-          size={14}
+          size={13}
           color={active ? COLORS.white : COLORS.secondaryText}
         />
         <Text
           style={{
             marginLeft: 5,
-            fontSize: 12,
+            fontSize: 11.5,
             fontWeight: "800",
             color: active ? COLORS.white : COLORS.primaryText,
           }}
@@ -1256,20 +1257,20 @@ function InfoPill({
         borderWidth: 1,
         borderColor: COLORS.border,
         borderRadius: 999,
-        paddingHorizontal: 8,
-        paddingVertical: 4,
+        paddingHorizontal: 6,
+        paddingVertical: 3,
       }}
     >
       <MaterialCommunityIcons
         name={icon}
-        size={12}
+        size={11}
         color={COLORS.secondaryText}
       />
       <Text
         style={{
           marginLeft: 4,
           color: COLORS.secondaryText,
-          fontSize: 11,
+          fontSize: 10.5,
           fontWeight: "700",
         }}
       >

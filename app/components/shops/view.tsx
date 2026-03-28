@@ -1,7 +1,13 @@
 // app/master/managers/shops/view.tsx
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
-import React, { useCallback, useEffect, useLayoutEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -71,6 +77,34 @@ type ShopData = {
   updatedAt?: string;
 };
 
+const UI = {
+  screenPaddingX: 14,
+  screenPaddingTop: 10,
+  screenPaddingBottom: 22,
+
+  cardRadius: 18,
+  sectionRadius: 16,
+  innerRadius: 12,
+  pillRadius: 999,
+
+  heroHeight: 160,
+
+  cardPadding: 14,
+  sectionPadding: 14,
+  rowVertical: 8,
+
+  iconBox: 34,
+  iconBoxLarge: 38,
+
+  title: 19,
+  sectionTitle: 15,
+  body: 13,
+  bodySmall: 12,
+  tiny: 11,
+
+  buttonHeight: 46,
+};
+
 function formatDate(value?: string) {
   if (!value) return "-";
   const d = new Date(value);
@@ -134,49 +168,55 @@ function SectionCard({
   return (
     <View
       style={{
-        marginTop: 16,
+        marginTop: 12,
         backgroundColor: COLORS.card,
-        borderRadius: 26,
-        padding: 18,
+        borderRadius: UI.sectionRadius,
+        padding: UI.sectionPadding,
         borderWidth: 1,
         borderColor: COLORS.border,
-        // shadowColor: COLORS.black,
-        shadowOffset: { width: 0, height: 8 },
-        shadowOpacity: 0.05,
-        shadowRadius: 18,
-        elevation: 3,
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.04,
+        shadowRadius: 12,
+        elevation: 2,
       }}
     >
-      <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 14 }}>
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          marginBottom: 10,
+        }}
+      >
         <View
           style={{
-            width: 44,
-            height: 44,
-            borderRadius: 16,
+            width: UI.iconBoxLarge,
+            height: UI.iconBoxLarge,
+            borderRadius: 12,
             backgroundColor: COLORS.primarySoft,
             alignItems: "center",
             justifyContent: "center",
-            marginRight: 12,
+            marginRight: 10,
           }}
         >
-          <MaterialCommunityIcons name={icon} size={20} color={COLORS.primary} />
+          <MaterialCommunityIcons name={icon} size={18} color={COLORS.primary} />
         </View>
 
         <View style={{ flex: 1 }}>
           <Text
             style={{
               color: COLORS.heading,
-              fontSize: 17,
-              fontWeight: "900",
+              fontSize: UI.sectionTitle,
+              fontWeight: "800",
             }}
           >
             {title}
           </Text>
+
           {!!subtitle && (
             <Text
               style={{
                 color: COLORS.secondaryText,
-                fontSize: 12,
+                fontSize: UI.bodySmall,
                 marginTop: 2,
                 fontWeight: "500",
               }}
@@ -197,57 +237,61 @@ function InfoRow({
   label,
   value,
   valueColor,
+  noBorder = false,
 }: {
   icon: keyof typeof MaterialCommunityIcons.glyphMap;
   label: string;
   value?: string;
   valueColor?: string;
+  noBorder?: boolean;
 }) {
   return (
     <View
       style={{
         flexDirection: "row",
         alignItems: "flex-start",
-        paddingVertical: 12,
-        borderBottomWidth: 1,
+        paddingVertical: UI.rowVertical,
+        borderBottomWidth: noBorder ? 0 : 1,
         borderBottomColor: COLORS.border,
       }}
     >
       <View
         style={{
-          width: 38,
-          height: 38,
-          borderRadius: 12,
+          width: UI.iconBox,
+          height: UI.iconBox,
+          borderRadius: 10,
           backgroundColor: COLORS.soft,
           borderWidth: 1,
           borderColor: COLORS.border,
           alignItems: "center",
           justifyContent: "center",
-          marginRight: 12,
+          marginRight: 10,
+          marginTop: 1,
         }}
       >
-        <MaterialCommunityIcons name={icon} size={18} color={COLORS.primary} />
+        <MaterialCommunityIcons name={icon} size={16} color={COLORS.primary} />
       </View>
 
       <View style={{ flex: 1 }}>
         <Text
           style={{
             color: COLORS.secondaryText,
-            fontSize: 11,
+            fontSize: UI.tiny,
             fontWeight: "800",
             textTransform: "uppercase",
-            letterSpacing: 0.5,
+            letterSpacing: 0.4,
           }}
         >
           {label}
         </Text>
+
         <Text
           style={{
-            marginTop: 4,
+            marginTop: 3,
             color: valueColor || COLORS.primaryText,
-            fontSize: 15,
-            fontWeight: "700",
-            lineHeight: 22,
+            fontSize: UI.body,
+            fontWeight: "600",
+            lineHeight: 18,
           }}
         >
           {value || "-"}
@@ -271,9 +315,9 @@ function DocViewCard({
   return (
     <View
       style={{
-        marginTop: 14,
-        borderRadius: 20,
-        padding: 14,
+        marginTop: 10,
+        borderRadius: 14,
+        padding: 12,
         backgroundColor: COLORS.soft,
         borderWidth: 1,
         borderColor: COLORS.border,
@@ -282,9 +326,9 @@ function DocViewCard({
       <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
         <View
           style={{
-            width: 50,
-            height: 50,
-            borderRadius: 16,
+            width: 42,
+            height: 42,
+            borderRadius: 12,
             backgroundColor: COLORS.white,
             borderWidth: 1,
             borderColor: COLORS.border,
@@ -294,17 +338,17 @@ function DocViewCard({
         >
           <MaterialCommunityIcons
             name={hasDoc ? "file-document-check-outline" : "file-remove-outline"}
-            size={24}
+            size={20}
             color={hasDoc ? COLORS.success : COLORS.mutedText}
           />
         </View>
 
-        <View style={{ flex: 1, marginLeft: 12 }}>
+        <View style={{ flex: 1, marginLeft: 10 }}>
           <Text
             style={{
               color: COLORS.heading,
-              fontSize: 15,
-              fontWeight: "800",
+              fontSize: UI.body,
+              fontWeight: "700",
             }}
           >
             {title}
@@ -312,10 +356,10 @@ function DocViewCard({
 
           <Text
             style={{
-              marginTop: 4,
+              marginTop: 3,
               color: hasDoc ? COLORS.primaryText : COLORS.secondaryText,
-              fontSize: 13,
-              fontWeight: "600",
+              fontSize: UI.bodySmall,
+              fontWeight: "500",
             }}
           >
             {hasDoc ? doc?.fileName || "Document uploaded" : "No document uploaded"}
@@ -324,10 +368,10 @@ function DocViewCard({
           {!!hasDoc && (
             <Text
               style={{
-                marginTop: 4,
+                marginTop: 3,
                 color: COLORS.mutedText,
-                fontSize: 11,
-                fontWeight: "600",
+                fontSize: UI.tiny,
+                fontWeight: "500",
               }}
             >
               {[doc?.mimeType, bytesToText(doc?.bytes)].filter(Boolean).join(" • ")}
@@ -340,22 +384,22 @@ function DocViewCard({
         <Pressable
           onPress={onOpen}
           style={{
-            marginTop: 14,
-            minHeight: 46,
-            borderRadius: 14,
+            marginTop: 10,
+            minHeight: 40,
+            borderRadius: 12,
             backgroundColor: COLORS.primary,
             alignItems: "center",
             justifyContent: "center",
             flexDirection: "row",
           }}
         >
-          <MaterialCommunityIcons name="open-in-new" size={18} color={COLORS.white} />
+          <MaterialCommunityIcons name="open-in-new" size={16} color={COLORS.white} />
           <Text
             style={{
-              marginLeft: 8,
+              marginLeft: 6,
               color: COLORS.white,
-              fontWeight: "900",
-              fontSize: 13,
+              fontWeight: "800",
+              fontSize: UI.bodySmall,
             }}
           >
             Open Document
@@ -370,7 +414,8 @@ export default function ShopViewScreen() {
   const router = useRouter();
   const navigation = useNavigation();
   const { id } = useLocalSearchParams<{ id: string }>();
-  const { token } = useAuth();
+  const authCtx = useAuth();
+  const token = authCtx?.token || authCtx?.accessToken || "";
 
   const [loading, setLoading] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -407,15 +452,16 @@ export default function ShopViewScreen() {
 
       if (!res.ok || !json?.success) {
         if (!json) console.log("RAW:", rr.text);
-        toastError(json?.message || `HTTP ${res.status}`);
         setData(null);
+        toastError(json?.message || `HTTP ${res.status}`);
         return;
       }
 
       setData((json.data || null) as ShopData | null);
-    } catch {
-      toastError("Network error");
+    } catch (error) {
+      console.log("fetchDetails error:", error);
       setData(null);
+      toastError("Network error");
     } finally {
       setLoading(false);
     }
@@ -428,7 +474,7 @@ export default function ShopViewScreen() {
   const goEdit = useCallback(() => {
     if (!id) return;
     // router.push(`/master/managers/shops/edit?id=${String(id)}`);
-  }, [router, id]);
+  }, [id]);
 
   const confirmDelete = useCallback(() => {
     if (!id) return;
@@ -458,12 +504,14 @@ export default function ShopViewScreen() {
 
               if (!res.ok || !json?.success) {
                 if (!json) console.log("RAW:", rr.text);
-                return toastError(json?.message || `HTTP ${res.status}`);
+                toastError(json?.message || `HTTP ${res.status}`);
+                return;
               }
 
               toastSuccess("Shop deleted successfully");
               router.back();
-            } catch {
+            } catch (error) {
+              console.log("delete error:", error);
               toastError("Network error");
             } finally {
               setDeleting(false);
@@ -485,17 +533,17 @@ export default function ShopViewScreen() {
       },
       headerTitleStyle: {
         color: COLORS.heading,
-        fontSize: 18,
-        fontWeight: "900",
+        fontSize: 17,
+        fontWeight: "800",
       },
       headerLeft: () => (
         <Pressable
           onPress={() => router.back()}
           hitSlop={10}
           style={{
-            width: 40,
-            height: 40,
-            borderRadius: 14,
+            width: 36,
+            height: 36,
+            borderRadius: 12,
             alignItems: "center",
             justifyContent: "center",
             backgroundColor: COLORS.card,
@@ -506,20 +554,26 @@ export default function ShopViewScreen() {
         >
           <MaterialCommunityIcons
             name="chevron-left"
-            size={24}
+            size={22}
             color={COLORS.heading}
           />
         </Pressable>
       ),
       headerRight: () => (
-        <View style={{ flexDirection: "row", alignItems: "center", marginRight: 10 }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            marginRight: 10,
+          }}
+        >
           <Pressable
             onPress={goEdit}
             hitSlop={10}
             style={{
-              width: 40,
-              height: 40,
-              borderRadius: 14,
+              width: 36,
+              height: 36,
+              borderRadius: 12,
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: COLORS.primarySoft,
@@ -528,7 +582,7 @@ export default function ShopViewScreen() {
           >
             <MaterialCommunityIcons
               name="pencil-outline"
-              size={21}
+              size={18}
               color={COLORS.primary}
             />
           </Pressable>
@@ -538,9 +592,9 @@ export default function ShopViewScreen() {
             hitSlop={10}
             disabled={deleting}
             style={{
-              width: 40,
-              height: 40,
-              borderRadius: 14,
+              width: 36,
+              height: 36,
+              borderRadius: 12,
               alignItems: "center",
               justifyContent: "center",
               backgroundColor: "#FDECEC",
@@ -552,7 +606,7 @@ export default function ShopViewScreen() {
             ) : (
               <MaterialCommunityIcons
                 name="trash-can-outline"
-                size={21}
+                size={18}
                 color={COLORS.danger}
               />
             )}
@@ -565,28 +619,44 @@ export default function ShopViewScreen() {
   const shopAddress = data?.shopAddress || data?.address;
   const frontImage = data?.frontImageUrl || "";
 
-  const openUrl = async (url?: string) => {
-    if (!url) return toastInfo("No file available");
-    const can = await Linking.canOpenURL(url);
-    if (!can) return toastError("Unable to open file");
-    await Linking.openURL(url);
-  };
+  const openUrl = useCallback(async (url?: string) => {
+    try {
+      if (!url?.trim()) {
+        toastInfo("No file available");
+        return;
+      }
 
-  return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.background }} edges={["bottom"]}>
-      {loading ? (
+      const supported = await Linking.canOpenURL(url);
+      if (!supported) {
+        toastError("Unable to open file");
+        return;
+      }
+
+      await Linking.openURL(url);
+    } catch (error) {
+      console.log("openUrl error:", error);
+      toastError("Failed to open file");
+    }
+  }, []);
+
+  if (loading) {
+    return (
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: COLORS.background }}
+        edges={["bottom"]}
+      >
         <View
           style={{
             flex: 1,
             alignItems: "center",
             justifyContent: "center",
-            paddingHorizontal: 24,
+            paddingHorizontal: 20,
           }}
         >
           <View
             style={{
-              width: 58,
-              height: 58,
+              width: 52,
+              height: 52,
               borderRadius: 999,
               backgroundColor: COLORS.card,
               alignItems: "center",
@@ -600,27 +670,37 @@ export default function ShopViewScreen() {
 
           <Text
             style={{
-              marginTop: 14,
+              marginTop: 12,
               color: COLORS.secondaryText,
-              fontWeight: "700",
+              fontSize: UI.body,
+              fontWeight: "600",
             }}
           >
             Loading shop details...
           </Text>
         </View>
-      ) : !data ? (
+      </SafeAreaView>
+    );
+  }
+
+  if (!data) {
+    return (
+      <SafeAreaView
+        style={{ flex: 1, backgroundColor: COLORS.background }}
+        edges={["bottom"]}
+      >
         <View
           style={{
             flex: 1,
             alignItems: "center",
             justifyContent: "center",
-            paddingHorizontal: 24,
+            paddingHorizontal: 22,
           }}
         >
           <View
             style={{
-              width: 88,
-              height: 88,
+              width: 76,
+              height: 76,
               borderRadius: 999,
               backgroundColor: COLORS.soft,
               alignItems: "center",
@@ -629,16 +709,16 @@ export default function ShopViewScreen() {
           >
             <MaterialCommunityIcons
               name="store-remove-outline"
-              size={40}
+              size={34}
               color={COLORS.mutedText}
             />
           </View>
 
           <Text
             style={{
-              marginTop: 14,
-              fontSize: 19,
-              fontWeight: "900",
+              marginTop: 12,
+              fontSize: 18,
+              fontWeight: "800",
               color: COLORS.heading,
             }}
           >
@@ -647,334 +727,366 @@ export default function ShopViewScreen() {
 
           <Text
             style={{
-              marginTop: 6,
+              marginTop: 5,
               color: COLORS.secondaryText,
               textAlign: "center",
-              lineHeight: 20,
+              lineHeight: 19,
+              fontSize: UI.body,
             }}
           >
             This shop record is unavailable or may have been removed.
           </Text>
         </View>
-      ) : (
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingHorizontal: 16,
-            paddingTop: 12,
-            paddingBottom: 34,
+      </SafeAreaView>
+    );
+  }
+
+  return (
+    <SafeAreaView
+      style={{ flex: 1, backgroundColor: COLORS.background }}
+      edges={["bottom"]}
+    >
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={{
+          paddingHorizontal: UI.screenPaddingX,
+          paddingTop: UI.screenPaddingTop,
+          paddingBottom: UI.screenPaddingBottom,
+        }}
+      >
+        <View
+          style={{
+            backgroundColor: COLORS.card,
+            borderRadius: UI.cardRadius,
+            overflow: "hidden",
+            borderWidth: 1,
+            borderColor: COLORS.border,
+            shadowOffset: { width: 0, height: 6 },
+            shadowOpacity: 0.04,
+            shadowRadius: 12,
+            elevation: 2,
           }}
         >
           <View
             style={{
-              backgroundColor: COLORS.card,
-              borderRadius: 30,
-              overflow: "hidden",
-              borderWidth: 1,
-              borderColor: COLORS.border,
-              // shadowColor: COLORS.black,
-              shadowOffset: { width: 0, height: 8 },
-              shadowOpacity: 0.05,
-              shadowRadius: 18,
-              elevation: 3,
+              height: UI.heroHeight,
+              backgroundColor: COLORS.soft,
+              alignItems: "center",
+              justifyContent: "center",
             }}
           >
+            {frontImage ? (
+              <Image
+                source={{ uri: frontImage }}
+                style={{ width: "100%", height: "100%" }}
+                resizeMode="cover"
+              />
+            ) : (
+              <MaterialCommunityIcons
+                name="storefront-outline"
+                size={46}
+                color={COLORS.mutedText}
+              />
+            )}
+          </View>
+
+          <View style={{ padding: UI.cardPadding }}>
             <View
               style={{
-                height: 210,
-                backgroundColor: COLORS.soft,
-                alignItems: "center",
-                justifyContent: "center",
+                alignSelf: "flex-start",
+                paddingHorizontal: 10,
+                paddingVertical: 5,
+                borderRadius: UI.pillRadius,
+                backgroundColor: data?.isActive ? "#EAF8EE" : "#FFF1F0",
+                marginBottom: 10,
               }}
             >
-              {frontImage ? (
-                <Image
-                  source={{ uri: frontImage }}
-                  style={{ width: "100%", height: "100%" }}
-                  resizeMode="cover"
-                />
-              ) : (
-                <MaterialCommunityIcons
-                  name="storefront-outline"
-                  size={58}
-                  color={COLORS.mutedText}
-                />
-              )}
+              <Text
+                style={{
+                  color: data?.isActive ? COLORS.success : COLORS.danger,
+                  fontSize: UI.tiny,
+                  fontWeight: "800",
+                }}
+              >
+                {data?.isActive ? "ACTIVE SHOP" : "INACTIVE SHOP"}
+              </Text>
             </View>
 
-            <View style={{ padding: 18 }}>
+            <Text
+              style={{
+                color: COLORS.heading,
+                fontSize: UI.title,
+                fontWeight: "800",
+              }}
+            >
+              {data?.name || "Unnamed Shop"}
+            </Text>
+
+            <Text
+              style={{
+                marginTop: 4,
+                color: COLORS.secondaryText,
+                fontSize: UI.body,
+                fontWeight: "500",
+              }}
+            >
+              {data?.businessType || "Business type not added"}
+            </Text>
+
+            <View
+              style={{
+                marginTop: 12,
+                flexDirection: "row",
+                flexWrap: "wrap",
+                gap: 8,
+              }}
+            >
               <View
                 style={{
-                  alignSelf: "flex-start",
-                  paddingHorizontal: 12,
-                  paddingVertical: 7,
-                  borderRadius: 999,
-                  backgroundColor: data?.isActive ? "#EAF8EE" : "#FFF1F0",
-                  marginBottom: 12,
+                  paddingHorizontal: 10,
+                  paddingVertical: 8,
+                  borderRadius: 12,
+                  backgroundColor: COLORS.soft,
+                  borderWidth: 1,
+                  borderColor: COLORS.border,
                 }}
               >
                 <Text
                   style={{
-                    color: data?.isActive ? COLORS.success : COLORS.danger,
-                    fontSize: 12,
-                    fontWeight: "900",
+                    color: COLORS.secondaryText,
+                    fontSize: UI.tiny,
+                    fontWeight: "800",
                   }}
                 >
-                  {data?.isActive ? "ACTIVE SHOP" : "INACTIVE SHOP"}
+                  CREATED
+                </Text>
+                <Text
+                  style={{
+                    marginTop: 3,
+                    color: COLORS.primaryText,
+                    fontSize: UI.bodySmall,
+                    fontWeight: "600",
+                  }}
+                >
+                  {formatDate(data?.createdAt)}
                 </Text>
               </View>
 
-              <Text
-                style={{
-                  color: COLORS.heading,
-                  fontSize: 22,
-                  fontWeight: "900",
-                }}
-              >
-                {data?.name || "Unnamed Shop"}
-              </Text>
-
-              <Text
-                style={{
-                  marginTop: 6,
-                  color: COLORS.secondaryText,
-                  fontSize: 14,
-                  fontWeight: "600",
-                }}
-              >
-                {data?.businessType || "Business type not added"}
-              </Text>
-
               <View
                 style={{
-                  marginTop: 16,
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  gap: 10,
+                  paddingHorizontal: 10,
+                  paddingVertical: 8,
+                  borderRadius: 12,
+                  backgroundColor: COLORS.soft,
+                  borderWidth: 1,
+                  borderColor: COLORS.border,
                 }}
               >
-                <View
+                <Text
                   style={{
-                    paddingHorizontal: 12,
-                    paddingVertical: 10,
-                    borderRadius: 14,
-                    backgroundColor: COLORS.soft,
-                    borderWidth: 1,
-                    borderColor: COLORS.border,
+                    color: COLORS.secondaryText,
+                    fontSize: UI.tiny,
+                    fontWeight: "800",
                   }}
                 >
-                  <Text style={{ color: COLORS.secondaryText, fontSize: 11, fontWeight: "800" }}>
-                    CREATED
-                  </Text>
-                  <Text
-                    style={{
-                      marginTop: 4,
-                      color: COLORS.primaryText,
-                      fontSize: 13,
-                      fontWeight: "700",
-                    }}
-                  >
-                    {formatDate(data?.createdAt)}
-                  </Text>
-                </View>
-
-                <View
+                  UPDATED
+                </Text>
+                <Text
                   style={{
-                    paddingHorizontal: 12,
-                    paddingVertical: 10,
-                    borderRadius: 14,
-                    backgroundColor: COLORS.soft,
-                    borderWidth: 1,
-                    borderColor: COLORS.border,
+                    marginTop: 3,
+                    color: COLORS.primaryText,
+                    fontSize: UI.bodySmall,
+                    fontWeight: "600",
                   }}
                 >
-                  <Text style={{ color: COLORS.secondaryText, fontSize: 11, fontWeight: "800" }}>
-                    UPDATED
-                  </Text>
-                  <Text
-                    style={{
-                      marginTop: 4,
-                      color: COLORS.primaryText,
-                      fontSize: 13,
-                      fontWeight: "700",
-                    }}
-                  >
-                    {formatDate(data?.updatedAt)}
-                  </Text>
-                </View>
+                  {formatDate(data?.updatedAt)}
+                </Text>
               </View>
             </View>
           </View>
+        </View>
 
-          <SectionCard
-            title="Basic Information"
-            subtitle="Main shop profile information"
-            icon="information-outline"
+        <SectionCard
+          title="Basic Information"
+          subtitle="Main shop profile information"
+          icon="information-outline"
+        >
+          <InfoRow icon="store-outline" label="Shop Name" value={data?.name || "-"} />
+          <InfoRow
+            icon="briefcase-outline"
+            label="Business Type"
+            value={data?.businessType || "-"}
+          />
+          <InfoRow
+            icon="check-decagram-outline"
+            label="Status"
+            value={data?.isActive ? "Active" : "Inactive"}
+            valueColor={data?.isActive ? COLORS.success : COLORS.danger}
+            noBorder
+          />
+        </SectionCard>
+
+        <SectionCard
+          title="Owner Information"
+          subtitle="Linked owner account details"
+          icon="account-tie-outline"
+        >
+          <InfoRow
+            icon="account-outline"
+            label="Owner Name"
+            value={getOwnerName(data?.shopOwnerAccountId)}
+          />
+          <InfoRow
+            icon="email-outline"
+            label="Owner Email"
+            value={getOwnerEmail(data?.shopOwnerAccountId)}
+            noBorder
+          />
+        </SectionCard>
+
+        <SectionCard
+          title="Address Information"
+          subtitle="Shop location and service area details"
+          icon="map-marker-outline"
+        >
+          <InfoRow icon="map-outline" label="State" value={shopAddress?.state || "-"} />
+          <InfoRow
+            icon="office-building-marker-outline"
+            label="District"
+            value={shopAddress?.district || "-"}
+          />
+          <InfoRow
+            icon="city-variant-outline"
+            label="Taluk"
+            value={shopAddress?.taluk || "-"}
+          />
+          <InfoRow
+            icon="map-marker-radius-outline"
+            label="Area"
+            value={shopAddress?.area || "-"}
+          />
+          <InfoRow
+            icon="road-variant"
+            label="Street / Door No"
+            value={shopAddress?.street || "-"}
+          />
+          <InfoRow
+            icon="mailbox-outline"
+            label="Pincode"
+            value={shopAddress?.pincode || "-"}
+          />
+          <InfoRow
+            icon="map-marker-path"
+            label="Full Address"
+            value={formatAddress(shopAddress)}
+            noBorder
+          />
+        </SectionCard>
+
+        <SectionCard
+          title="Shop Documents"
+          subtitle="Uploaded compliance documents"
+          icon="file-document-multiple-outline"
+        >
+          <DocViewCard
+            title="GST Certificate"
+            doc={data?.gstCertificate}
+            onOpen={() => openUrl(data?.gstCertificate?.url)}
+          />
+
+          <DocViewCard
+            title="Udyam Certificate"
+            doc={data?.udyamCertificate}
+            onOpen={() => openUrl(data?.udyamCertificate?.url)}
+          />
+        </SectionCard>
+
+        <View
+          style={{
+            marginTop: 14,
+            flexDirection: "row",
+            gap: 10,
+          }}
+        >
+          <Pressable
+            onPress={goEdit}
+            style={{
+              flex: 1,
+              minHeight: UI.buttonHeight,
+              borderRadius: 14,
+              backgroundColor: COLORS.primary,
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "row",
+            }}
           >
-            <InfoRow icon="store-outline" label="Shop Name" value={data?.name || "-"} />
-            <InfoRow
-              icon="briefcase-outline"
-              label="Business Type"
-              value={data?.businessType || "-"}
+            <MaterialCommunityIcons
+              name="pencil-outline"
+              size={18}
+              color={COLORS.white}
             />
-            <InfoRow
-              icon="check-decagram-outline"
-              label="Status"
-              value={data?.isActive ? "Active" : "Inactive"}
-              valueColor={data?.isActive ? COLORS.success : COLORS.danger}
-            />
-          </SectionCard>
-
-          <SectionCard
-            title="Owner Information"
-            subtitle="Linked owner account details"
-            icon="account-tie-outline"
-          >
-            <InfoRow
-              icon="account-outline"
-              label="Owner Name"
-              value={getOwnerName(data?.shopOwnerAccountId)}
-            />
-            <InfoRow
-              icon="email-outline"
-              label="Owner Email"
-              value={getOwnerEmail(data?.shopOwnerAccountId)}
-            />
-          </SectionCard>
-
-          <SectionCard
-            title="Address Information"
-            subtitle="Shop location and service area details"
-            icon="map-marker-outline"
-          >
-            <InfoRow icon="map-outline" label="State" value={shopAddress?.state || "-"} />
-            <InfoRow
-              icon="office-building-marker-outline"
-              label="District"
-              value={shopAddress?.district || "-"}
-            />
-            <InfoRow
-              icon="city-variant-outline"
-              label="Taluk"
-              value={shopAddress?.taluk || "-"}
-            />
-            <InfoRow
-              icon="map-marker-radius-outline"
-              label="Area"
-              value={shopAddress?.area || "-"}
-            />
-            <InfoRow
-              icon="road-variant"
-              label="Street / Door No"
-              value={shopAddress?.street || "-"}
-            />
-            <InfoRow
-              icon="mailbox-outline"
-              label="Pincode"
-              value={shopAddress?.pincode || "-"}
-            />
-            <InfoRow
-              icon="map-marker-path"
-              label="Full Address"
-              value={formatAddress(shopAddress)}
-            />
-          </SectionCard>
-
-          <SectionCard
-            title="Shop Documents"
-            subtitle="Uploaded compliance documents"
-            icon="file-document-multiple-outline"
-          >
-            <DocViewCard
-              title="GST Certificate"
-              doc={data?.gstCertificate}
-              onOpen={() => openUrl(data?.gstCertificate?.url)}
-            />
-
-            <DocViewCard
-              title="Udyam Certificate"
-              doc={data?.udyamCertificate}
-              onOpen={() => openUrl(data?.udyamCertificate?.url)}
-            />
-          </SectionCard>
-
-          <View style={{ marginTop: 18, flexDirection: "row", gap: 12 }}>
-            <Pressable
-              onPress={goEdit}
+            <Text
               style={{
-                flex: 1,
-                minHeight: 54,
-                borderRadius: 18,
-                backgroundColor: COLORS.primary,
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "row",
+                marginLeft: 6,
+                color: COLORS.white,
+                fontWeight: "800",
+                fontSize: UI.body,
               }}
             >
-              <MaterialCommunityIcons name="pencil-outline" size={20} color={COLORS.white} />
-              <Text
-                style={{
-                  marginLeft: 8,
-                  color: COLORS.white,
-                  fontWeight: "900",
-                  fontSize: 15,
-                }}
-              >
-                Edit Shop
-              </Text>
-            </Pressable>
+              Edit Shop
+            </Text>
+          </Pressable>
 
-            <Pressable
-              onPress={confirmDelete}
-              disabled={deleting}
-              style={{
-                flex: 1,
-                minHeight: 54,
-                borderRadius: 18,
-                backgroundColor: COLORS.danger,
-                alignItems: "center",
-                justifyContent: "center",
-                flexDirection: "row",
-                opacity: deleting ? 0.65 : 1,
-              }}
-            >
-              {deleting ? (
-                <>
-                  <ActivityIndicator color={COLORS.white} />
-                  <Text
-                    style={{
-                      marginLeft: 8,
-                      color: COLORS.white,
-                      fontWeight: "900",
-                      fontSize: 15,
-                    }}
-                  >
-                    Deleting...
-                  </Text>
-                </>
-              ) : (
-                <>
-                  <MaterialCommunityIcons
-                    name="trash-can-outline"
-                    size={20}
-                    color={COLORS.white}
-                  />
-                  <Text
-                    style={{
-                      marginLeft: 8,
-                      color: COLORS.white,
-                      fontWeight: "900",
-                      fontSize: 15,
-                    }}
-                  >
-                    Delete Shop
-                  </Text>
-                </>
-              )}
-            </Pressable>
-          </View>
-        </ScrollView>
-      )}
+          <Pressable
+            onPress={confirmDelete}
+            disabled={deleting}
+            style={{
+              flex: 1,
+              minHeight: UI.buttonHeight,
+              borderRadius: 14,
+              backgroundColor: COLORS.danger,
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: "row",
+              opacity: deleting ? 0.65 : 1,
+            }}
+          >
+            {deleting ? (
+              <>
+                <ActivityIndicator color={COLORS.white} size="small" />
+                <Text
+                  style={{
+                    marginLeft: 6,
+                    color: COLORS.white,
+                    fontWeight: "800",
+                    fontSize: UI.body,
+                  }}
+                >
+                  Deleting...
+                </Text>
+              </>
+            ) : (
+              <>
+                <MaterialCommunityIcons
+                  name="trash-can-outline"
+                  size={18}
+                  color={COLORS.white}
+                />
+                <Text
+                  style={{
+                    marginLeft: 6,
+                    color: COLORS.white,
+                    fontWeight: "800",
+                    fontSize: UI.body,
+                  }}
+                >
+                  Delete Shop
+                </Text>
+              </>
+            )}
+          </Pressable>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }

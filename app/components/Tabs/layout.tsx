@@ -43,7 +43,7 @@ const ALL_TABS: TabItem[] = [
     name: "shopOwners",
     title: "Shop Owners",
     icon: "store-outline",
-    roles: [ROLES.MASTER_ADMIN, ROLES.MANAGER, ROLES.SUPERVISOR],
+    roles: [ROLES.MASTER_ADMIN, ROLES.MANAGER, ROLES.SUPERVISOR,ROLES.STAFF],
   },
   {
     name: "Manager",

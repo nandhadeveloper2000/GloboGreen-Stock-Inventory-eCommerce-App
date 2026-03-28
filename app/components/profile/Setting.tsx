@@ -322,7 +322,7 @@ function SectionDivider() {
       style={{
         height: 1,
         backgroundColor: COLORS.divider,
-        marginVertical: 10,
+        marginVertical: 8,
       }}
     />
   );
@@ -353,26 +353,26 @@ function MenuItem({
       style={{
         flexDirection: "row",
         alignItems: "center",
-        paddingVertical: 10,
+        paddingVertical: 8,
       }}
     >
       <View
         style={{
-          height: 44,
-          width: 44,
-          borderRadius: 16,
+          height: 40,
+          width: 40,
+          borderRadius: 12,
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: iconBg,
         }}
       >
-        <MaterialCommunityIcons name={icon} size={20} color={iconColor} />
+        <MaterialCommunityIcons name={icon} size={18} color={iconColor} />
       </View>
 
-      <View style={{ marginLeft: 12, flex: 1 }}>
+      <View style={{ marginLeft: 10, flex: 1 }}>
         <Text
           style={{
-            fontSize: 14,
+            fontSize: 13,
             fontWeight: "800",
             color: titleColor || COLORS.heading,
           }}
@@ -382,7 +382,7 @@ function MenuItem({
         <Text
           style={{
             marginTop: 2,
-            fontSize: 12,
+            fontSize: 11,
             color: COLORS.secondaryText,
           }}
         >
@@ -392,7 +392,7 @@ function MenuItem({
 
       <MaterialCommunityIcons
         name="chevron-right"
-        size={22}
+        size={20}
         color={chevronColor || COLORS.mutedText}
       />
     </Pressable>
@@ -587,8 +587,8 @@ export default function MySettings() {
           <ActivityIndicator size="large" color={COLORS.primary} />
           <Text
             style={{
-              marginTop: 12,
-              fontSize: 14,
+              marginTop: 10,
+              fontSize: 13,
               fontWeight: "600",
               color: COLORS.secondaryText,
             }}
@@ -606,7 +606,7 @@ export default function MySettings() {
 
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{ paddingBottom: 90 }}
+        contentContainerStyle={{ paddingBottom: 80 }}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -621,10 +621,10 @@ export default function MySettings() {
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
             style={{
-              borderRadius: 24,
+              borderRadius: 22,
               paddingHorizontal: 16,
-              paddingTop: 16,
-              paddingBottom: 18,
+              paddingTop: 14,
+              paddingBottom: 16,
             }}
           >
             <View
@@ -637,11 +637,11 @@ export default function MySettings() {
               <View>
                 <Text
                   style={{
-                    fontSize: 11,
+                    fontSize: 10,
                     fontWeight: "800",
                     textTransform: "uppercase",
-                    letterSpacing: 1.5,
-                    color: "rgba(255,255,255,0.8)",
+                    letterSpacing: 1.2,
+                    color: "rgba(255,255,255,0.82)",
                   }}
                 >
                   {theme.badge}
@@ -649,7 +649,7 @@ export default function MySettings() {
                 <Text
                   style={{
                     marginTop: 4,
-                    fontSize: 30,
+                    fontSize: 24,
                     fontWeight: "900",
                     color: COLORS.white,
                   }}
@@ -661,9 +661,9 @@ export default function MySettings() {
               <Pressable
                 onPress={() => fetchMyProfile(true)}
                 style={{
-                  height: 40,
-                  width: 40,
-                  borderRadius: 16,
+                  height: 36,
+                  width: 36,
+                  borderRadius: 12,
                   alignItems: "center",
                   justifyContent: "center",
                   backgroundColor: "rgba(255,255,255,0.15)",
@@ -671,7 +671,7 @@ export default function MySettings() {
               >
                 <MaterialCommunityIcons
                   name="refresh"
-                  size={18}
+                  size={17}
                   color={COLORS.white}
                 />
               </Pressable>
@@ -679,7 +679,7 @@ export default function MySettings() {
 
             <View
               style={{
-                marginTop: 20,
+                marginTop: 14,
                 flexDirection: "row",
                 alignItems: "center",
               }}
@@ -689,9 +689,9 @@ export default function MySettings() {
                   source={{ uri: avatarUri }}
                   resizeMode="cover"
                   style={{
-                    height: 82,
-                    width: 82,
-                    borderRadius: 24,
+                    height: 60,
+                    width: 60,
+                    borderRadius: 18,
                     borderWidth: 2,
                     borderColor: COLORS.white,
                   }}
@@ -702,9 +702,9 @@ export default function MySettings() {
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
                   style={{
-                    height: 82,
-                    width: 82,
-                    borderRadius: 24,
+                    height: 60,
+                    width: 60,
+                    borderRadius: 18,
                     alignItems: "center",
                     justifyContent: "center",
                     borderWidth: 2,
@@ -713,7 +713,7 @@ export default function MySettings() {
                 >
                   <Text
                     style={{
-                      fontSize: 24,
+                      fontSize: 18,
                       fontWeight: "900",
                       color: COLORS.white,
                     }}
@@ -727,7 +727,7 @@ export default function MySettings() {
                 <Text
                   numberOfLines={1}
                   style={{
-                    fontSize: 24,
+                    fontSize: 18,
                     fontWeight: "900",
                     color: COLORS.white,
                   }}
@@ -738,9 +738,9 @@ export default function MySettings() {
                 <Text
                   numberOfLines={1}
                   style={{
-                    marginTop: 4,
-                    fontSize: 14,
-                    color: "rgba(255,255,255,0.85)",
+                    marginTop: 3,
+                    fontSize: 13,
+                    color: "rgba(255,255,255,0.86)",
                   }}
                 >
                   {displayEmail}
@@ -748,17 +748,17 @@ export default function MySettings() {
 
                 <View
                   style={{
-                    marginTop: 12,
+                    marginTop: 10,
                     alignSelf: "flex-start",
                     borderRadius: 999,
                     backgroundColor: "rgba(255,255,255,0.15)",
-                    paddingHorizontal: 12,
-                    paddingVertical: 6,
+                    paddingHorizontal: 10,
+                    paddingVertical: 4,
                   }}
                 >
                   <Text
                     style={{
-                      fontSize: 11,
+                      fontSize: 10,
                       fontWeight: "800",
                       color: COLORS.white,
                     }}
@@ -772,17 +772,17 @@ export default function MySettings() {
 
           <View
             style={{
-              marginTop: 16,
-              borderRadius: 24,
+              marginTop: 12,
+              borderRadius: 20,
               borderWidth: 1,
               borderColor: COLORS.border,
               backgroundColor: COLORS.card,
-              padding: 16,
+              padding: 14,
             }}
           >
             <Text
               style={{
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: "800",
                 color: COLORS.heading,
               }}
@@ -792,14 +792,14 @@ export default function MySettings() {
             <Text
               style={{
                 marginTop: 4,
-                fontSize: 12,
+                fontSize: 11,
                 color: COLORS.secondaryText,
               }}
             >
               Manage your account and security settings
             </Text>
 
-            <View style={{ marginTop: 12 }}>
+            <View style={{ marginTop: 10 }}>
               <MenuItem
                 icon="account-circle-outline"
                 iconBg={COLORS.primaryLight}
@@ -835,17 +835,17 @@ export default function MySettings() {
 
           <View
             style={{
-              marginTop: 16,
-              borderRadius: 24,
+              marginTop: 12,
+              borderRadius: 20,
               borderWidth: 1,
               borderColor: COLORS.border,
               backgroundColor: COLORS.card,
-              padding: 16,
+              padding: 14,
             }}
           >
             <Text
               style={{
-                fontSize: 18,
+                fontSize: 16,
                 fontWeight: "800",
                 color: COLORS.heading,
               }}
@@ -855,14 +855,14 @@ export default function MySettings() {
             <Text
               style={{
                 marginTop: 4,
-                fontSize: 12,
+                fontSize: 11,
                 color: COLORS.secondaryText,
               }}
             >
               Account access and logout
             </Text>
 
-            <View style={{ marginTop: 12 }}>
+            <View style={{ marginTop: 10 }}>
               <MenuItem
                 icon="logout"
                 iconBg={COLORS.inactiveBg}
@@ -896,30 +896,30 @@ export default function MySettings() {
           <View
             style={{
               backgroundColor: COLORS.card,
-              borderTopLeftRadius: 28,
-              borderTopRightRadius: 28,
+              borderTopLeftRadius: 24,
+              borderTopRightRadius: 24,
               paddingHorizontal: 18,
               paddingTop: 14,
-              paddingBottom: 26,
+              paddingBottom: 24,
             }}
           >
             <View
               style={{
                 alignSelf: "center",
-                width: 52,
+                width: 50,
                 height: 5,
                 borderRadius: 999,
                 backgroundColor: COLORS.border,
-                marginBottom: 16,
+                marginBottom: 14,
               }}
             />
 
             <View
               style={{
                 alignSelf: "center",
-                height: 64,
-                width: 64,
-                borderRadius: 20,
+                height: 56,
+                width: 56,
+                borderRadius: 18,
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: COLORS.inactiveBg,
@@ -927,15 +927,15 @@ export default function MySettings() {
             >
               <MaterialCommunityIcons
                 name="logout"
-                size={28}
+                size={24}
                 color={COLORS.danger}
               />
             </View>
 
             <Text
               style={{
-                marginTop: 16,
-                fontSize: 20,
+                marginTop: 14,
+                fontSize: 18,
                 fontWeight: "900",
                 color: COLORS.heading,
                 textAlign: "center",
@@ -947,8 +947,8 @@ export default function MySettings() {
             <Text
               style={{
                 marginTop: 8,
-                fontSize: 13,
-                lineHeight: 20,
+                fontSize: 12,
+                lineHeight: 18,
                 color: COLORS.secondaryText,
                 textAlign: "center",
               }}
@@ -958,9 +958,9 @@ export default function MySettings() {
 
             <View
               style={{
-                marginTop: 20,
+                marginTop: 18,
                 flexDirection: "row",
-                gap: 12,
+                gap: 10,
               }}
             >
               <Pressable
@@ -969,8 +969,8 @@ export default function MySettings() {
                 }}
                 style={{
                   flex: 1,
-                  height: 50,
-                  borderRadius: 16,
+                  height: 46,
+                  borderRadius: 14,
                   borderWidth: 1,
                   borderColor: COLORS.border,
                   alignItems: "center",
@@ -980,7 +980,7 @@ export default function MySettings() {
               >
                 <Text
                   style={{
-                    fontSize: 14,
+                    fontSize: 13,
                     fontWeight: "800",
                     color: COLORS.heading,
                   }}
@@ -994,8 +994,8 @@ export default function MySettings() {
                 disabled={loggingOut}
                 style={{
                   flex: 1,
-                  height: 50,
-                  borderRadius: 16,
+                  height: 46,
+                  borderRadius: 14,
                   alignItems: "center",
                   justifyContent: "center",
                   backgroundColor: COLORS.danger,
@@ -1007,7 +1007,7 @@ export default function MySettings() {
                 ) : (
                   <Text
                     style={{
-                      fontSize: 14,
+                      fontSize: 13,
                       fontWeight: "800",
                       color: COLORS.white,
                     }}

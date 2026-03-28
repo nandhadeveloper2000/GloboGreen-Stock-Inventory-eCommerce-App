@@ -204,16 +204,16 @@ function InputRow({
   props?: any;
 }) {
   return (
-    <View className="mt-4">
-      <Text className="mb-2 text-[13px] font-extrabold text-heading">
+    <View className="mt-3">
+      <Text className="mb-1.5 text-[12px] font-extrabold text-heading">
         {label}
       </Text>
 
-      <View className="h-[56px] flex-row items-center rounded-[20px] border border-border bg-soft px-4">
-        <View className="h-[34px] w-[34px] items-center justify-center rounded-xl border border-border bg-white">
+      <View className="h-[44px] flex-row items-center rounded-[14px] border border-border bg-soft px-3">
+        <View className="h-[30px] w-[30px] items-center justify-center rounded-[10px] border border-border bg-white">
           <MaterialCommunityIcons
             name={icon}
-            size={18}
+            size={16}
             color={COLORS.secondaryText}
           />
         </View>
@@ -223,7 +223,7 @@ function InputRow({
           onChangeText={onChangeText}
           placeholderTextColor={COLORS.labelText}
           autoCorrect={false}
-          className="ml-3 flex-1 text-[15px] font-semibold text-primaryText"
+          className="ml-2.5 flex-1 text-[13px] font-semibold text-primaryText"
           {...props}
         />
       </View>
@@ -547,15 +547,15 @@ export default function Profile() {
         <StatusBar barStyle="dark-content" backgroundColor={COLORS.background} />
 
         <View className="flex-1 items-center justify-center px-6">
-          <View className="h-[84px] w-[84px] items-center justify-center rounded-full bg-successSoft">
+          <View className="h-[72px] w-[72px] items-center justify-center rounded-full bg-successSoft">
             <ActivityIndicator size="large" color={COLORS.success} />
           </View>
 
-          <Text className="mt-4 text-[16px] font-black text-primaryText">
+          <Text className="mt-3 text-[14px] font-black text-primaryText">
             Loading profile...
           </Text>
 
-          <Text className="mt-1 text-[13px] text-secondaryText">
+          <Text className="mt-1 text-[12px] text-secondaryText">
             Please wait while we fetch your details
           </Text>
         </View>
@@ -577,7 +577,7 @@ export default function Profile() {
             showsVerticalScrollIndicator={false}
             keyboardShouldPersistTaps="handled"
             contentContainerStyle={{
-              paddingBottom: 120,
+              paddingBottom: 100,
               flexGrow: 1,
             }}
           >
@@ -585,47 +585,47 @@ export default function Profile() {
               colors={theme.gradient}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
-              className="min-h-[235px] overflow-hidden rounded-b-[34px] px-5 pb-7 pt-3"
+              className="min-h-[200px] overflow-hidden rounded-b-[28px] px-4 pb-6 pt-3"
             >
-              <View className="absolute right-[-20px] top-[-30px] h-[180px] w-[180px] rounded-full bg-white/10" />
-              <View className="absolute bottom-6 left-[-20px] h-[130px] w-[130px] rounded-full bg-white/10" />
-              <View className="absolute right-10 top-24 h-[90px] w-[90px] rounded-full bg-white/5" />
+              <View className="absolute right-[-20px] top-[-30px] h-[160px] w-[160px] rounded-full bg-white/10" />
+              <View className="absolute bottom-6 left-[-20px] h-[110px] w-[110px] rounded-full bg-white/10" />
+              <View className="absolute right-10 top-24 h-[80px] w-[80px] rounded-full bg-white/5" />
 
               <View className="self-start rounded-full bg-white/15 px-3 py-1.5">
-                <Text className="text-[11px] font-extrabold tracking-wide text-white">
+                <Text className="text-[10px] font-extrabold tracking-wide text-white">
                   {theme.badge}
                 </Text>
               </View>
 
-              <Text className="mt-4 text-[30px] font-black text-white">
+              <Text className="mt-4 text-[24px] font-black text-white">
                 {theme.title}
               </Text>
 
-              <Text className="mt-2 max-w-[94%] text-[14px] leading-[22px] text-white/85">
+              <Text className="mt-2 max-w-[94%] text-[13px] leading-[20px] text-white/85">
                 {theme.subtitle}
               </Text>
             </LinearGradient>
 
-            <View className="-mt-6 px-4 pb-8">
+            <View className="-mt-5 px-4 pb-8">
               <View
-                className="rounded-[28px] border border-border bg-card p-4"
+                className="rounded-[22px] border border-border bg-card p-3"
                 style={{
                   shadowColor: "#000",
                   shadowOpacity: 0.06,
-                  shadowRadius: 14,
-                  shadowOffset: { width: 0, height: 6 },
+                  shadowRadius: 12,
+                  shadowOffset: { width: 0, height: 5 },
                   elevation: 4,
                 }}
               >
                 <View className="items-center">
                   <View className="relative">
                     <View
-                      className="h-[124px] w-[124px] items-center justify-center overflow-hidden rounded-full border-[3px] border-white bg-soft"
+                      className="h-[88px] w-[88px] items-center justify-center overflow-hidden rounded-full border-[2px] border-white bg-soft"
                       style={{
                         shadowColor: "#000",
                         shadowOpacity: 0.08,
-                        shadowRadius: 10,
-                        shadowOffset: { width: 0, height: 4 },
+                        shadowRadius: 8,
+                        shadowOffset: { width: 0, height: 3 },
                         elevation: 3,
                       }}
                     >
@@ -649,7 +649,7 @@ export default function Profile() {
                         >
                           <MaterialCommunityIcons
                             name="account"
-                            size={72}
+                            size={50}
                             color={COLORS.successDark}
                           />
                         </LinearGradient>
@@ -660,11 +660,11 @@ export default function Profile() {
                       onPress={openAvatarOptions}
                       disabled={avatarSaving}
                       hitSlop={10}
-                      className="absolute bottom-1 right-1 h-[38px] w-[38px] items-center justify-center rounded-full border-[3px] border-white bg-primary"
+                      className="absolute bottom-0.5 right-0.5 h-[34px] w-[34px] items-center justify-center rounded-full border-[2px] border-white bg-primary"
                       style={{
                         shadowColor: "#000",
                         shadowOpacity: 0.15,
-                        shadowRadius: 6,
+                        shadowRadius: 5,
                         shadowOffset: { width: 0, height: 2 },
                         elevation: 4,
                       }}
@@ -674,26 +674,26 @@ export default function Profile() {
                       ) : (
                         <MaterialCommunityIcons
                           name="camera"
-                          size={17}
+                          size={15}
                           color={COLORS.white}
                         />
                       )}
                     </Pressable>
                   </View>
 
-                  <Text className="mt-4 text-[18px] font-black text-primaryText">
+                  <Text className="mt-3 text-[16px] font-black text-primaryText">
                     {getDisplayName(profile)}
                   </Text>
 
-                  <Text className="mt-1 text-[13px] font-semibold text-secondaryText">
+                  <Text className="mt-1 text-[12px] font-semibold text-secondaryText">
                     @{profile?.username || "username"}
                   </Text>
 
-                  <View className="mt-4 w-full flex-row gap-3">
+                  <View className="mt-3 w-full flex-row gap-2">
                     <Pressable
                       onPress={openAvatarOptions}
                       disabled={avatarSaving}
-                      className={`flex-1 flex-row items-center justify-center rounded-[18px] px-4 py-3.5 ${
+                      className={`flex-1 flex-row items-center justify-center rounded-[14px] px-4 py-3 ${
                         avatarSaving ? "bg-primary/60" : "bg-primary"
                       }`}
                     >
@@ -703,10 +703,10 @@ export default function Profile() {
                         <>
                           <MaterialCommunityIcons
                             name="image-edit-outline"
-                            size={18}
+                            size={16}
                             color={COLORS.white}
                           />
-                          <Text className="ml-2 text-[14px] font-extrabold text-white">
+                          <Text className="ml-2 text-[13px] font-extrabold text-white">
                             Change Photo
                           </Text>
                         </>
@@ -716,41 +716,41 @@ export default function Profile() {
                     <Pressable
                       onPress={removeAvatar}
                       disabled={avatarSaving}
-                      className="flex-1 flex-row items-center justify-center rounded-[18px] border border-border bg-soft px-4 py-3.5"
+                      className="flex-1 flex-row items-center justify-center rounded-[14px] border border-border bg-soft px-4 py-3"
                     >
                       <MaterialCommunityIcons
                         name="trash-can-outline"
-                        size={18}
+                        size={16}
                         color={COLORS.primaryText}
                       />
-                      <Text className="ml-2 text-[14px] font-extrabold text-primaryText">
+                      <Text className="ml-2 text-[13px] font-extrabold text-primaryText">
                         Remove
                       </Text>
                     </Pressable>
                   </View>
 
-                  <Text className="mt-3 text-center text-[12px] text-secondaryText">
+                  <Text className="mt-2.5 text-center text-[11px] text-secondaryText">
                     Tap camera or change photo to update your profile photo
                   </Text>
                 </View>
 
-                <View className="mt-5 rounded-[22px] border border-border bg-soft px-4 py-3">
-                  <View className="flex-row items-center justify-between py-2">
-                    <Text className="text-[12px] font-extrabold text-secondaryText">
+                <View className="mt-4 rounded-[18px] border border-border bg-soft px-3 py-2.5">
+                  <View className="flex-row items-center justify-between py-1.5">
+                    <Text className="text-[11px] font-extrabold text-secondaryText">
                       ACCOUNT TYPE
                     </Text>
-                    <Text className="font-black text-successDark">
+                    <Text className="text-[12px] font-black text-successDark">
                       {roleLabel}
                     </Text>
                   </View>
 
-                  <View className="flex-row items-center justify-between py-2">
-                    <Text className="text-[12px] font-extrabold text-secondaryText">
+                  <View className="flex-row items-center justify-between py-1.5">
+                    <Text className="text-[11px] font-extrabold text-secondaryText">
                       EMAIL
                     </Text>
                     <Text
                       numberOfLines={1}
-                      className="max-w-[65%] text-right font-extrabold text-primaryText"
+                      className="max-w-[65%] text-right text-[12px] font-extrabold text-primaryText"
                     >
                       {profile?.email || "-"}
                     </Text>
@@ -798,7 +798,7 @@ export default function Profile() {
                 <Pressable
                   onPress={saveProfile}
                   disabled={saving}
-                  className={`mb-4 mt-6 items-center rounded-[20px] py-4 ${
+                  className={`mb-2 mt-5 items-center rounded-[14px] py-3 ${
                     saving ? "bg-primary/60" : "bg-primary"
                   }`}
                 >
@@ -806,7 +806,7 @@ export default function Profile() {
                     {saving ? (
                       <>
                         <ActivityIndicator color={COLORS.white} />
-                        <Text className="ml-2 font-black text-white">
+                        <Text className="ml-2 text-[13px] font-black text-white">
                           Saving...
                         </Text>
                       </>
@@ -814,10 +814,10 @@ export default function Profile() {
                       <>
                         <MaterialCommunityIcons
                           name="content-save"
-                          size={20}
+                          size={17}
                           color={COLORS.white}
                         />
-                        <Text className="ml-2 font-black text-white">
+                        <Text className="ml-2 text-[13px] font-black text-white">
                           Save Changes
                         </Text>
                       </>
